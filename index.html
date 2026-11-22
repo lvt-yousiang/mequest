@@ -538,6 +538,14 @@ label.btn{display:inline-flex;align-items:center;justify-content:center;cursor:p
 .eggbtn small{font:400 11px/1 var(--label)}
 .palslot .stages{display:flex;gap:4px}.palslot .stages i{width:10px;height:10px;background:#D5DCE6;box-shadow:inset 0 0 0 2px var(--line)}.palslot .stages i.on{background:#F6C23E}
 @media (max-width:560px){ .palcard{flex-wrap:wrap} .eggpick{width:100%;justify-content:center} }
+
+.subjwrap{display:flex;flex-direction:column;gap:8px}
+.gradetabs{display:flex;gap:8px;margin:0 4px}
+.gtab{flex:0 0 auto;padding:8px 14px;background:var(--stone) var(--noise) 0 0/24px 24px;font:400 13px/1 var(--label);letter-spacing:.04em;box-shadow:var(--pf), var(--bevel);margin:4px}
+.gtab.on{background:#FFE58A;box-shadow:var(--pf), inset 0 -5px 0 #C98A06}
+.frac{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font:700 calc(24px * var(--k))/1 var(--display);vertical-align:middle}
+.frac i{display:block;width:100%;min-width:1.1em;height:3px;background:currentColor;margin:3px 0}
+.choice .frac{font-size:calc(28px * var(--k))}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -1848,6 +1856,7 @@ function zhRZ(g, d){
   return zq(RB(PH('q_pic')), PL(PH('q_pic')), {visual:panel(`<div class="bigemo">${p.e}</div>`), kind:'choice', options:os.map(x => zopt(x, {big:1})), answer:p.c,
     hints:[RB(PH('h_pic')), RB(PH('h_pyis')) + ` <b class="pyword">${ci.py}</b>`, {h:RB(PH('h_readall')), helper:optsWithPy(os)}], explain:`${p.e} ${RB([[p.c, ci.py]])}`});
 }
+const charInfo = c => ALLC.find(x => x.c === c) || (typeof ZH2G !== 'undefined' ? ZH2G.flatMap(g => g.chars).find(x => x.c === c) : null) || (typeof P2Z !== 'undefined' ? P2Z.chars.find(x => x.c === c) : null);
 function zhPY(g, d){
   if (d === 2){
     const ci = pick(g.chars.filter(x => !x.poly && x.tone >= 1 && x.tone <= 4));
@@ -1856,8 +1865,8 @@ function zhPY(g, d){
   }
   if (d === 3 && coin()){
     const w = pick(g.words.filter(x => x.t.every(t => t[1]))), right = w.t.map(t => t[1]).join(' ');
-    const alt1 = w.t.map((t, i) => { if (i !== 0) return t[1]; const ci = ALLC.find(x => x.c === t[0]); return ci ? toneMark(ci.base, (ci.tone % 4) + 1) : t[1]; }).join(' ');
-    const alt2 = w.t.map((t, i) => { if (i !== w.t.length - 1) return t[1]; const ci = ALLC.find(x => x.c === t[0]); return ci ? toneMark(ci.base, ((ci.tone + 1) % 4) + 1) : t[1]; }).join(' ');
+    const alt1 = w.t.map((t, i) => { if (i !== 0) return t[1]; const ci = charInfo(t[0]); return ci ? toneMark(ci.base, (ci.tone % 4) + 1) : t[1]; }).join(' ');
+    const alt2 = w.t.map((t, i) => { if (i !== w.t.length - 1) return t[1]; const ci = charInfo(t[0]); return ci ? toneMark(ci.base, ((ci.tone + 1) % 4) + 1) : t[1]; }).join(' ');
     return zq(`“<b class="zbig">${w.w}</b>”` + RB(PH('q_wpy')), w.w + PL(PH('q_wpy')), {visual:'', kind:'choice', options:uniqOpts(right, [alt1, alt2]).map(x => opt(x, x, {txt:1})), answer:right,
       hints:[RB(PH('h_smym')), RB(PH('h_tonesong')), RB(PH('h_listen'))], hintSay:[null, null, w.w], explain:RB(w.t)});
   }
@@ -2476,7 +2485,7 @@ ZH.groups.forEach(g => ['rz', 'py', 'cy', 'jz'].forEach(k => { ADV[`zh_${k}_${g.
 ZH.groups.forEach(g => { ADV[`zh_xz_${g.id}`] = d => zhXZ(g, d); });
 function advQ(id, d){
   const f = ADV[id];
-  const q = f ? f(d) : GEN[id](3);
+  const q = f ? f(d) : GEN[id](d);
   q.lvl = d; q.adv = true;
   if (!q.lang && (id.startsWith('en_'))) q.lang = 'en';
   return q;
@@ -2485,7 +2494,7 @@ function advQ(id, d){
 /* ================= learner tracking, learn mode, level checks, challenges, report ================= */
 const BANDS = ['Not yet P1', 'P1 basic', 'P1 solid', 'P1 advanced', 'P2 ready'];
 const BANDC = ['#8E8E98', '#2F6FDE', '#4E9F2F', '#C98A06', '#8456CF'];
-const bandChip = b => `<span class="chip band" style="background:${BANDC[b]}">${BANDS[b]}</span>`;
+const bandChip = (b, g = 1) => `<span class="chip band" style="background:${BANDC[b]}">${(typeof BANDS_G !== 'undefined' ? BANDS_G[g] : BANDS)[b]}</span>`;
 const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
 const rate = a => a && a[0] ? a[1] / a[0] : null;
 function ST(){
@@ -2565,7 +2574,7 @@ function recommend(subId){
   const due = order.filter(id => sk(id).lvl >= 1 && daysSince((ST().by[id] || {}).t) >= 5);
   if (due.length) return {id:due[0], why:'is due for a quick review', btn:'REVIEW'};
   const ready = order.filter(id => sk(id).lvl >= 3 && (sk(id).adv || 0) < 2);
-  if (ready.length){ const id = ready[0]; return {id, why:(sk(id).adv || 0) ? 'is ready for the P2 Preview challenge' : 'is ready for the P1 Advanced challenge', btn:'CHALLENGE', lvl:(sk(id).adv || 0) ? 5 : 4}; }
+  if (ready.length){ const id = ready[0]; return {id, why:`is ready for the ${lvName(id, (sk(id).adv || 0) ? 5 : 4)} challenge`, btn:'CHALLENGE', lvl:(sk(id).adv || 0) ? 5 : 4}; }
   const nx = order.find(id => unlocked(id) && sk(id).lvl < 3);
   return nx ? {id:nx, why:'is your next adventure', btn:'START'} : null;
 }
@@ -2652,7 +2661,7 @@ function finishTest(){
   sfx.win(); confetti();
   $('#lfoot').hidden = true; $('#sheet').hidden = true; $('#pfill').style.width = '100%';
   const body = $('#lbody'); body.innerHTML = '';
-  const rows = Object.entries(T.res).map(([id, b]) => `<div class="mrow"><span></span><div><b>${SK[id].name}${SK[id].sub ? ` <span class="hsub">${SK[id].sub}</span>` : ''}</b></div><div class="right">${bandChip(b)}</div></div>`).join('');
+  const rows = Object.entries(T.res).map(([id, b]) => `<div class="mrow"><span></span><div><b>${SK[id].name}${SK[id].sub ? ` <span class="hsub">${SK[id].sub}</span>` : ''}</b></div><div class="right">${bandChip(b, gradeOf(id))}</div></div>`).join('');
   const r = el('div', 'result', `${kibi('wow', {scale:5})}<h2>Level check done!</h2><div class="lvlup">${T.title} · +10 K Coins for trying your best!</div><div class="mapunit" style="width:100%;text-align:left">${rows}</div><p class="small">Grown-ups can see the full report in Admin → Report.</p>`);
   const b = el('button', 'btn go wide', 'CONTINUE'); b.onclick = endLesson;
   r.append(b); body.append(r);
@@ -2669,7 +2678,7 @@ let reportSub = 'math';
 function adminReport(body){
   const P = profile(), st = ST();
   const sw = el('div', 'subjtabs small3');
-  SUBJECTS.forEach(x => { const b = el('button', 'stab' + (x.id === reportSub ? ' on' : ''), `<b>${x.label}</b>`); b.onclick = () => { reportSub = x.id; renderAdmin(); }; sw.append(b); });
+  SUBJECTS.forEach(x => { const b = el('button', 'stab' + (x.id === reportSub ? ' on' : ''), `<b>${subLabel(x)}</b>`); b.onclick = () => { reportSub = x.id; renderAdmin(); }; sw.append(b); });
   body.append(el('h4', 'ah', 'Reminders'));
   const al = alerts();
   body.append(al.length ? el('div', 'alerts', al.map(a => `<div class="alert ${a.k}"><b>${a.t}</b><span>${a.d}</span></div>`).join('')) : el('p', 'small', 'Nothing needs your attention right now.'));
@@ -2679,7 +2688,7 @@ function adminReport(body){
   if (bands.length){
     const counts = [0, 0, 0, 0, 0]; bands.forEach(x => counts[x.b]++);
     const med = bands.map(x => x.b).sort((a, b) => a - b)[Math.floor(bands.length / 2)];
-    body.append(el('div', 'tiles3 rep', `<div class="rt c"><b>Overall</b><span style="font-size:20px">${BANDS[med]}</span></div><div class="rt b"><b>Topics measured</b><span>${bands.length}/${SUB.units.flatMap(u => u.skills).length}</span></div><div class="rt a"><b>P1 adv. or above</b><span>${counts[3] + counts[4]}</span></div>`));
+    body.append(el('div', 'tiles3 rep', `<div class="rt c"><b>Overall</b><span style="font-size:20px">${BANDS_G[SUB.grade][med]}</span></div><div class="rt b"><b>Topics measured</b><span>${bands.length}/${SUB.units.flatMap(u => u.skills).length}</span></div><div class="rt a"><b>P1 adv. or above</b><span>${counts[3] + counts[4]}</span></div>`));
   } else body.append(el('p', 'small', `No ${SUB.label} levels yet. Ask your child to do a Level check (on the ${SUB.label} page) for a quick picture.`));
   SUB.units.forEach(u => {
     const card = el('section', 'mapunit'); card.style.setProperty('--u', u.color);
@@ -2687,7 +2696,7 @@ function adminReport(body){
     u.skills.forEach(id => {
       const b = st.by[id], ib = inferredBand(id), fr = b ? pct(b.f, b.n) : null;
       const meter = b ? `<div class="meter" role="img" aria-label="First-try accuracy ${fr}%"><i style="width:${fr}%"></i></div><small>${fr}% first try · ${b.n} answers · ${Math.round(b.ms / Math.max(1, b.n) / 1000)} s each · hints ${pct(b.hu, b.n)}%</small>` : '<small>Not practised yet</small>';
-      card.append(el('div', 'mrow rep', `<span></span><div><b>${SK[id].name}${SK[id].sub ? ` <span class="hsub">${SK[id].sub}</span>` : ''}</b>${meter}</div><div class="right">${ib ? bandChip(ib.b) + `<small>${ib.src === 'check' ? 'from level check' : 'from practice'}</small>` : '<span class="chip s0">Unknown</span>'}</div>`));
+      card.append(el('div', 'mrow rep', `<span></span><div><b>${SK[id].name}${SK[id].sub ? ` <span class="hsub">${SK[id].sub}</span>` : ''}</b>${meter}</div><div class="right">${ib ? bandChip(ib.b, SUB.grade) + `<small>${ib.src === 'check' ? 'from level check' : 'from practice'}</small>` : '<span class="chip s0">Unknown</span>'}</div>`));
     });
     body.append(card);
   });
@@ -2713,12 +2722,12 @@ function adminReport(body){
 }
 function alerts(){
   const out = [], st = ST(), P = profile();
-  SUBJECTS.forEach(x => { const d = daysSince(st.last[x.id]); if (st.n && d >= 3 && d < 999) out.push({k:'warn', t:`No ${x.label} for ${d} days`, d:'A short lesson keeps it fresh.'}); });
+  SUBJECTS.forEach(x => { const d = daysSince(st.last[x.id]); if (st.last[x.id] && d >= 3 && d < 999) out.push({k:'warn', t:`No ${subLabel(x)} for ${d} days`, d:'A short lesson keeps it fresh.'}); });
   ALLSK().forEach(id => { const r = recentRate(id); if (r != null && r < .5) out.push({k:'warn', t:`Finding “${SK[id].name}” hard`, d:`Only ${pct(r, 1)}% right first time recently. Try the Learn step together, or use real objects.`}); });
   if (P.n >= 20 && P.fw >= .15) out.push({k:'warn', t:'Rushing', d:'Many quick wrong answers. Kibi has added a short pause.'});
   const ready = ALLSK().filter(id => sk(id).lvl >= 3 && !(sk(id).adv)).length;
   if (ready) out.push({k:'good', t:`${ready} topic${ready > 1 ? 's' : ''} ready for a challenge`, d:'Open a 3-star topic and press P1 ADVANCED.'});
-  SUBJECTS.forEach(x => { if (!orderOf(x.id).some(id => S.place && S.place[id])) out.push({k:'info', t:`No ${x.label} level check yet`, d:'A level check takes about 10 minutes and gives a quick picture.'}); });
+  SUBJECTS.filter(x => x.grade === curGrade()).forEach(x => { if (!orderOf(x.id).some(id => S.place && S.place[id])) out.push({k:'info', t:`No ${subLabel(x)} level check yet`, d:'A level check takes about 10 minutes and gives a quick picture.'}); });
   const tm = todayMinutes(); if (tm >= (S.settings.breakMin || 20) * 2) out.push({k:'warn', t:`${tm} minutes today`, d:'That is a lot of screen time for one day.'});
   return out.slice(0, 8);
 }
@@ -2861,7 +2870,7 @@ function paperDict(id){
 
 /* --- kid-facing card on home --- */
 function dictCards(sub){
-  const lists = dictLists().filter(L => L.lang === (sub === 'zh' ? 'zh' : 'en') && (daysTo(L.date) == null || daysTo(L.date) >= -1));
+  const lists = dictLists().filter(L => L.lang === (sub.startsWith('zh') ? 'zh' : 'en') && (daysTo(L.date) == null || daysTo(L.date) >= -1));
   return lists.sort((a, b) => (daysTo(a.date) ?? 99) - (daysTo(b.date) ?? 99)).map(L => {
     const weak = dictWeak(L).length, n = daysTo(L.date);
     const c = el('div', 'reviewcard dictcard' + (n != null && n <= 2 ? ' soon' : ''), `<div><small>${icon('speaker', 2)} ${L.lang === 'zh' ? '听写' : 'SPELLING'}${L.date ? ' · ' + dueLabel(L.date) : ''}</small><h3>${esc(L.name)}</h3><p>${L.words.length} words${weak ? ` · ${weak} to fix` : ''}</p></div>`);
@@ -2893,7 +2902,7 @@ function adminDict(body){
   body.append(box);
 }
 function editDict(L){
-  const isNew = !L; L = L || {id:'d' + Date.now(), name:'', lang:curSub() === 'en' ? 'en' : 'zh', words:[], date:''};
+  const isNew = !L; L = L || {id:'d' + Date.now(), name:'', lang:curSub().startsWith('en') ? 'en' : 'zh', words:[], date:''};
   openModal(`<h3>${isNew ? 'New' : 'Edit'} list</h3>
     <div class="field"><label class="flab">Language</label><div class="seg" id="dLang"><button data-v="zh">华文 听写</button><button data-v="en">English spelling</button></div></div>
     <div class="field"><label class="flab" for="dName">Name</label><input id="dName" maxlength="40" placeholder="e.g. 听写 5 / Spelling List 3" value="${esc(L.name)}"></div>
@@ -3034,6 +3043,560 @@ function palShow(ev, done){
     setTimeout(flick, 700);
   }
 }
+/* ================= Primary 2: Maths ================= */
+const fracHTML = (n, d) => `<span class="frac"><b>${n}</b><i></i><b>${d}</b></span>`;
+const fracTxt = (n, d) => `${n}/${d}`;
+function fracShape(n, d, kind){
+  kind = kind || (d <= 8 && coin() ? 'circle' : 'bar');
+  const fill = '#FFCB52', empty = '#FFFFFF', st = 'stroke="#1B2A4A" stroke-width="3"';
+  if (kind === 'bar'){ const w = 260 / d; return `<svg class="big" viewBox="0 0 280 70" style="max-width:300px" role="img" aria-label="fraction bar">${Array.from({length:d}, (_, i) => `<rect x="${10 + i * w}" y="10" width="${w}" height="50" fill="${i < n ? fill : empty}" ${st}/>`).join('')}</svg>`; }
+  const cx = 70, cy = 70, r = 60;
+  const seg = i => { const a0 = -Math.PI / 2 + i * 2 * Math.PI / d, a1 = a0 + 2 * Math.PI / d; const p = a => `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; return `<path d="M${cx},${cy} L${p(a0)} A${r},${r} 0 ${d === 1 ? 1 : 0} 1 ${p(a1)} Z" fill="${i < n ? fill : empty}" ${st}/>`; };
+  return `<svg class="big" viewBox="0 0 140 140" style="max-width:170px" role="img" aria-label="fraction circle">${d === 1 ? `<circle cx="70" cy="70" r="60" fill="${n ? fill : empty}" ${st}/>` : Array.from({length:d}, (_, i) => seg(i)).join('')}</svg>`;
+}
+function scaleSVG(kg, g){
+  const total = kg + g / 1000, max = total <= 5 ? 5 : 10, a = -Math.PI / 2 + total / max * 2 * Math.PI * .9 - .9 * Math.PI;
+  let ticks = '';
+  for (let i = 0; i <= max; i++){ const t = -Math.PI / 2 - .9 * Math.PI + i / max * 2 * Math.PI * .9; ticks += `<line x1="${100 + 62 * Math.cos(t)}" y1="${100 + 62 * Math.sin(t)}" x2="${100 + 74 * Math.cos(t)}" y2="${100 + 74 * Math.sin(t)}" stroke="#1B2A4A" stroke-width="3"/><text x="${100 + 50 * Math.cos(t)}" y="${106 + 50 * Math.sin(t)}" text-anchor="middle" font-size="15" font-weight="700" fill="#1B2A4A">${i}</text>`; if (max === 5 && i < max){ for (let j = 1; j < 10; j++){ const u = t + j / 10 * 2 * Math.PI * .9 / max; ticks += `<line x1="${100 + 68 * Math.cos(u)}" y1="${100 + 68 * Math.sin(u)}" x2="${100 + 74 * Math.cos(u)}" y2="${100 + 74 * Math.sin(u)}" stroke="#1B2A4A" stroke-width="1.5"/>`; } } }
+  return `<svg class="big" viewBox="0 0 200 200" style="max-width:220px" role="img" aria-label="weighing scale"><circle cx="100" cy="100" r="82" fill="#fff" stroke="#1B2A4A" stroke-width="5"/>${ticks}<text x="100" y="150" text-anchor="middle" font-size="16" font-weight="700" fill="#5B6478">kg</text><line x1="100" y1="100" x2="${100 + 66 * Math.cos(a)}" y2="${100 + 66 * Math.sin(a)}" stroke="#E0503A" stroke-width="5" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#1B2A4A"/></svg>`;
+}
+function beakerSVG(l, max){
+  const H = 160, top = 20, bot = top + H, lvl = bot - l / max * H; let ticks = '';
+  for (let i = 0; i <= max; i++){ const y = bot - i / max * H; ticks += `<line x1="40" y1="${y}" x2="${i % (max > 10 ? 5 : 1) === 0 ? 62 : 52}" y2="${y}" stroke="#1B2A4A" stroke-width="2"/>` + (i % (max > 10 ? 5 : 1) === 0 ? `<text x="30" y="${y + 5}" text-anchor="end" font-size="14" font-weight="700" fill="#1B2A4A">${i}</text>` : ''); }
+  return `<svg class="big" viewBox="0 0 180 200" style="max-width:190px" role="img" aria-label="measuring beaker"><rect x="40" y="${lvl}" width="100" height="${bot - lvl}" fill="#7FC8FF"/><path d="M40 ${top} L40 ${bot} L140 ${bot} L140 ${top}" fill="none" stroke="#1B2A4A" stroke-width="5"/>${ticks}<text x="160" y="${top + 10}" font-size="16" font-weight="700" fill="#5B6478">ℓ</text></svg>`;
+}
+const cmpOpts = () => ['>', '<', '='].map(x => opt(x, x, {big:1}));
+const nDigits3 = () => rand(101, 999);
+const GEN2 = {
+/* Numbers to 1000 */
+m2_count(d){
+  if (d >= 5){ const th = rand(1, 9), h = rand(0, 9), t = rand(0, 9), o = rand(0, 9), n = th * 1000 + h * 100 + t * 10 + o; return nq(`${th} thousands, ${h} hundreds, ${t} tens and ${o} ones make ___.`, n, ['Write the thousands digit first.', 'Then the hundreds, tens and ones digits. Use 0 for any empty place.'], `${n}.`); }
+  const h = rand(d < 2 ? 1 : 2, d < 2 ? 3 : 9), t = rand(0, 9), o = rand(0, 9);
+  if (d >= 4){ const t2 = t + 10, n = h * 100 + t2 * 10 + o; return nq(`${h} hundreds, ${t2} tens and ${o} ones make ___.`, n, [`${t2} tens is more than 10 tens. 10 tens make 1 hundred.`, 'Change 10 tens into 1 more hundred. Then write the number.'], `${t2} tens = 1 hundred and ${t} tens, so it is ${h + 1} hundreds, ${t} tens, ${o} ones = ${n}.`); }
+  const n = h * 100 + t * 10 + o;
+  return nq('What number is shown?', n, ['A flat is 100, a rod is 10, a small cube is 1.', 'Count the flats, then the rods, then the cubes.', 'Write the hundreds digit, then tens, then ones.'], `${h} hundreds ${t} tens ${o} ones = ${n}.`, {visual:panel(flats(h, t, o) + '<div class="tlabel">flat = 100 · rod = 10 · cube = 1</div>')});
+},
+m2_place(d){
+  if (d >= 5){ const n = rand(1001, 9999); const s = String(n), p = rand(0, 3), v = +s[p] * [1000, 100, 10, 1][p]; if (!+s[p]) return GEN2.m2_place(5); return cq(`In ${n}, the digit ${s[p]} stands for ___.`, uniqOpts(String(v), [s[p], String(+s[p] * 10), String(+s[p] * 100), String(+s[p] * 1000)].filter(x => x !== String(v))).map(x => opt(x)), v, ['Name the places from the right: ones, tens, hundreds, thousands.', 'Which place is the digit in?'], `${s[p]} is in the ${['thousands', 'hundreds', 'tens', 'ones'][p]} place: ${v}.`); }
+  const n = nDigits3(), h = Math.floor(n / 100), t = Math.floor(n / 10) % 10, o = n % 10;
+  if (d <= 1 || (d < 4 && coin())) return nq(`${h * 100} + ${t * 10} + ${o} = ___`, n, ['Each part is one place: hundreds, tens, ones.', 'Put the digits in order: hundreds, tens, ones.'], `${h * 100} + ${t * 10} + ${o} = ${n}.`);
+  if (d >= 4){ const nn = rand(1, 9) * 100 + rand(0, 9), hh = Math.floor(nn / 100); return nq(`${nn} = ${hh * 100} + ___`, nn - hh * 100, ['Split the number into hundreds and the rest.', 'Take away the hundreds part. What is left?'], `${nn} = ${hh * 100} + ${nn - hh * 100}.`); }
+  const s = String(n); let p = rand(0, 2); if (s[p] === '0') p = 0;
+  const v = +s[p] * [100, 10, 1][p];
+  return cq(`In ${n}, the digit ${s[p]} stands for ___.`, uniqOpts(String(v), [s[p], String(+s[p] * 10), String(+s[p] * 100)].filter(x => x !== String(v))).map(x => opt(x)), v, ['Is the digit in the hundreds, tens or ones place?', 'In the hundreds place a digit means that many hundreds.'], `In ${n}, the ${s[p]} is in the ${['hundreds', 'tens', 'ones'][p]} place.`);
+},
+m2_words(d){
+  if (d >= 5){ const n = rand(1001, 9999), w = `${ONES[Math.floor(n / 1000)]} thousand${n % 1000 ? ' ' + words3d(n % 1000) : ''}`; return nq(`Write “${w}” in numerals.`, n, ['Write the thousands first.', 'If a place has nothing, write 0 there.'], `${n}.`); }
+  const n = d < 2 ? rand(1, 9) * 100 + rand(0, 99) : rand(101, 999);
+  if (coin() || d >= 3) return nq(`Write “${words3d(n)}” in numerals.`, n, ['Read it in parts: hundreds, then tens and ones.', 'If there are no tens, the tens digit is 0.'], `“${words3d(n)}” = ${n}.`);
+  const w = words3d(n), alt = [words3d(n + 10 > 999 ? n - 10 : n + 10), words3d(Math.floor(n / 100) * 100 + (n % 10) * 10 + Math.floor(n / 10) % 10)].filter(x => x !== w);
+  return cq(`Which words say ${n}?`, uniqOpts(w, alt).map(x => opt(x, x, {txt:1})), w, ['Read the hundreds digit first.', 'Then look at the tens and ones together.'], `${n} = ${w}.`);
+},
+m2_compare(d){
+  if (d >= 4){ const ds = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 3), big = coin(); const s = ds.slice().sort((a, b) => big ? b - a : a - b).join('');
+    return nq(`Use ${ds.join(', ')} once each. Make the ${big ? 'greatest' : 'smallest'} 3-digit number.`, +s, ['The hundreds place matters most.', `Put the ${big ? 'biggest' : 'smallest'} digit in the hundreds place, then the next, then the last.`], `${s}.`); }
+  if (d <= 1){ let a = nDigits3(), b = nDigits3(); if (coin()) b = Math.floor(a / 100) * 100 + rand(0, 99); const ans = a > b ? '>' : a < b ? '<' : '=';
+    return cq(`${a} ___ ${b}`, cmpOpts(), ans, ['Compare the hundreds first.', 'If the hundreds are the same, compare the tens, then the ones.', 'The open side of > or < faces the bigger number.'], `${a} ${ans} ${b}.`); }
+  const set = new Set(); const H = rand(1, 8); while (set.size < 4) set.add((coin() ? H : rand(1, 9)) * 100 + rand(0, 99));
+  const ns = [...set], asc = coin(), sorted = ns.slice().sort((a, b) => asc ? a - b : b - a);
+  return {prompt:`Tap the numbers from ${asc ? 'smallest to greatest' : 'greatest to smallest'}.`, visual:'', kind:'order', tiles:shuffle(ns).map(String), answer:sorted.map(String), hints:['Compare the hundreds digits first.', 'Same hundreds? Then compare the tens, then the ones.'], explain:sorted.join(', ')};
+},
+m2_pattern(d){
+  const step = d >= 5 ? pick([1000, -1000, 500]) : d >= 4 ? pick([5, 25, 50, -5, -50]) : d >= 2 ? pick([10, 100, -10, -100]) : pick([1, 10, 100, -1]);
+  const start = step > 0 ? rand(1, d >= 5 ? 4 : 5) * (Math.abs(step) >= 100 ? 100 : 10) + (Math.abs(step) >= 1000 ? 0 : rand(0, 9)) : rand(6, 9) * (Math.abs(step) >= 1000 ? 1000 : 100) + rand(0, 9) * 10;
+  const seq = Array.from({length:5}, (_, i) => start + step * i), bi = rand(1, 4);
+  return nq('What is the missing number?', seq[bi], ['How much does it change each time?', 'Is it going up or down? Make the same jump.'], `It goes ${step > 0 ? 'up' : 'down'} by ${Math.abs(step)} each time.`, {visual:panel(`<div class="seq">${seq.map((x, i) => i === bi ? '<span class="blank">?</span>' : `<span>${x}</span>`).join('')}</div>`)});
+},
+m2_oddeven(d){
+  if (d <= 1){ const n = rand(2, 20), ev = n % 2 === 0; return cq(`Is ${n} odd or even?`, [opt('odd'), opt('even')], ev ? 'even' : 'odd', ['Try to put the things into pairs.', 'If every one has a partner, the number is even. If one is left over, it is odd.'], `${n} is ${ev ? 'even' : 'odd'}.`, {visual:panel(`<div class="eg" style="grid-template-columns:repeat(2,auto)">${'<span>🧦</span>'.repeat(n)}</div>`)}); }
+  if (d >= 4){ const a = rand(11, 99), b = rand(11, 99), s = a + b; return cq(`${a} + ${b}: is the answer odd or even? (No need to add!)`, [opt('odd'), opt('even')], s % 2 ? 'odd' : 'even', ['Only the ones digits decide odd or even.', 'odd + odd = even, even + even = even, odd + even = odd.'], `${a} is ${a % 2 ? 'odd' : 'even'} and ${b} is ${b % 2 ? 'odd' : 'even'}, so the answer is ${s % 2 ? 'odd' : 'even'}.`); }
+  const want = coin() ? 'even' : 'odd', ns = []; while (ns.length < 3){ const n = rand(101, 999); if ((n % 2 === 0) !== (want === 'even') && !ns.includes(n)) ns.push(n); }
+  let r; do { r = rand(101, 999); } while ((r % 2 === 0) !== (want === 'even'));
+  return cq(`Which number is ${want}?`, shuffle([r, ...ns.slice(0, 2)]).map(x => opt(x)), r, ['Look only at the ones digit.', 'Even numbers end in 0, 2, 4, 6 or 8. Odd numbers end in 1, 3, 5, 7 or 9.'], `${r} is ${want}.`);
+},
+/* Add & subtract within 1000 */
+m2_addmental(d){
+  const add = coin(), place = d <= 1 ? 100 : pick([10, 100]);
+  let a = rand(1, 8) * 100 + rand(0, 9) * 10 + (d >= 2 ? rand(0, 9) : 0), k = rand(1, 5) * place;
+  if (d >= 4){ k = rand(2, 9) * 10 + rand(1, 9); a = rand(2, 7) * 100 + rand(0, 9) * 10; }
+  if (!add && k > a) [a, k] = [k + a, a];
+  if (add && a + k > 999) a -= 300;
+  const ans = add ? a + k : a - k;
+  return nq(`${a} ${add ? '+' : '−'} ${k} = ?`, ans, [d >= 4 ? 'Split the number into tens and ones. Do the tens first, then the ones.' : `Which place changes when you ${add ? 'add' : 'take away'} ${place === 100 ? 'hundreds' : 'tens'}?`, `Count ${add ? 'on' : 'back'} in ${place === 100 ? 'hundreds' : 'tens'}.`], `${a} ${add ? '+' : '−'} ${k} = ${ans}.`);
+},
+m2_add(d){
+  let a, b;
+  if (d >= 5){ a = rand(1200, 6500); b = rand(800, 3000); return nq(`${a} + ${b} = ?`, a + b, ['Line up the ones, tens, hundreds and thousands.', 'Add from the ones. Carry when a place makes 10 or more.'], `${a} + ${b} = ${a + b}.`); }
+  do { a = rand(d < 2 ? 110 : 150, 700); b = rand(d < 2 ? 10 : 100, 299); } while (a + b > 999 || (d >= 1 && (a % 10) + (b % 10) < 10 && d < 4) || (d >= 3 && (Math.floor(a / 10) % 10) + (Math.floor(b / 10) % 10) < 9));
+  if (d >= 4){ const c = rand(50, 200); if (a + b + c <= 999) return nq(`${a} + ${b} + ${c} = ?`, a + b + c, ['Add two of the numbers first.', 'Then add the third number to that answer.'], `${a} + ${b} = ${a + b}; ${a + b} + ${c} = ${a + b + c}.`); }
+  return nq(`${a} + ${b} = ?`, a + b, ['Add the ones first. 10 or more ones? Carry 1 ten.', 'Then add the tens. 10 or more tens? Carry 1 hundred.', 'Then add the hundreds.'], `${a} + ${b} = ${a + b}.`, {visual:panel(column3(a, b, '+'))});
+},
+m2_sub(d){
+  let a, b;
+  if (d >= 5){ a = rand(3000, 9000); b = rand(1000, a - 500); return nq(`${a} − ${b} = ?`, a - b, ['Line up all the places.', 'Start from the ones. Regroup from the next place when you need to.'], `${a} − ${b} = ${a - b}.`); }
+  if (d >= 3 && coin()){ a = rand(2, 9) * 100; b = rand(110, a - 11); if (b % 10 === 0) b++; return nq(`${a} − ${b} = ?`, a - b, ['There are no ones or tens to take from. Go to the hundreds.', 'Change 1 hundred into 9 tens and 10 ones.'], `${a} − ${b} = ${a - b}.`, {visual:panel(column3(a, b, '−'))}); }
+  do { a = rand(200, 980); b = rand(d < 2 ? 10 : 100, a - 10); } while (d >= 1 && (a % 10) >= (b % 10));
+  return nq(`${a} − ${b} = ?`, a - b, ['Start with the ones. Not enough? Change 1 ten into 10 ones.', 'Then the tens. Not enough? Change 1 hundred into 10 tens.', 'Then subtract the hundreds.'], `${a} − ${b} = ${a - b}.`, {visual:panel(column3(a, b, '−'))});
+},
+m2_wp(d){
+  const [n, he] = pick(PEOPLE), [m] = pick(PEOPLE.filter(p => p[0] !== n)); const T = pick([['stamps'], ['stickers'], ['beads'], ['marbles'], ['cards']])[0];
+  if (d <= 1){ const a = rand(120, 500), b = rand(100, 400), add = coin(); if (add) return nq(`${n} has ${a} ${T}. ${m} gives ${he === 'he' ? 'him' : 'her'} ${b} more. How many ${T} does ${n} have now?`, a + b, ['Is the number getting bigger or smaller?', '“Gives more” means put together.'], `${a} + ${b} = ${a + b}.`);
+    return nq(`${n} had ${a + b} ${T}. ${he[0].toUpperCase() + he.slice(1)} gave away ${b}. How many are left?`, a, ['Gave away means take away.', 'Take the part given away from the whole.'], `${a + b} − ${b} = ${a}.`); }
+  if (d <= 3){ const a = rand(200, 600), x = rand(40, 180); if (coin()) return nq(`${n} has ${a} ${T}. ${m} has ${x} more ${T} than ${n}. How many ${T} does ${m} have?`, a + x, [`Who has more?`, `${m} has ${n}’s number and ${x} more.`, 'Draw two bars: one longer by the extra part.'], `${a} + ${x} = ${a + x}.`);
+    return nq(`${n} has ${a + x} ${T}. ${m} has ${a}. How many more ${T} does ${n} have than ${m}?`, x, ['“How many more” means find the difference.', 'Draw two bars. The extra part is the answer.'], `${a + x} − ${a} = ${x}.`); }
+  const b = rand(80, 200), c = rand(50, 150), a = b + c + rand(40, 400);
+  return nq(`A shop had ${a} ${T}. It sold ${b} in the morning and ${c} in the afternoon. How many ${T} were left?`, a - b - c, ['There are two parts sold. What happened first?', 'Take away one part, then the other. Or add the parts first.', 'Check: left + sold = what the shop had.'], `${a} − ${b} − ${c} = ${a - b - c}.`);
+},
+/* Multiply & divide */
+m2_tables(d){
+  const tb = d >= 5 ? pick([6, 7, 8, 9]) : d >= 2 ? pick([2, 3, 4, 5, 10]) : pick([2, 5, 10]), k = rand(2, 10);
+  if (d >= 4) return nq(`___ × ${tb} = ${k * tb}`, k, [`How many ${tb}s make ${k * tb}?`, `Count in ${tb}s and keep track of how many jumps.`], `${k} × ${tb} = ${k * tb}.`);
+  return nq(`${k} × ${tb} = ?`, k * tb, [`${k} × ${tb} means ${k} groups of ${tb}.`, `Count in ${tb}s, ${k} times.`, `Use a fact you know: ${k - 1} × ${tb}, then add one more ${tb}.`], `${k} × ${tb} = ${k * tb}.`);
+},
+m2_mult(d){
+  const g = rand(2, d >= 3 ? 6 : 5), e = pick(d >= 2 ? [2, 3, 4, 5, 10] : [2, 5, 10]), [emo, name] = pick(EMO);
+  if (coin() && e <= 6){ return nq(`There are ${g} rows with ${e} ${name} in each row. How many ${name} are there?`, g * e, ['How many rows? How many in one row?', 'Multiply: rows × number in each row.'], `${g} × ${e} = ${g * e}.`, {visual:panel(`<div class="eg" style="grid-template-columns:repeat(${e},auto)">${`<span>${emo}</span>`.repeat(g * e)}</div>`)}); }
+  const right = `${g} × ${e}`; return cq(`Which number sentence matches the picture?`, uniqOpts(right, [`${g} + ${e}`, `${e} × ${e}`, `${g} × ${g}`].filter(x => x !== right)).map(x => opt(x)), right, ['Count the groups first.', 'Then count how many are in each group.', 'groups × number in each group'], `${g} groups of ${e}: ${right} = ${g * e}.`, {visual:panel(plates(g, e, emo))});
+},
+m2_div(d){
+  const t = pick(d >= 5 ? [6, 7, 8, 9] : d >= 2 ? [2, 3, 4, 5, 10] : [2, 5, 10]), k = rand(2, 10), N = t * k, [emo, name] = pick(EMO);
+  if (d >= 5 && coin()){ const r = rand(1, t - 1); return nq(`${N + r} ÷ ${t} = ? (with remainder: type the whole groups)`, k, [`How many full groups of ${t} can you make?`, 'The ones left over are the remainder.'], `${N + r} ÷ ${t} = ${k} remainder ${r}.`); }
+  if (d <= 1 && N <= 30) return nq(`Share ${N} ${name} equally into ${t} groups. How many in each group?`, k, ['Give one to each group, again and again.', `Think: ? × ${t} = ${N}.`], `${N} ÷ ${t} = ${k}.`, {visual:panel(tray(N, emo))});
+  return nq(`${N} ÷ ${t} = ?`, k, [`How many groups of ${t} make ${N}?`, `Think of the ${t} times table: ? × ${t} = ${N}.`], `${N} ÷ ${t} = ${k}.`);
+},
+m2_mdwp(d){
+  const [n] = pick(PEOPLE), t = pick(d >= 5 ? [6, 7, 8, 9] : [2, 3, 4, 5, 10]), k = rand(2, 10);
+  const Q = pick([
+    () => nq(`${n} buys ${k} packets of crayons. Each packet has ${t} crayons. How many crayons are there in all?`, k * t, ['Each packet has the same number.', 'Equal groups: use multiplication.'], `${k} × ${t} = ${k * t}.`),
+    () => nq(`${k * t} children sit in groups of ${t}. How many groups are there?`, k, ['“In groups of” means make groups of that size.', 'Use division: total ÷ size of each group.'], `${k * t} ÷ ${t} = ${k}.`),
+    () => nq(`${n} shares ${k * t} sweets equally among ${t} friends. How many sweets does each friend get?`, k, ['Share equally means divide.', `Think: ? × ${t} = ${k * t}.`], `${k * t} ÷ ${t} = ${k}.`),
+    () => nq(`A table has ${t === 10 ? 4 : t} legs. How many legs do ${k} tables have?`, k * (t === 10 ? 4 : t), ['Each table has the same number of legs.', 'Multiply the number of tables by the legs on each.'], `${k} × ${t === 10 ? 4 : t} = ${k * (t === 10 ? 4 : t)}.`)]);
+  if (d >= 4){ const a = rand(3, 6), b = pick([2, 3, 4, 5]), c = rand(2, 9); return nq(`${n} has ${a} boxes of ${b} cakes and ${c} more cakes. How many cakes are there altogether?`, a * b + c, ['First find the cakes in the boxes.', 'Then add the extra cakes.'], `${a} × ${b} = ${a * b}; ${a * b} + ${c} = ${a * b + c}.`); }
+  return Q();
+},
+/* Fractions */
+m2_frac(d){
+  const dd = d >= 2 ? pick([3, 4, 5, 6, 8, 10, 12]) : pick([2, 3, 4]), n = d >= 2 ? rand(1, dd - 1) : 1;
+  if (d >= 4) return cq(`What fraction is NOT shaded?`, uniqOpts(fracTxt(dd - n, dd), [fracTxt(n, dd), fracTxt(dd - n, n), fracTxt(1, dd)]).map(x => { const [a, b] = x.split('/'); return opt(x, '', {html:fracHTML(a, b)}); }), fracTxt(dd - n, dd), ['Count all the equal parts: that is the bottom number.', 'Now count the parts that are white.'], `${dd - n} out of ${dd} parts are not shaded: ${dd - n}/${dd}.`, {visual:panel(fracShape(n, dd))});
+  return cq('What fraction of the shape is shaded?', uniqOpts(fracTxt(n, dd), [fracTxt(dd - n || 1, dd), fracTxt(dd, n), fracTxt(n, dd + 1)].filter(x => x !== fracTxt(n, dd))).map(x => { const [a, b] = x.split('/'); return opt(x, '', {html:fracHTML(a, b)}); }), fracTxt(n, dd), ['Count ALL the equal parts. That number goes at the bottom.', 'Count the shaded parts. That number goes on top.'], `${n} out of ${dd} equal parts are shaded: ${n}/${dd}.`, {visual:panel(fracShape(n, dd))});
+},
+m2_fraccmp(d){
+  if (d <= 2){ let a = pick([2, 3, 4, 5, 6, 8, 10, 12]), b; do { b = pick([2, 3, 4, 5, 6, 8, 10, 12]); } while (b === a); const big = coin(), ans = big ? (a < b ? a : b) : (a < b ? b : a);
+    return cq(`Which is ${big ? 'greater' : 'smaller'}?`, [a, b].map(x => opt(fracTxt(1, x), '', {html:fracHTML(1, x)})), fracTxt(1, ans), ['Think of one cake cut into equal pieces.', 'More pieces means each piece is smaller.'], `1/${Math.min(a, b)} is greater than 1/${Math.max(a, b)}.`, {visual:panel(`<div class="shapeset">${fracShape(1, a, 'bar')}${fracShape(1, b, 'bar')}</div>`)}); }
+  const dd = pick([5, 6, 7, 8, 9, 10, 12]); const set = new Set(); while (set.size < 3) set.add(rand(1, dd - 1));
+  const ns = [...set], asc = coin(), sorted = ns.slice().sort((x, y) => asc ? x - y : y - x).map(x => fracTxt(x, dd));
+  return {prompt:`Put in order from ${asc ? 'smallest to greatest' : 'greatest to smallest'}.`, visual:'', kind:'order', tiles:shuffle(ns.map(x => fracTxt(x, dd))), answer:sorted, hints:['The bottom numbers are the same, so the pieces are the same size.', 'Compare the top numbers: more pieces means more.'], explain:sorted.join(', ')};
+},
+m2_fracadd(d){
+  const dd = pick(d >= 2 ? [5, 6, 7, 8, 9, 10, 12] : [3, 4, 5, 6]);
+  if (d >= 3 && coin()){ const a = rand(1, dd - 1); return cq(`1 whole − ${fracTxt(a, dd)} = ?`, uniqOpts(fracTxt(dd - a, dd), [fracTxt(a, dd), fracTxt(dd - a, a), fracTxt(1, dd)]).map(x => { const [p, q] = x.split('/'); return opt(x, '', {html:fracHTML(p, q)}); }), fracTxt(dd - a, dd), [`1 whole is the same as ${dd}/${dd}.`, `Take ${a} pieces away from ${dd} pieces.`], `${dd}/${dd} − ${a}/${dd} = ${dd - a}/${dd}.`); }
+  const a = rand(1, dd - 2), b = rand(1, dd - 1 - a), add = coin() || d <= 1;
+  const right = add ? fracTxt(a + b, dd) : fracTxt(a + b - b, dd);
+  const A = add ? a : a + b;
+  return cq(`${fracTxt(A, dd)} ${add ? '+' : '−'} ${fracTxt(b, dd)} = ?`, uniqOpts(right, [fracTxt(add ? a + b : a, dd * 2), fracTxt(add ? a + b + 1 : Math.max(1, a - 1), dd), fracTxt(add ? a + b : a, dd + dd)].filter(x => x !== right)).map(x => { const [p, q] = x.split('/'); return opt(x, '', {html:fracHTML(p, q)}); }), right, ['The bottom numbers are the same, so the pieces are the same size.', `${add ? 'Add' : 'Take away'} the top numbers only. The bottom number stays the same.`], `${A}/${dd} ${add ? '+' : '−'} ${b}/${dd} = ${right}.`, {visual:panel(fracShape(A, dd, 'bar'))});
+},
+/* Money */
+m2_money(d){
+  if (d <= 1){ const dol = rand(1, 9), c = rand(1, 19) * 5; const right = `$${dol}.${pad2(c)}`; return cq(`${dol * 100 + c}¢ = ?`, uniqOpts(right, [`$${dol}${pad2(c)}.00`, `$${dol}.${pad2(c).slice(0, 1)}`, `$${dol + 1}.${pad2(c)}`]).map(x => opt(x)), right, ['100¢ makes $1.', 'Take out the dollars first. The cents left go after the dot with two digits.'], `${dol * 100 + c}¢ = ${right}.`); }
+  if (d >= 4){ const a = rand(2, 9) * 100 + rand(1, 19) * 5, b = a + pick([-5, 5, 10, -10, 50]); const A = `$${Math.floor(a / 100)}.${pad2(a % 100)}`, B = `$${Math.floor(b / 100)}.${pad2(b % 100)}`; const ans = a > b ? '>' : a < b ? '<' : '=';
+    return cq(`${A} ___ ${B}`, cmpOpts(), ans, ['Compare the dollars first.', 'If the dollars are the same, compare the cents.'], `${A} ${ans} ${B}.`); }
+  const notes = shuffle([10, 5, 2, 1, 2, 5]).slice(0, rand(2, 3)), coinsL = shuffle([50, 20, 20, 10, 5]).slice(0, rand(1, 3));
+  const dol = notes.reduce((t, x) => t + x, 0), c = coinsL.reduce((t, x) => t + x, 0), right = `$${dol + Math.floor(c / 100)}.${pad2(c % 100)}`;
+  return cq('How much money is there?', uniqOpts(right, [`$${dol}.${pad2((c + 10) % 100)}`, `$${dol + 1}.${pad2(c % 100)}`, `$${c}.${pad2(dol)}`]).map(x => opt(x)), right, ['Add up the notes and the $1 coins first.', 'Then add up the cents.', 'Write dollars, a dot, then the cents with two digits.'], `${dol} dollars and ${c} cents = ${right}.`, {visual:panel(cashHTML(notes) + coinsHTML(coinsL))});
+},
+m2_moneywp(d){
+  const [n, he] = pick(PEOPLE), item = pick(['a book', 'a toy car', 'a water bottle', 'a pencil box', 'a ball']), item2 = pick(['a ruler', 'a cap', 'a puzzle', 'a story book']);
+  if (d <= 1){ const a = rand(3, 40), b = rand(2, 30); return nq(`${item[0].toUpperCase() + item.slice(1)} costs $${a}. ${item2[0].toUpperCase() + item2.slice(1)} costs $${b}. How much do they cost altogether?`, a + b, ['“Altogether” means add.', 'Add the two prices.'], `$${a} + $${b} = $${a + b}.`, {pre:'$'}); }
+  if (d <= 3){ const pay = pick([50, 100]), cost = rand(12, pay - 5); return nq(`${n} pays $${pay} for ${item} that costs $${cost}. How much change does ${he} get?`, pay - cost, ['Change = money paid − cost.', `Count on from $${cost} to $${pay}.`], `$${pay} − $${cost} = $${pay - cost}.`, {pre:'$'}); }
+  const a = rand(25, 95), b = rand(20, 80); return nq(`${n} had ${a + b + 30}¢. ${he[0].toUpperCase() + he.slice(1)} spent ${a}¢ on a snack and ${b}¢ on a drink. How much money is left?`, 30, ['Find how much was spent altogether first.', 'Then take that away from what was there at the start.'], `${a}¢ + ${b}¢ = ${a + b}¢; ${a + b + 30}¢ − ${a + b}¢ = 30¢.`, {unit:'¢'});
+},
+/* Measurement */
+m2_length(d){
+  if (d <= 1){ const it = pick([['the length of a classroom', 'm'], ['the height of a door', 'm'], ['the length of a pencil', 'cm'], ['the length of your finger', 'cm'], ['the length of a swimming pool', 'm'], ['the width of a book', 'cm']]);
+    return cq(`Which unit would you use to measure ${it[0]}?`, [opt('cm'), opt('m')], it[1], ['A metre is about one big step. A centimetre is about the width of your finger.', 'Is the thing short or long?'], `Use ${it[1]}.`); }
+  if (d <= 3){ const a = rand(15, 90), b = rand(10, 80), [n] = pick(PEOPLE);
+    return coin() ? nq(`A ribbon is ${a + b} cm long. ${n} cuts off ${b} cm. How long is the ribbon now?`, a, ['Cutting off makes it shorter.', 'Take away the part cut off.'], `${a + b} − ${b} = ${a} cm.`, {unit:'cm'})
+      : nq(`Rope A is ${a} m long. Rope B is ${b} m long. What is the total length?`, a + b, ['Total means add.', 'Add the two lengths.'], `${a} + ${b} = ${a + b} m.`, {unit:'m'}); }
+  const a = rand(2, 6), b = rand(20, 80); return nq(`${a} m ${b} cm = ___ cm`, a * 100 + b, ['1 m = 100 cm.', `${a} m is ${a} hundreds of centimetres. Then add the extra cm.`], `${a} m = ${a * 100} cm, so ${a} m ${b} cm = ${a * 100 + b} cm.`, {unit:'cm'});
+},
+m2_mass(d){
+  if (d <= 1){ const it = pick([['an apple', 'g'], ['a bag of rice', 'kg'], ['a pencil', 'g'], ['a watermelon', 'kg'], ['a child', 'kg'], ['an egg', 'g']]);
+    return cq(`Which unit would you use to measure the mass of ${it[0]}?`, [opt('g'), opt('kg')], it[1], ['A kilogram is heavy, like a big bag of sugar. A gram is very light, like a paper clip.', 'Is the thing heavy or light?'], `Use ${it[1]}.`); }
+  if (d <= 3){ const kg = rand(1, 4), half = coin() ? 0 : 500; const right = half ? `${kg} kg 500 g` : `${kg} kg`;
+    return cq('What is the mass shown on the scale?', uniqOpts(right, [`${kg + 1} kg`, `${kg} kg 50 g`, `${Math.max(0, kg - 1)} kg 500 g`, `${kg} kg 500 g`]).map(x => opt(x)), right, ['Find the number the arrow points to or has just passed.', 'Each small mark between two numbers is 100 g.'], `The arrow shows ${right}.`, {visual:panel(scaleSVG(kg, half))}); }
+  const a = rand(200, 700), b = rand(100, 900 - a); return nq(`A bag of flour has a mass of ${a} g. A bag of sugar is ${b} g heavier. What is the mass of the bag of sugar?`, a + b, ['Heavier means more.', 'Add the extra mass.'], `${a} + ${b} = ${a + b} g.`, {unit:'g'});
+},
+m2_volume(d){
+  if (d <= 2){ const max = pick([5, 10]), l = rand(1, max - 1); return nq('How much water is in the beaker?', l, ['Look at the top of the water.', 'Read the number on the scale next to it.'], `The water reaches ${l} ℓ.`, {unit:'ℓ', visual:panel(beakerSVG(l, max))}); }
+  if (d === 3){ const a = rand(3, 9), b = rand(2, 9); return cq(`Jug A holds ${a} ℓ of water. Jug B holds ${b} ℓ. Which jug holds more water?`, [opt('Jug A'), opt('Jug B'), opt('same')], a > b ? 'Jug A' : a < b ? 'Jug B' : 'same', ['Compare the two numbers of litres.', 'More litres means more water.'], `${a} ℓ and ${b} ℓ.`); }
+  const t = rand(20, 60), u = rand(5, 15), k = rand(2, 4); return nq(`A tank has ${t} ℓ of water. ${k} buckets with ${u} ℓ each are poured into it. How much water is in the tank now?`, t + k * u, ['First find how much water the buckets hold altogether.', 'Then add it to the water in the tank.'], `${k} × ${u} = ${k * u} ℓ; ${t} + ${k * u} = ${t + k * u} ℓ.`, {unit:'ℓ'});
+},
+/* Time */
+m2_clock5(d){
+  const h = rand(1, 12), m = d <= 1 ? pick([0, 15, 30, 45]) : rand(0, 11) * 5;
+  const f = (a, b) => `${a}.${pad2(b)}`, right = f(h, m);
+  if (d >= 4){ const m1 = rand(1, 58); return cq('What time is it?', uniqOpts(f(h, m1), [f(h, (m1 + 5) % 60), f(h === 12 ? 1 : h + 1, m1), f(h, Math.max(0, m1 - 1))]).map(x => opt(x)), f(h, m1), ['Hour hand first: the number it has just passed.', 'Count in 5s on the minute hand, then count the small marks one by one.'], `It is ${f(h, m1)}.`, {visual:panel(clockSVG(h, m1, 220))}); }
+  return cq('What time is it?', uniqOpts(right, [f(h, (m + 5) % 60), f(h === 12 ? 1 : h + 1, m), f(h, (60 - m) % 60), f(m / 5 || 12, h * 5 % 60)]).map(x => opt(x)), right, ['The short hand shows the hour: look at the number it has just passed.', 'The long hand shows minutes. Count in 5s from 12.'], `It is ${right}.`, {visual:panel(clockSVG(h, m, 220))});
+},
+m2_duration(d){
+  const f = t => { const h = Math.floor(t / 60) % 12 || 12, m = t % 60; return `${h}.${pad2(m)} ${t < 720 ? 'a.m.' : 'p.m.'}`; };
+  if (d <= 1){ const s = rand(7, 16) * 60, k = rand(1, 3); return nq(`A class starts at ${f(s)} and ends at ${f(s + k * 60)}. How many hours long is it?`, k, ['Count on from the start time in hours.', 'Each jump of one hour moves the hour hand to the next number.'], `${f(s)} to ${f(s + k * 60)} is ${k} h.`, {unit:'h'}); }
+  if (d <= 3){ const s = rand(8, 16) * 60 + rand(0, 5) * 5, k = rand(2, 11) * 5, right = f(s + k); return cq(`A show starts at ${f(s)}. It lasts ${k} minutes. When does it end?`, uniqOpts(right, [f(s + k + 5), f(s + 60), f(s + k - 5 > s ? s + k - 5 : s + k + 10)]).map(x => opt(x)), right, ['Add the minutes to the start time.', 'If the minutes pass 60, the hour goes up by 1.'], `It ends at ${right}.`); }
+  const s = rand(8, 14) * 60 + rand(0, 11) * 5, k = rand(70, 170); const right = `${Math.floor(k / 60)} h ${k % 60} min`;
+  return cq(`Mum leaves home at ${f(s)} and comes back at ${f(s + k)}. How long was she away?`, uniqOpts(right, [`${Math.floor(k / 60) + 1} h ${k % 60} min`, `${Math.floor(k / 60)} h ${(k % 60 + 10) % 60} min`, `${k % 60} h ${Math.floor(k / 60)} min`]).map(x => opt(x)), right, ['Count on in whole hours first.', 'Then count on the minutes that are left.'], `From ${f(s)} to ${f(s + k)} is ${right}.`);
+},
+/* Shapes & graphs */
+m2_shapes2d(d){
+  if (d <= 2){ const k = pick(['half circle', 'quarter circle', 'circle', 'square', 'rectangle', 'triangle']); return cq('What is this shape called?', uniqOpts(k, SHAPES.filter(x => x !== k)).map(x => opt(x, x, {txt:1})), k, ['Count the straight sides and look for curved sides.', 'Half of a circle and a quarter of a circle each have a curved side and straight sides.'], `This is a ${k}.`, {visual:panel(shapeSVG(k, rand(0, 1)))}); }
+  const ks = shuffle(['triangle', 'circle', 'square', 'half circle']).slice(0, 2), cols = ['#7FB0FF', '#FFCB52', '#F5A3C7'], sz = [44, 64];
+  const unit = d >= 4 ? [[0, 0, 0], [1, 1, 1], [0, 2, 1]] : [[0, 0, 0], [1, 1, 1]];
+  const mk = (k, c, s) => shapeSVG(ks[k], 0, cols[c], '', sz[s]);
+  const seq = Array.from({length:6}, (_, i) => unit[i % unit.length]), nx = unit[6 % unit.length];
+  const right = `${ks[nx[0]]}|${nx[1]}|${nx[2]}`;
+  const cand = [[nx[0], nx[1], nx[2]], [1 - nx[0], nx[1], nx[2]], [nx[0], (nx[1] + 1) % 3, nx[2]], [nx[0], nx[1], 1 - nx[2]]];
+  const os = []; cand.forEach(c => { const v = `${ks[c[0]]}|${c[1]}|${c[2]}`; if (!os.find(o => o.value === v)) os.push(opt(v, '', {html:mk(c[0], c[1], c[2])})); });
+  return cq('What comes next in the pattern?', shuffle(os.slice(0, 3)), right, ['Look at the shape, the colour and the size.', 'Find the part that repeats.'], 'The pattern repeats.', {visual:panel(`<div class="shapeset">${seq.map(x => mk(...x)).join('')}<svg class="px" viewBox="0 0 10 10" width="44" height="44"><text x="5" y="8" text-anchor="middle" font-size="8" font-weight="700" fill="#D98A0B">?</text></svg></div>`)});
+},
+m2_shapes3d(d){
+  const k = pick(Object.keys(SOLID));
+  if (d <= 2) return cq('What is the name of this solid?', uniqOpts(k, Object.keys(SOLID)).map(x => opt(x, x, {txt:1})), k, ['Look at the faces: are they flat or curved?', 'Think of things at home with this shape: a dice, a box, a can of soup, a party hat or a ball.'], `This is a ${k}.`, {visual:panel(solidSVG(k))});
+  const Q = pick([['Which solid has no flat faces?', 'sphere', ['cube', 'cylinder']], ['Which solid has 6 square faces?', 'cube', ['cuboid', 'cylinder']], ['Which solid has one flat face and one point?', 'cone', ['cylinder', 'sphere']], ['Which solid can roll AND stack?', 'cylinder', ['sphere', 'cube']]]);
+  return cq(Q[0], shuffle([Q[1], ...Q[2]]).map(x => opt(x, '', {html:solidSVG(x).replace('class="big"', '').replace('max-width:150px', 'width:90px')})), Q[1], ['Imagine holding each solid.', 'A flat face can sit on the table. A curved face can roll.'], `The answer is the ${Q[1]}.`);
+},
+m2_graphs(d){
+  const SETS = [['Books read in a week', [['📘', 'Ali'], ['📗', 'Mei'], ['📕', 'Jun'], ['📙', 'Siti']]], ['Fruits sold', [['🍎', 'Apple'], ['🍌', 'Banana'], ['🍊', 'Orange'], ['🍇', 'Grapes']]]];
+  const [title, cats] = pick(SETS), key = d <= 1 ? 2 : pick([2, 5, 10]), c = cats.map(() => rand(1, 6)), i = rand(0, 3);
+  const vis = panel(graphHTML(title, cats, c).replace('Each picture stands for 1 child.', `Each picture stands for ${key}.`));
+  if (d <= 2) return nq(`How many for ${cats[i][1]}?`, c[i] * key, [`Look at the key: each picture is ${key}, not 1.`, `Count the pictures, then count in ${key}s.`], `${c[i]} pictures × ${key} = ${c[i] * key}.`, {visual:vis});
+  let j = (i + rand(1, 3)) % 4; while (c[j] === c[i]) c[j] = c[j] % 6 + 1;
+  const vis2 = panel(graphHTML(title, cats, c).replace('Each picture stands for 1 child.', `Each picture stands for ${key}.`));
+  if (d === 3) return nq(`How many more for ${cats[c[i] > c[j] ? i : j][1]} than ${cats[c[i] > c[j] ? j : i][1]}?`, Math.abs(c[i] - c[j]) * key, ['Find each amount using the key.', 'Then find the difference.'], `${Math.max(c[i], c[j])} × ${key} − ${Math.min(c[i], c[j])} × ${key} = ${Math.abs(c[i] - c[j]) * key}.`, {visual:vis2});
+  return nq('How many are there altogether?', c.reduce((t, x) => t + x, 0) * key, ['Count all the pictures.', `Each picture is ${key}. Multiply or count in ${key}s.`], `${c.reduce((t, x) => t + x, 0)} pictures × ${key} = ${c.reduce((t, x) => t + x, 0) * key}.`, {visual:vis2});
+}
+};
+const UNITS2 = [
+  {id:'v1', title:'Numbers to 1000', color:'#4E9F2F', skills:['m2_count', 'm2_place', 'm2_words', 'm2_compare', 'm2_pattern', 'm2_oddeven']},
+  {id:'v2', title:'Add & Subtract to 1000', color:'#3C7FD8', skills:['m2_addmental', 'm2_add', 'm2_sub', 'm2_wp']},
+  {id:'v3', title:'Times Tables', color:'#C9503B', skills:['m2_tables', 'm2_mult', 'm2_div', 'm2_mdwp']},
+  {id:'v4', title:'Fractions', color:'#D9623B', skills:['m2_frac', 'm2_fraccmp', 'm2_fracadd']},
+  {id:'v5', title:'Money', color:'#C98A06', skills:['m2_money', 'm2_moneywp']},
+  {id:'v6', title:'Length, Mass & Volume', color:'#8456CF', skills:['m2_length', 'm2_mass', 'm2_volume']},
+  {id:'v7', title:'Time', color:'#1A9A93', skills:['m2_clock5', 'm2_duration']},
+  {id:'v8', title:'Shapes & Graphs', color:'#3C7FD8', skills:['m2_shapes2d', 'm2_shapes3d', 'm2_graphs']}
+];
+const mk2 = (name, icon, syl, t, ex, cap) => ({name, icon, syl, tips:{t, ex, cap}});
+const SK2M = {
+  m2_count:mk2('Hundreds', '100', 'Count and read numbers to 1000 (hundreds, tens, ones)', ['A flat is 100, a rod is 10, a cube is 1.', 'Count hundreds first, then tens, then ones.'], () => flats(2, 3, 4), '2 hundreds 3 tens 4 ones = 234'),
+  m2_place:mk2('Place value', 'HTO', 'Place value and expanded form to 1000', ['In 582: 5 hundreds, 8 tens, 2 ones.', '582 = 500 + 80 + 2'], () => '<div class="seq"><span>500</span><span>80</span><span>2</span></div>', '500 + 80 + 2 = 582'),
+  m2_words:mk2('Number words', 'Aa', 'Read and write numbers to 1000 in words', ['Say the hundreds, then “and”, then the tens and ones.', '345 = three hundred and forty-five'], () => '<div class="seq"><span>345</span></div>', 'three hundred and forty-five'),
+  m2_compare:mk2('Compare & order', '#compare', 'Compare and order numbers to 1000', ['Compare hundreds first, then tens, then ones.', 'The open mouth of > or < eats the bigger number.'], () => '<div class="seq"><span>452</span><span>&gt;</span><span>425</span></div>', '452 > 425'),
+  m2_pattern:mk2('Patterns', '…', 'Number patterns: count on and back in 1s, 10s, 100s', ['Find the jump between numbers.', 'Use the same jump to find the missing number.'], () => '<div class="seq"><span>230</span><span>330</span><span>430</span></div>', 'Jump of 100'),
+  m2_oddeven:mk2('Odd & even', '2|3', 'Odd and even numbers', ['Even numbers can be put in pairs.', 'Look at the ones digit: 0 2 4 6 8 are even.'], () => '<div class="seq"><span>2</span><span>4</span><span>6</span><span>8</span></div>', 'Even numbers'),
+  m2_addmental:mk2('Mental maths', '🧠', 'Add and subtract ones, tens and hundreds mentally', ['Only one place changes when you add tens or hundreds.', '340 + 200: the hundreds change: 540.'], () => '<div class="seq"><span>340</span><span>+200</span><span>540</span></div>', '340 + 200 = 540'),
+  m2_add:mk2('Addition', '+', 'Add within 1000 with regrouping', ['Start with the ones.', '10 ones = 1 ten; 10 tens = 1 hundred.'], () => column3(256, 178, '+'), 'Carry when you get 10 or more'),
+  m2_sub:mk2('Subtraction', '−', 'Subtract within 1000 with regrouping', ['Start with the ones.', 'Not enough? Change 1 ten into 10 ones.'], () => column3(432, 158, '−'), 'Regroup when you need to'),
+  m2_wp:mk2('Word problems', '?', 'Solve 1-step and 2-step word problems', ['Read twice. Find what you need to find.', 'Draw bars to show the parts and the whole.'], () => '<div class="bigemo">📖</div>', 'Draw a model'),
+  m2_tables:mk2('Times tables', '×', 'Multiplication tables of 2, 3, 4, 5 and 10', ['Count in 2s, 3s, 4s, 5s and 10s.', 'If you know 4 × 5, then 5 × 4 is the same.'], () => '<div class="seq"><span>3</span><span>6</span><span>9</span><span>12</span></div>', 'Counting in 3s'),
+  m2_mult:mk2('Multiply', '⊞', 'Multiplication as equal groups and arrays', ['groups × number in each group', 'An array has rows and columns.'], () => plates(3, 4, '🍓'), '3 × 4 = 12'),
+  m2_div:mk2('Divide', '÷', 'Division as sharing and grouping', ['Sharing: give one each, again and again.', 'Use the times table backwards.'], () => tray(12, '🍪'), '12 ÷ 3 = 4'),
+  m2_mdwp:mk2('× ÷ problems', '?', 'Word problems with multiplication and division', ['Equal groups → multiply.', 'Share equally or make groups → divide.'], () => '<div class="bigemo">🧺</div>', 'Equal groups'),
+  m2_frac:mk2('Fractions', '½', 'Fraction of a whole: numerator and denominator', ['The bottom number tells how many equal parts.', 'The top number tells how many parts we take.'], () => fracShape(3, 4, 'circle'), '3/4 is shaded'),
+  m2_fraccmp:mk2('Compare fractions', '⅓', 'Compare and order unit fractions and like fractions', ['More pieces → smaller pieces.', 'Same bottom number → compare the tops.'], () => `<div class="shapeset">${fracShape(1, 2, 'bar')}${fracShape(1, 4, 'bar')}</div>`, '1/2 > 1/4'),
+  m2_fracadd:mk2('Add fractions', '¼+', 'Add and subtract like fractions within 1 whole', ['Same bottom number: add or take away the tops.', '1 whole = 8/8 = 5/5 …'], () => fracShape(3, 5, 'bar'), '1/5 + 2/5 = 3/5'),
+  m2_money:mk2('Dollars & cents', '$', 'Read, write and compare money in $ and ¢', ['$1 = 100¢', 'Write $3.45: dollars, a dot, then two digits of cents.'], () => cashHTML([2, 1]) + coinsHTML([20, 20, 5]), '$3.45'),
+  m2_moneywp:mk2('Money problems', '🛒', 'Word problems with money', ['Altogether → add.', 'Change = money paid − cost.'], () => '<div class="bigemo">🛒</div>', 'Shopping maths'),
+  m2_length:mk2('Metres', 'm', 'Length in metres and centimetres', ['1 m = 100 cm', 'Use m for long things, cm for short things.'], () => '<div class="bigemo">📏</div>', '1 m = 100 cm'),
+  m2_mass:mk2('Mass', 'kg', 'Mass in kilograms and grams', ['1 kg = 1000 g', 'Read the scale where the arrow points.'], () => scaleSVG(2, 500), '2 kg 500 g'),
+  m2_volume:mk2('Volume', 'ℓ', 'Volume of liquid in litres', ['Read the level at the top of the water.', 'More litres → more water.'], () => beakerSVG(3, 5), '3 ℓ'),
+  m2_clock5:mk2('Telling time', '#clock', 'Tell time to 5 minutes', ['Short hand: hours. Long hand: minutes.', 'Count the minutes in 5s.'], () => clockSVG(3, 25, 140), '3.25'),
+  m2_duration:mk2('How long?', '⏱', 'Duration in hours and minutes; a.m. and p.m.', ['Count on whole hours first, then minutes.', 'a.m. = morning, p.m. = afternoon and night.'], () => '<div class="seq"><span>9.00</span><span>→</span><span>11.30</span></div>', '2 h 30 min'),
+  m2_shapes2d:mk2('2D shapes', '#tri', '2D shapes including half and quarter circles; patterns', ['Count the sides and corners.', 'Patterns can change shape, size and colour.'], () => shapeSVG('half circle', 0, '#FFCB52', 'big', 110), 'half circle'),
+  m2_shapes3d:mk2('3D shapes', '🧊', 'Cube, cuboid, cone, cylinder and sphere', ['Flat faces can sit; curved faces can roll.', 'A cube has 6 square faces.'], () => solidSVG('cylinder'), 'cylinder'),
+  m2_graphs:mk2('Picture graphs', '#bars', 'Picture graphs with a key (scale)', ['Always read the key first.', 'Each picture may stand for 2, 5 or 10.'], () => '<div class="bigemo">📊</div>', 'Read the key')
+};
+
+/* ================= Primary 2: English ================= */
+const tier = (d, E, C, H) => d <= 1 ? E.concat(C) : d <= 3 ? C.concat(E) : H.concat(H, C);
+const fillQ = (S, hints, extra) => cq(S[0], shuffle([S[1], ...S[2]]).map(x => opt(x, x, {txt:1})), S[1], hints, S[0].replace('___', S[1]), extra);
+const GEN2E = {
+e2_vowelteam(d){
+  const S = pick(tier(d,
+    [['Which word has the same “ai” sound as RAIN?', 'train', ['ten', 'ran']], ['Which word has the same “ee” sound as TREE?', 'sheep', ['shop', 'step']], ['Which word has the same “oa” sound as BOAT?', 'coat', ['cot', 'cat']], ['Which word has the same “ay” sound as PLAY?', 'day', ['dog', 'did']]],
+    [['Choose the correct spelling: The ___ is shining.', 'rain', ['rane', 'rayn']], ['Choose the correct spelling: I can see a ___ in the sky.', 'kite', ['kyte', 'kight']], ['Choose the correct spelling: We ___ to the beach.', 'went', ['wennt', 'whent']], ['Choose the correct spelling: The ___ is very bright tonight.', 'light', ['lite', 'lihgt']], ['Choose the correct spelling: Please ___ the window.', 'close', ['cloze', 'clowse']], ['Choose the correct spelling: I like to ___ books.', 'read', ['reed', 'raed']]],
+    [['Which word does NOT have a long “a” sound?', 'bag', ['bake', 'paint']], ['Which word does NOT have a long “e” sound?', 'bed', ['team', 'field']], ['Which word does NOT have a long “i” sound?', 'pin', ['pie', 'night']], ['Which word does NOT have a long “o” sound?', 'pot', ['snow', 'toast']]]));
+  return fillQ(S, ['Say each word out loud and listen to the vowel sound.', 'Two letters can make one long vowel sound: ai, ay, ee, ea, oa, ow, igh, ie.'], {say:S[0]});
+},
+e2_rcontrol(d){
+  const S = pick(tier(d,
+    [['Which word has the “ar” sound as in CAR?', 'star', ['stay', 'stop']], ['Which word has the “or” sound as in FORK?', 'horse', ['house', 'hose']], ['Which word has the “er” sound as in HER?', 'bird', ['bid', 'bed']]],
+    [['Fill in: The ___ (b_rd) is singing.', 'bird', ['berd', 'burd']], ['Fill in: Please ___ (t_rn) off the light.', 'turn', ['tern', 'tirn']], ['Fill in: My ___ (sh_rt) is blue.', 'shirt', ['shurt', 'shert']], ['Fill in: We went to the ___ (p_rk).', 'park', ['pork', 'perk']], ['Fill in: The ___ (st_rm) was loud.', 'storm', ['starm', 'sturm']]],
+    [['Choose the correct spelling: The ___ looked at the stars.', 'girl', ['gurl', 'gerl']], ['Choose the correct spelling: My ___ is in Primary 4.', 'sister', ['sistur', 'sistir']], ['Choose the correct spelling: I got the ___ prize!', 'first', ['ferst', 'furst']], ['Choose the correct spelling: The farmer has a big ___.', 'farm', ['form', 'ferm']]]));
+  return fillQ(S, ['Listen for the vowel + r sound.', 'er, ir and ur can sound the same. Picture the word in your storybook.'], {say:S[0]});
+},
+e2_silent(d){
+  const S = pick(tier(d,
+    [['Which letter is silent in KNIFE?', 'k', ['n', 'f']], ['Which letter is silent in WRITE?', 'w', ['r', 't']], ['Which letter is silent in LAMB?', 'b', ['l', 'm']]],
+    [['Choose the correct spelling: I ___ the answer!', 'know', ['no', 'kno']], ['Choose the correct spelling: Please ___ on the door.', 'knock', ['nock', 'knok']], ['Choose the correct spelling: Can you ___ a letter?', 'write', ['rite', 'wright']], ['Choose the correct spelling: The baby can ___ up the stairs.', 'climb', ['clime', 'clim']], ['Choose the correct spelling: The ___ on my watch is gold.', 'wrist', ['rist', 'wirst']]],
+    [['Which word has a SOFT “c” (says s)?', 'city', ['cat', 'cup']], ['Which word has a SOFT “g” (says j)?', 'giant', ['goat', 'gate']], ['Which word says “f” but has no letter f?', 'phone', ['pony', 'hope']], ['Which word has a silent “h”?', 'hour', ['house', 'happy']]]));
+  return fillQ(S, ['Say the word out loud. Which letters can you NOT hear?', 'Some letters are silent: kn, wr, mb. c and g can be soft before e, i and y.'], {say:S[0]});
+},
+e2_spell(d){
+  const W = pick(tier(d,
+    [['because', ['becuase', 'becos']], ['friend', ['freind', 'frend']], ['people', ['peple', 'peopel']], ['school', ['skool', 'scool']], ['there', ['thare', 'ther']]],
+    [['beautiful', ['beautifull', 'butiful']], ['different', ['diffrent', 'differant']], ['favourite', ['favrite', 'favourit']], ['answer', ['anser', 'answar']], ['library', ['libary', 'libery']], ['Wednesday', ['Wensday', 'Wednsday']]],
+    [['February', ['Febuary', 'Februrary']], ['interesting', ['intresting', 'interisting']], ['probably', ['probly', 'probabley']], ['surprise', ['suprise', 'surprize']], ['believe', ['beleive', 'belive']]]));
+  return cq('Which word is spelled correctly?', shuffle([W[0], ...W[1]]).map(x => opt(x, x, {txt:1})), W[0], ['Say the word slowly in parts.', 'Check each part with how it looks in your books.'], `“${W[0]}” is spelled ${W[0].split('').join('-')}.`, {say:`Which word is spelled correctly? ${W[0]}.`});
+},
+e2_prefix(d){
+  const S = pick(tier(d,
+    [['The opposite of HAPPY is ___.', 'unhappy', ['dishappy', 'rehappy']], ['The opposite of LOCK is ___.', 'unlock', ['dislock', 'relock']], ['The opposite of LIKE is ___.', 'dislike', ['unlike', 'relike']]],
+    [['I spilt my paint. I must ___ the picture.', 'redraw', ['undraw', 'disdraw']], ['The boy did not obey. He ___ his mother.', 'disobeyed', ['unobeyed', 'reobeyed']], ['Mum asked me to ___ my bag after the trip.', 'unpack', ['dispack', 'repack']], ['The room was not tidy. It was ___.', 'untidy', ['distidy', 'retidy']]],
+    [['Our team did not agree. We ___.', 'disagreed', ['unagreed', 'reagreed']], ['The magician made the coin ___.', 'disappear', ['unappear', 'reappear']], ['Please ___ your spelling before you hand it in.', 'recheck', ['uncheck', 'discheck']], ['It is not fair. It is ___.', 'unfair', ['disfair', 'refair']]]));
+  return fillQ(S, ['A prefix goes at the start of a word and changes its meaning.', 'un- and dis- mean “not” or “the opposite”. re- means “again”.']);
+},
+e2_suffix(d){
+  const S = pick(tier(d,
+    [['A dog that helps is ___.', 'helpful', ['helpless', 'helply']], ['She sang in a soft way. She sang ___.', 'softly', ['softful', 'softless']], ['A tree with no leaves is ___.', 'leafless', ['leafful', 'leafly']]],
+    [['Be ___ when you cross the road.', 'careful', ['careless', 'carely']], ['He ran ___ to catch the bus.', 'quickly', ['quickful', 'quickless']], ['The ___ boy forgot his bag again.', 'careless', ['careful', 'carely']], ['Thank you! You are very ___.', 'kind', ['kindless', 'kindful']]],
+    [['My kite flew ___ than yours.', 'higher', ['highest', 'more high']], ['This is the ___ day of my life!', 'happiest', ['happyest', 'happier']], ['The baby is sleeping ___.', 'peacefully', ['peaceful', 'peacefuly']], ['Grandpa’s stories are always ___.', 'wonderful', ['wonderly', 'wonderless']]]));
+  return fillQ(S, ['A suffix goes at the end of a word.', '-ful means “full of”, -less means “without”, -ly tells how something is done.']);
+},
+e2_homophone(d){
+  const S = pick(tier(d,
+    [['I ___ a big dog at the park.', 'saw', ['sore', 'sow']], ['The ___ is shining brightly.', 'sun', ['son', 'sum']], ['I have ___ apples.', 'eight', ['ate', 'ait']]],
+    [['I ___ my lunch quickly.', 'ate', ['eight', 'eat']], ['The wind ___ my hat away.', 'blew', ['blue', 'blow']], ['Can you ___ the bell?', 'hear', ['here', 'hair']], ['We bought ___ new books.', 'two', ['too', 'to']], ['Look over ___!', 'there', ['their', "they're"]]],
+    [['The children packed ___ bags.', 'their', ['there', "they're"]], ['I don’t know ___ it will rain.', 'whether', ['weather', 'wether']], ['The ___ carried the ball in its mouth.', 'dog', ['dock', 'dug']], ['___ going to the zoo tomorrow.', "They're", ['Their', 'There']], ['A ___ is a female deer.', 'doe', ['dough', 'do']]]));
+  return fillQ(S, ['Homophones sound the same but are spelled differently and mean different things.', 'Read the whole sentence. Which meaning fits?']);
+},
+e2_synant(d){
+  const ant = coin();
+  const S = ant ? pick(tier(d, [['big', 'small', ['large', 'huge']], ['hot', 'cold', ['warm', 'sunny']], ['up', 'down', ['over', 'high']]], [['brave', 'scared', ['strong', 'bold']], ['early', 'late', ['soon', 'first']], ['loud', 'quiet', ['noisy', 'happy']], ['empty', 'full', ['clean', 'open']]], [['ancient', 'modern', ['old', 'broken']], ['generous', 'selfish', ['kind', 'rich']], ['shallow', 'deep', ['narrow', 'wet']]]))
+                : pick(tier(d, [['big', 'large', ['tiny', 'tall']], ['glad', 'happy', ['sad', 'angry']], ['fast', 'quick', ['slow', 'late']]], [['shout', 'yell', ['whisper', 'sing']], ['tired', 'sleepy', ['awake', 'hungry']], ['begin', 'start', ['finish', 'stop']], ['tiny', 'little', ['huge', 'heavy']]], [['enormous', 'huge', ['tiny', 'heavy']], ['delighted', 'pleased', ['upset', 'tired']], ['furious', 'very angry', ['very happy', 'very sleepy']]]));
+  return cq(`Which word means the ${ant ? 'OPPOSITE of' : 'SAME as'} “${S[0]}”?`, shuffle([S[1], ...S[2]]).map(x => opt(x, x, {txt:1})), S[1], [ant ? 'Opposite means as different as can be.' : 'Same means nearly the same meaning.', `Put each word into a sentence with “${S[0]}”. Does it ${ant ? 'flip' : 'keep'} the meaning?`], `“${S[0]}” and “${S[1]}” are ${ant ? 'opposites' : 'synonyms'}.`);
+},
+e2_tense(d){
+  const S = pick(tier(d,
+    [['Yesterday, I ___ to the park.', 'went', ['go', 'goes']], ['Last night, we ___ a movie.', 'watched', ['watch', 'watches']], ['She ___ a song at the concert last week.', 'sang', ['sing', 'sings']]],
+    [['Look! The cat ___ the fish.', 'is eating', ['ate', 'eats']], ['When I came home, Mum ___ dinner.', 'was cooking', ['is cooking', 'cooks']], ['The children ___ when the bell rang.', 'were playing', ['was playing', 'are playing']], ['I ___ my homework every day.', 'do', ['did', 'doing']]],
+    [['By the time we arrived, the bus ___.', 'had left', ['has left', 'leaves']], ['He ___ his keys, so he could not open the door.', 'had lost', ['loses', 'has lose']], ['While Dad ___ the car, it started to rain.', 'was washing', ['washed', 'is washing']], ['Mei ___ the piano since she was five.', 'has played', ['plays', 'played']]]));
+  return fillQ(S, ['Look for time clues: yesterday, now, look!, when, while, every day.', 'Past = already happened. -ing with am/is/are = happening now; with was/were = happening in the past.']);
+},
+e2_agree(d){
+  const S = pick(tier(d,
+    [['My brother ___ a red bicycle.', 'has', ['have', 'having']], ['The birds ___ singing.', 'are', ['is', 'am']], ['She ___ not like spiders.', 'does', ['do', 'doing']]],
+    [['Each of the boys ___ a book.', 'has', ['have', 'are']], ['The flowers in the vase ___ pretty.', 'are', ['is', 'was']], ['Neither Ali nor Ben ___ here.', 'is', ['are', 'were']], ['There ___ many people at the party.', 'were', ['was', 'is']]],
+    [['A flock of birds ___ flying south.', 'is', ['are', 'were']], ['One of my friends ___ in China.', 'lives', ['live', 'living']], ['The news ___ very exciting.', 'was', ['were', 'are']], ['Everybody ___ a turn.', 'gets', ['get', 'getting']]]));
+  return fillQ(S, ['Find WHO or WHAT the sentence is about.', 'One person or thing: is, has, does, -s. More than one: are, have, do.']);
+},
+e2_compare(d){
+  const S = pick(tier(d,
+    [['An elephant is ___ than a cat.', 'bigger', ['big', 'biggest']], ['Ali is the ___ boy in the class.', 'tallest', ['taller', 'tall']], ['Today is ___ than yesterday.', 'hotter', ['hot', 'hottest']]],
+    [['This puzzle is ___ than that one.', 'easier', ['easyer', 'easiest']], ['Mei is the ___ of the three sisters.', 'youngest', ['younger', 'young']], ['My drawing is ___ than yours.', 'better', ['gooder', 'best']], ['This is the ___ day of the year.', 'hottest', ['hotest', 'hotter']]],
+    [['This is the ___ story I have ever read.', 'most interesting', ['interestingest', 'more interesting']], ['Your cough is ___ today than yesterday.', 'worse', ['badder', 'worst']], ['Of all the fruits, durians are the ___.', 'most expensive', ['expensivest', 'more expensive']], ['She ran ___ than anyone else.', 'faster', ['more fast', 'fastest']]]));
+  return fillQ(S, ['Comparing two things? Use -er or “more”.', /better|best/.test(S[1]) ? 'Some words change completely: bad → worse → worst.' : 'Some words change completely: good → better → best.']);
+},
+e2_adverb(d){
+  const S = pick(tier(d,
+    [['The tortoise walked ___.', 'slowly', ['slow', 'slowed']], ['The baby slept ___.', 'quietly', ['quiet', 'quieter']], ['Jun ran ___ to the finish line.', 'quickly', ['quick', 'quicker']]],
+    [['She smiled ___ at the new girl.', 'kindly', ['kind', 'kindness']], ['The thunder roared ___.', 'loudly', ['loud', 'louder']], ['He did his work ___.', 'carefully', ['careful', 'care']], ['Please speak ___ in the library.', 'softly', ['soft', 'softer']]],
+    [['The team played ___ and won the cup.', 'well', ['good', 'goodly']], ['The fire spread ___ through the forest.', 'rapidly', ['rapid', 'rapidness']], ['She ___ opened the old box.', 'carefully', ['careful', 'carefulness']], ['The children waited ___ for the show to start.', 'patiently', ['patient', 'patience']]]));
+  return fillQ(S, ['The missing word tells HOW something is done.', 'Many “how” words end in -ly.']);
+},
+e2_preptime(d){
+  const S = pick(tier(d,
+    [['My birthday is ___ May.', 'in', ['on', 'at']], ['We have swimming ___ Monday.', 'on', ['in', 'at']], ['School starts ___ 7.30 a.m.', 'at', ['on', 'in']]],
+    [['I was born ___ 2019.', 'in', ['on', 'at']], ['We open presents ___ Christmas Day.', 'on', ['in', 'at']], ['The owl hunts ___ night.', 'at', ['in', 'on']], ['We play outside ___ the afternoon.', 'in', ['at', 'on']]],
+    [['The shop is closed ___ Sundays.', 'on', ['in', 'at']], ['Please finish your work ___ Friday.', 'by', ['at', 'in']], ['I have lived here ___ three years.', 'for', ['since', 'at']], ['She has been waiting ___ 9 o’clock.', 'since', ['for', 'on']]]));
+  return fillQ(S, ['in → months, years, parts of the day. on → days and dates. at → clock times and night.', 'Read the time word right after the gap.']);
+},
+e2_quant(d){
+  const S = pick(tier(d,
+    [['I have ___ sweets left. Only two!', 'a few', ['a little', 'much']], ['There is ___ milk in the glass.', 'a little', ['a few', 'many']], ['How ___ pencils do you have?', 'many', ['much', 'little']]],
+    [['Is there ___ juice in the fridge?', 'any', ['some', 'many']], ['We need ___ eggs to bake a cake.', 'some', ['any', 'much']], ['There isn’t ___ time left.', 'much', ['many', 'few']], ['___ of the children like ice cream.', 'All', ['Every', 'Each']]],
+    [['There are ___ apples in the basket than oranges.', 'fewer', ['less', 'little']], ['I drank ___ water than my brother.', 'less', ['fewer', 'few']], ['___ student has a locker.', 'Every', ['All', 'Many']], ['Very ___ people came because of the rain.', 'few', ['little', 'less']]]));
+  return fillQ(S, ['Can you count the thing one by one (sweets)? Or not (milk)?', 'Countable: many, a few, fewer. Uncountable: much, a little, less. Questions and “not”: any.']);
+},
+e2_conj(d){
+  const S = pick(tier(d,
+    [['I like apples ___ bananas.', 'and', ['but', 'so']], ['I was tired, ___ I went to bed early.', 'so', ['and', 'or']], ['Do you want rice ___ noodles?', 'or', ['so', 'because']]],
+    [['She stayed home ___ she was sick.', 'because', ['so', 'but']], ['I wanted to play, ___ it was raining.', 'but', ['so', 'or']], ['Brush your teeth ___ you go to bed.', 'before', ['after', 'because']], ['We went for a swim ___ we finished lunch.', 'after', ['before', 'or']]],
+    [['___ it was raining, we still played football.', 'Although', ['Because', 'So']], ['You cannot go out ___ you finish your homework.', 'until', ['and', 'because']], ['Hold my hand ___ we cross the road.', 'while', ['but', 'so']], ['I will help you ___ you help me.', 'if', ['but', 'or']]]));
+  return fillQ(S, ['Joining words link ideas.', 'and = add · but = surprise · so = result · because = reason · or = choice · before/after = time.']);
+},
+e2_punct(d){
+  const set = pick(tier(d,
+    [['Where is my bag?', 'Where is my bag.', 'where is my bag?'], ['What a beautiful day!', 'what a beautiful day.', 'What a beautiful day?'], ['My name is Mei.', 'my name is Mei.', 'My name is mei.']],
+    [['I bought pens, pencils and erasers.', 'I bought pens pencils and erasers.', 'I bought, pens, pencils, and, erasers.'], ['“Come here,” said Mum.', 'Come here, said Mum.', '“Come here, said Mum.”'], ['We went to Sentosa on Saturday.', 'We went to sentosa on saturday.', 'we went to Sentosa on Saturday.'], ['Tom’s dog is very friendly.', 'Toms dog is very friendly.', 'Toms’ dog is very friendly.']],
+    [['“Can we go to the park?” asked Ben.', '“Can we go to the park.” asked Ben.', 'Can we go to the park? asked Ben.'], ['The girls’ bags are on the table.', 'The girl’s bags are on the table.', 'The girls bags are on the table.'], ['It’s time to feed the cat its dinner.', 'Its time to feed the cat it’s dinner.', 'It’s time to feed the cat it’s dinner.']]));
+  return cq('Which sentence is written correctly?', shuffle(set).map(x => opt(x, x, {txt:1})), set[0], ['Check: capital letter at the start and for names; the right mark at the end.', 'Commas go between things in a list. Speech marks go around the exact words spoken. ’s shows who owns something.'], `“${set[0]}” is correct.`);
+},
+e2_edit(d){
+  const S = pick(tier(d,
+    [['Find the wrong word: “She go to school every day.”', 'go', ['She', 'school']], ['Find the wrong word: “I has two brothers.”', 'has', ['I', 'brothers']], ['Find the wrong word: “The dog wag its tail.”', 'wag', ['dog', 'tail']]],
+    [['Find the wrong word: “Yesterday we buyed some fruit.”', 'buyed', ['Yesterday', 'fruit']], ['Find the wrong word: “There is three cats on the wall.”', 'is', ['three', 'wall']], ['Find the wrong word: “He runned to the bus stop.”', 'runned', ['He', 'stop']], ['Find the wrong word: “Mei and me went shopping.”', 'me', ['Mei', 'shopping']]],
+    [['Find the wrong word: “Each of the boys have a pencil.”', 'have', ['Each', 'pencil']], ['Find the wrong word: “She is more taller than her sister.”', 'more', ['taller', 'sister']], ['Find the wrong word: “I have less friends than him.”', 'less', ['friends', 'have']], ['Find the wrong word: “The childrens are playing.”', 'childrens', ['are', 'playing']]]));
+  return fillQ(S, ['Read the sentence aloud. Which word sounds wrong?', 'Check the action word: does it match who is doing it and when?']);
+},
+e2_join(d){
+  const S = pick(tier(d,
+    [['I was hungry. I ate a sandwich.', 'I was hungry, so I ate a sandwich.', ['I was hungry but I ate a sandwich.', 'I was hungry or I ate a sandwich.']], ['Ali likes cats. Ali likes dogs.', 'Ali likes cats and dogs.', ['Ali likes cats but dogs.', 'Ali likes cats so dogs.']]],
+    [['It rained. We stayed indoors.', 'We stayed indoors because it rained.', ['We stayed indoors but it rained.', 'It rained because we stayed indoors.']], ['The cake was nice. It was too sweet.', 'The cake was nice but it was too sweet.', ['The cake was nice so it was too sweet.', 'The cake was nice because it was too sweet.']], ['Mei finished her homework. Mei watched TV.', 'After Mei finished her homework, she watched TV.', ['Before Mei finished her homework, she watched TV.', 'Mei watched TV, so she finished her homework.']]],
+    [['The boy is my cousin. The boy is wearing a red cap.', 'The boy who is wearing a red cap is my cousin.', ['The boy which is wearing a red cap is my cousin.', 'The boy is my cousin who red cap.']], ['It was raining. We still went out.', 'Although it was raining, we still went out.', ['Because it was raining, we still went out.', 'It was raining so we still went out.']], ['She was tired. She kept running.', 'Even though she was tired, she kept running.', ['She was tired so she kept running.', 'She was tired because she kept running.']]]));
+  return cq(`Join the sentences: “${S[0]}”`, shuffle([S[1], ...S[2]]).map(x => opt(x, x, {txt:1})), S[1], ['How are the two ideas linked: adding, a reason, a result, a surprise or time?', 'Read your joined sentence. Does it mean the same as the two sentences?'], S[1]);
+},
+e2_build(d){
+  const sen = pick(tier(d,
+    ['My grandmother lives in a small flat.', 'The children are playing in the field.', 'We went to the zoo on Sunday.'],
+    ['After lunch, my brother and I played chess.', 'The little girl was scared of the loud thunder.', 'Every morning, Dad walks our dog in the park.'],
+    ['Although it was late, the children were still wide awake.', 'The tired farmer sat under the tree and fell asleep.', 'When the bell rang, all the pupils lined up quietly.']));
+  const ws = sen.split(' ');
+  return {prompt:'Make a sentence. Tap the words in the right order.', visual:'', kind:'order', tiles:shuffle(ws), answer:ws, longTiles:1, hints:['Find the word with a capital letter. It goes first.', 'Who is the sentence about? What did they do?', 'The word with the full stop goes last. Read it aloud to check.'], explain:sen};
+},
+e2_comp(d){
+  const P = pick([
+    {t:'Last Saturday, Ravi and his father went fishing at the reservoir. They woke up at six o’clock and packed sandwiches, water and bait. By noon, Ravi had caught three small fish. His father caught one big one. They let all the small fish go back into the water.', q:[['When did Ravi go fishing?', 'last Saturday', ['last Sunday', 'yesterday']], ['How many fish did Ravi catch?', 'three', ['one', 'four']], ['What did they do with the small fish?', 'let them go', ['cooked them', 'sold them']]]},
+    {t:'Siti’s class planted green beans in paper cups. Every day, they watered the beans and placed the cups near the window. After a week, tiny shoots appeared. Siti measured hers with a ruler. It was four centimetres tall!', q:[['Where did the class put the cups?', 'near the window', ['under the table', 'in the cupboard']], ['When did the shoots appear?', 'after a week', ['after a day', 'after a month']], ['How tall was Siti’s plant?', 'four centimetres', ['four metres', 'forty centimetres']]]}
+  ]);
+  const [q, a, bad] = pick(P.q);
+  return cq(q, shuffle([a, ...bad]).map(x => opt(x, x, {txt:1})), a, ['Find the key word from the question in the story.', 'Read the sentence around it carefully.'], `The story says: ${a}.`, {visual:panel(`<p class="story">${hx(P.t)}</p>`), say:`${P.t} ${q}`});
+},
+e2_infer(d){
+  const P = pick([
+    {t:'Jun stared at the clock. It was almost ten. His tummy rumbled loudly. He had skipped breakfast because he woke up late.', q:[['How did Jun feel?', 'hungry', ['full', 'sleepy']], ['Why did Jun skip breakfast?', 'he woke up late', ['he was not hungry', 'there was no food']]]},
+    {t:'Aisha’s eyes filled with tears as she hugged her grandmother at the airport. “I will miss you,” she whispered. The plane would leave in an hour.', q:[['How did Aisha feel?', 'sad', ['excited', 'angry']], ['Where was the grandmother probably going?', 'away on a plane', ['to the market', 'to school']]]},
+    {t:'The ground was wet and there were puddles everywhere. People were closing their umbrellas and the sun was peeping through the clouds.', q:[['What had just happened?', 'it had just rained', ['it was snowing', 'there was a fire']], ['What is the weather like now?', 'it is clearing up', ['it is getting darker', 'a storm is starting']]]}
+  ]);
+  const [q, a, bad] = pick(P.q);
+  return cq(q, shuffle([a, ...bad]).map(x => opt(x, x, {txt:1})), a, ['The story does not say it directly. Look for clues.', 'What do the clues tell you? Use what you know too.'], `The clues tell us: ${a}.`, {visual:panel(`<p class="story">${hx(P.t)}</p>`), say:`${P.t} ${q}`});
+},
+e2_vocab(d){
+  const P = pick([
+    {t:'The puppy was so tiny that it could fit into Mei’s palm.', w:'tiny', a:'very small', o:['very loud', 'very fast']},
+    {t:'After the long walk, Grandpa was exhausted and fell asleep on the sofa.', w:'exhausted', a:'very tired', o:['very hungry', 'very happy']},
+    {t:'The children were thrilled when they heard they were going to the beach.', w:'thrilled', a:'very excited', o:['very scared', 'very bored']},
+    {t:'The old bridge was fragile, so only one person could cross at a time.', w:'fragile', a:'easily broken', o:['very strong', 'very long']},
+    {t:'Ben was reluctant to jump into the cold pool.', w:'reluctant', a:'not wanting to', o:['very keen', 'too tired']}
+  ]);
+  return cq(`What does “${P.w}” mean?`, shuffle([P.a, ...P.o]).map(x => opt(x, x, {txt:1})), P.a, ['Find the word in the sentence.', 'Read the rest of the sentence. What clues tell you the meaning?'], `“${P.w}” means ${P.a}.`, {visual:panel(`<p class="story">${hx(P.t)}</p>`), say:P.t});
+},
+e2_seq(d){
+  const s = pick([
+    ['Ali felt very thirsty after football.', 'He walked to the canteen.', 'He bought a cold drink.', 'He drank it all at once.', 'He felt much better.'],
+    ['The caterpillar hatched from a tiny egg.', 'It ate many leaves and grew bigger.', 'It made a hard shell around itself.', 'A butterfly came out of the shell.', 'The butterfly flew away.'],
+    ['Mum mixed flour, sugar and eggs.', 'She poured the mixture into a tin.', 'She baked it in the oven.', 'She let the cake cool down.', 'We shared the cake with our neighbours.'],
+    ['Priya found a lost kitten in the rain.', 'She carried it home in her jacket.', 'Mum dried it with a towel.', 'They gave it some warm milk.', 'The kitten fell asleep on the sofa.'],
+    ['The class planned a picnic.', 'Everyone packed food and drinks.', 'They took a bus to the park.', 'They ate under a big tree.', 'They cleaned up and went home.'],
+    ['Ben’s tooth felt wobbly.', 'He wiggled it with his tongue.', 'It fell out during lunch.', 'He put it in a small box.', 'He showed it proudly to Dad.']]);
+  return {prompt:'Put the story in order. Tap what happened first.', visual:'', kind:'order', tiles:shuffle(s), answer:s, longTiles:1, hints:['What must happen before anything else?', 'Read your order like a story. Does each step make sense after the one before?'], explain:s.join(' ')};
+}
+};
+const EN_UNITS2 = [
+  {id:'w1', title:'Phonics & Spelling', color:'#3C7FD8', skills:['e2_vowelteam', 'e2_rcontrol', 'e2_silent', 'e2_spell']},
+  {id:'w2', title:'Word Power', color:'#4E9F2F', skills:['e2_prefix', 'e2_suffix', 'e2_homophone', 'e2_synant']},
+  {id:'w3', title:'Grammar', color:'#C9503B', skills:['e2_tense', 'e2_agree', 'e2_compare', 'e2_adverb', 'e2_preptime', 'e2_quant', 'e2_conj']},
+  {id:'w4', title:'Writing Sentences', color:'#C98A06', skills:['e2_punct', 'e2_edit', 'e2_join', 'e2_build']},
+  {id:'w5', title:'Reading', color:'#8456CF', skills:['e2_comp', 'e2_infer', 'e2_vocab', 'e2_seq']}
+];
+const eT = (name, icon, syl, t, cap) => ({name, icon, syl, tips:{t, ex:() => `<div class="seq"><span>${cap}</span></div>`, cap:''}});
+const SK2E = {
+  e2_vowelteam:eT('Vowel teams', 'ai', 'Long vowel teams: ai ay ee ea oa ow igh ie', ['Two vowels together often say one long sound.', 'rain, play, tree, read, boat, snow, light, pie'], 'rain · tree · boat'),
+  e2_rcontrol:eT('Bossy r', 'ar', 'r-controlled vowels: ar, or, er, ir, ur', ['The r changes the vowel sound.', 'car, fork, her, bird, turn'], 'car · fork · bird'),
+  e2_silent:eT('Silent letters', 'kn', 'Silent letters (kn, wr, mb), soft c and g, ph', ['Some letters are silent: knee, write, lamb.', 'c and g are soft before e, i, y: city, giant.'], 'knee · write · lamb'),
+  e2_spell:eT('Tricky spellings', 'abc', 'Spell common P2 words correctly', ['Break long words into parts: beau-ti-ful.', 'Look, say, cover, write, check.'], 'beau-ti-ful'),
+  e2_prefix:eT('Prefixes', 'un-', 'Prefixes un-, dis-, re-', ['un- and dis- mean “not”.', 're- means “again”.'], 'un + happy'),
+  e2_suffix:eT('Suffixes', '-ful', 'Suffixes -ful, -less, -ly, -er, -est', ['-ful = full of; -less = without.', '-ly tells how: slowly, softly.'], 'help + ful'),
+  e2_homophone:eT('Homophones', 'two', 'Words that sound the same: to/too/two, there/their', ['They sound the same but mean different things.', 'Read the whole sentence to choose.'], 'to · too · two'),
+  e2_synant:eT('Same & opposite', '↔', 'Synonyms and antonyms', ['Synonyms mean almost the same.', 'Antonyms mean the opposite.'], 'big · large · small'),
+  e2_tense:eT('Tenses', 'ed', 'Simple past, present and past continuous', ['Yesterday → past: went, ate.', 'Now → am/is/are + -ing. Then → was/were + -ing.'], 'was playing'),
+  e2_agree:eT('Is or are?', 'is', 'Subject–verb agreement', ['One → is, has, does.', 'More than one → are, have, do.'], 'he has · they have'),
+  e2_compare:eT('-er & -est', 'er', 'Comparatives and superlatives', ['Two things → -er / more.', 'Three or more → -est / most. good → better → best.'], 'big · bigger · biggest'),
+  e2_adverb:eT('How words', 'ly', 'Adverbs of manner', ['Adverbs tell HOW something happens.', 'Many end in -ly: quickly, softly.'], 'ran quickly'),
+  e2_preptime:eT('In · on · at', 'at', 'Prepositions of time', ['in May, in 2025, in the morning', 'on Monday · at 7 o’clock · at night'], 'on Monday'),
+  e2_quant:eT('Many or much', 'any', 'Quantifiers: some/any, many/much, a few/a little', ['Countable: many, a few.', 'Uncountable: much, a little.'], 'many apples · much milk'),
+  e2_conj:eT('Joining words', '+', 'Conjunctions: and, but, so, because, or, before, after', ['because = reason; so = result.', 'but = surprise; or = choice.'], 'because · so · but'),
+  e2_punct:eT('Punctuation', '?!', 'Capital letters, full stops, ? !, commas, apostrophes, speech marks', ['Capital letters for the start and names.', 'Speech marks go around the words someone says.'], '“Hello!” said Mei.'),
+  e2_edit:eT('Spot the mistake', '✎', 'Find and fix grammar mistakes', ['Read it aloud slowly.', 'Check the action words and the plurals.'], 'She goes ✓'),
+  e2_join:eT('Join sentences', '⧉', 'Combine two sentences into one', ['Find how the ideas link.', 'Use and, but, so, because, after, although, who.'], 'so · because · who'),
+  e2_build:eT('Build sentences', '▭▭', 'Arrange words into longer sentences', ['Start with the capital letter.', 'Who? did what? where? when?'], 'Who · did · where'),
+  e2_comp:eT('Comprehension', '📖', 'Find information in a passage', ['Find the key word from the question.', 'Read the sentences around it.'], 'Read · find · answer'),
+  e2_infer:eT('Read between the lines', '🔍', 'Make inferences from clues', ['Clues + what you know = the answer.', 'How do the characters feel? Why?'], 'clues → idea'),
+  e2_vocab:eT('Word meaning', 'Aa', 'Work out word meanings from context', ['Read the whole sentence.', 'Try your meaning in place of the word.'], 'context clues'),
+  e2_seq:eT('Story order', '1-2-3', 'Sequence 5 events in a story', ['What happens first? What happens last?', 'Each step must make sense after the one before.'], 'first · next · last')
+};
+
+/* ================= Primary 2: 华文 ================= */
+const ZH2 = {"groups": [{"id": "g7", "title": "二下 第11–15课", "tt": [["二", "èr"], ["下", "xià"], [" ", ""], ["第", "dì"], ["1", ""], ["1", ""], ["–", ""], ["1", ""], ["5", ""], ["课", "kè"]], "chars": [{"c": "纸", "py": "zhǐ", "base": "zhi", "tone": 3, "ini": "zh", "poly": false}, {"c": "机", "py": "jī", "base": "ji", "tone": 1, "ini": "j", "poly": false}, {"c": "块", "py": "kuài", "base": "kuai", "tone": 4, "ini": "k", "poly": false}, {"c": "跟", "py": "gēn", "base": "gen", "tone": 1, "ini": "g", "poly": false}, {"c": "棋", "py": "qí", "base": "qi", "tone": 2, "ini": "q", "poly": false}, {"c": "搭", "py": "dā", "base": "da", "tone": 1, "ini": "d", "poly": false}, {"c": "积", "py": "jī", "base": "ji", "tone": 1, "ini": "j", "poly": false}, {"c": "布", "py": "bù", "base": "bu", "tone": 4, "ini": "b", "poly": false}, {"c": "娃", "py": "wá", "base": "wa", "tone": 2, "ini": "w", "poly": false}, {"c": "吧", "py": "ba", "base": "ba", "tone": 5, "ini": "b", "poly": false}, {"c": "器", "py": "qì", "base": "qi", "tone": 4, "ini": "q", "poly": false}, {"c": "许", "py": "xǔ", "base": "xu", "tone": 3, "ini": "x", "poly": false}, {"c": "绳", "py": "shéng", "base": "sheng", "tone": 2, "ini": "sh", "poly": false}, {"c": "捏", "py": "niē", "base": "nie", "tone": 1, "ini": "n", "poly": false}, {"c": "拼", "py": "pīn", "base": "pin", "tone": 1, "ini": "p", "poly": false}, {"c": "船", "py": "chuán", "base": "chuan", "tone": 2, "ini": "ch", "poly": false}, {"c": "更", "py": "gèng", "base": "geng", "tone": 4, "ini": "g", "poly": false}, {"c": "鹰", "py": "yīng", "base": "ying", "tone": 1, "ini": "y", "poly": false}, {"c": "追", "py": "zhuī", "base": "zhui", "tone": 1, "ini": "zh", "poly": false}, {"c": "永", "py": "yǒng", "base": "yong", "tone": 3, "ini": "y", "poly": false}, {"c": "轻", "py": "qīng", "base": "qing", "tone": 1, "ini": "q", "poly": false}, {"c": "命", "py": "mìng", "base": "ming", "tone": 4, "ini": "m", "poly": false}, {"c": "百", "py": "bǎi", "base": "bai", "tone": 3, "ini": "b", "poly": false}, {"c": "健", "py": "jiàn", "base": "jian", "tone": 4, "ini": "j", "poly": false}, {"c": "康", "py": "kāng", "base": "kang", "tone": 1, "ini": "k", "poly": false}, {"c": "幸", "py": "xìng", "base": "xing", "tone": 4, "ini": "x", "poly": false}, {"c": "愿", "py": "yuàn", "base": "yuan", "tone": 4, "ini": "y", "poly": false}, {"c": "吹", "py": "chuī", "base": "chui", "tone": 1, "ini": "ch", "poly": false}, {"c": "糕", "py": "gāo", "base": "gao", "tone": 1, "ini": "g", "poly": false}, {"c": "首", "py": "shǒu", "base": "shou", "tone": 3, "ini": "sh", "poly": false}, {"c": "张", "py": "zhāng", "base": "zhang", "tone": 1, "ini": "zh", "poly": false}, {"c": "卡", "py": "kǎ", "base": "ka", "tone": 3, "ini": "k", "poly": false}, {"c": "影", "py": "yǐng", "base": "ying", "tone": 3, "ini": "y", "poly": false}, {"c": "票", "py": "piào", "base": "piao", "tone": 4, "ini": "p", "poly": false}, {"c": "礼", "py": "lǐ", "base": "li", "tone": 3, "ini": "l", "poly": false}, {"c": "厅", "py": "tīng", "base": "ting", "tone": 1, "ini": "t", "poly": false}, {"c": "奇", "py": "qí", "base": "qi", "tone": 2, "ini": "q", "poly": false}, {"c": "怪", "py": "guài", "base": "guai", "tone": 4, "ini": "g", "poly": false}, {"c": "活", "py": "huó", "base": "huo", "tone": 2, "ini": "h", "poly": false}, {"c": "宝", "py": "bǎo", "base": "bao", "tone": 3, "ini": "b", "poly": false}, {"c": "澡", "py": "zǎo", "base": "zao", "tone": 3, "ini": "z", "poly": false}, {"c": "睡", "py": "shuì", "base": "shui", "tone": 4, "ini": "sh", "poly": false}, {"c": "觉", "py": "jué", "base": "jue", "tone": 2, "ini": "j", "poly": false}, {"c": "羽", "py": "yǔ", "base": "yu", "tone": 3, "ini": "y", "poly": false}, {"c": "乖", "py": "guāi", "base": "guai", "tone": 1, "ini": "g", "poly": false}, {"c": "总", "py": "zǒng", "base": "zong", "tone": 3, "ini": "z", "poly": false}, {"c": "聪", "py": "cōng", "base": "cong", "tone": 1, "ini": "c", "poly": false}, {"c": "金", "py": "jīn", "base": "jin", "tone": 1, "ini": "j", "poly": false}, {"c": "漂", "py": "piāo", "base": "piao", "tone": 1, "ini": "p", "poly": false}, {"c": "吐", "py": "tǔ", "base": "tu", "tone": 3, "ini": "t", "poly": false}, {"c": "宠", "py": "chǒng", "base": "chong", "tone": 3, "ini": "ch", "poly": false}, {"c": "岛", "py": "dǎo", "base": "dao", "tone": 3, "ini": "d", "poly": false}, {"c": "欺", "py": "qī", "base": "qi", "tone": 1, "ini": "q", "poly": false}, {"c": "负", "py": "fù", "base": "fu", "tone": 4, "ini": "f", "poly": false}, {"c": "丢", "py": "diū", "base": "diu", "tone": 1, "ini": "d", "poly": false}, {"c": "梦", "py": "mèng", "base": "meng", "tone": 4, "ini": "m", "poly": false}, {"c": "围", "py": "wéi", "base": "wei", "tone": 2, "ini": "w", "poly": false}, {"c": "迎", "py": "yíng", "base": "ying", "tone": 2, "ini": "y", "poly": false}, {"c": "识", "py": "shí", "base": "shi", "tone": 2, "ini": "sh", "poly": false}, {"c": "醒", "py": "xǐng", "base": "xing", "tone": 3, "ini": "x", "poly": false}, {"c": "难", "py": "nán", "base": "nan", "tone": 2, "ini": "n", "poly": false}, {"c": "易", "py": "yì", "base": "yi", "tone": 4, "ini": "y", "poly": false}, {"c": "粗", "py": "cū", "base": "cu", "tone": 1, "ini": "c", "poly": false}, {"c": "细", "py": "xì", "base": "xi", "tone": 4, "ini": "x", "poly": false}, {"c": "抢", "py": "qiǎng", "base": "qiang", "tone": 3, "ini": "q", "poly": false}, {"c": "推", "py": "tuī", "base": "tui", "tone": 1, "ini": "t", "poly": false}, {"c": "讨", "py": "tǎo", "base": "tao", "tone": 3, "ini": "t", "poly": false}, {"c": "厌", "py": "yàn", "base": "yan", "tone": 4, "ini": "y", "poly": false}, {"c": "争", "py": "zhēng", "base": "zheng", "tone": 1, "ini": "zh", "poly": false}, {"c": "吵", "py": "chǎo", "base": "chao", "tone": 3, "ini": "ch", "poly": false}, {"c": "弄", "py": "nòng", "base": "nong", "tone": 4, "ini": "n", "poly": false}, {"c": "破", "py": "pò", "base": "po", "tone": 4, "ini": "p", "poly": false}, {"c": "撞", "py": "zhuàng", "base": "zhuang", "tone": 4, "ini": "zh", "poly": false}, {"c": "倒", "py": "dào", "base": "dao", "tone": 4, "ini": "d", "poly": false}, {"c": "伤", "py": "shāng", "base": "shang", "tone": 1, "ini": "sh", "poly": false}, {"c": "容", "py": "róng", "base": "rong", "tone": 2, "ini": "r", "poly": false}, {"c": "能", "py": "néng", "base": "neng", "tone": 2, "ini": "n", "poly": false}, {"c": "晶", "py": "jīng", "base": "jing", "tone": 1, "ini": "j", "poly": false}, {"c": "道", "py": "dào", "base": "dao", "tone": 4, "ini": "d", "poly": false}, {"c": "虹", "py": "hóng", "base": "hong", "tone": 2, "ini": "h", "poly": false}, {"c": "茄", "py": "jiā", "base": "jia", "tone": 1, "ini": "j", "poly": false}, {"c": "紫", "py": "zǐ", "base": "zi", "tone": 3, "ini": "z", "poly": false}, {"c": "番", "py": "fān", "base": "fan", "tone": 1, "ini": "f", "poly": false}, {"c": "芽", "py": "yá", "base": "ya", "tone": 2, "ini": "y", "poly": false}, {"c": "扁", "py": "biǎn", "base": "bian", "tone": 3, "ini": "b", "poly": false}, {"c": "玉", "py": "yù", "base": "yu", "tone": 4, "ini": "y", "poly": false}, {"c": "比", "py": "bǐ", "base": "bi", "tone": 3, "ini": "b", "poly": false}, {"c": "伯", "py": "bó", "base": "bo", "tone": 2, "ini": "b", "poly": false}, {"c": "萝", "py": "luó", "base": "luo", "tone": 2, "ini": "l", "poly": false}, {"c": "卜", "py": "bo", "base": "bo", "tone": 5, "ini": "b", "poly": false}, {"c": "煮", "py": "zhǔ", "base": "zhu", "tone": 3, "ini": "zh", "poly": false}, {"c": "鼠", "py": "shǔ", "base": "shu", "tone": 3, "ini": "sh", "poly": false}, {"c": "或", "py": "huò", "base": "huo", "tone": 4, "ini": "h", "poly": false}, {"c": "者", "py": "zhě", "base": "zhe", "tone": 3, "ini": "zh", "poly": false}, {"c": "猪", "py": "zhū", "base": "zhu", "tone": 1, "ini": "zh", "poly": false}, {"c": "拔", "py": "bá", "base": "ba", "tone": 2, "ini": "b", "poly": false}, {"c": "摘", "py": "zhāi", "base": "zhai", "tone": 1, "ini": "zh", "poly": false}, {"c": "挖", "py": "wā", "base": "wa", "tone": 1, "ini": "w", "poly": false}, {"c": "考", "py": "kǎo", "base": "kao", "tone": 3, "ini": "k", "poly": false}, {"c": "根", "py": "gēn", "base": "gen", "tone": 1, "ini": "g", "poly": false}, {"c": "实", "py": "shí", "base": "shi", "tone": 2, "ini": "sh", "poly": false}], "pics": [{"c": "纸", "e": "📄"}, {"c": "船", "e": "⛵"}, {"c": "鹰", "e": "🦅"}, {"c": "糕", "e": "🍰"}, {"c": "票", "e": "🎫"}, {"c": "礼", "e": "🎁"}, {"c": "睡", "e": "😴"}, {"c": "金", "e": "🥇"}, {"c": "岛", "e": "🏝️"}, {"c": "梦", "e": "💭"}, {"c": "虹", "e": "🌈"}, {"c": "茄", "e": "🍆"}, {"c": "鼠", "e": "🐭"}, {"c": "猪", "e": "🐷"}, {"c": "芽", "e": "🌱"}], "words": [{"w": "纸船", "t": [["纸", "zhǐ"], ["船", "chuán"]]}, {"w": "积木", "t": [["积", "jī"], ["木", "mù"]]}, {"w": "布娃娃", "t": [["布", "bù"], ["娃", "wá"], ["娃", "wá"]]}, {"w": "绳子", "t": [["绳", "shéng"], ["子", "zi"]]}, {"w": "拼图", "t": [["拼", "pīn"], ["图", "tú"]]}, {"w": "健康", "t": [["健", "jiàn"], ["康", "kāng"]]}, {"w": "生日", "t": [["生", "shēng"], ["日", "rì"]]}, {"w": "蛋糕", "t": [["蛋", "dàn"], ["糕", "gāo"]]}, {"w": "电影", "t": [["电", "diàn"], ["影", "yǐng"]]}, {"w": "礼物", "t": [["礼", "lǐ"], ["物", "wù"]]}, {"w": "奇怪", "t": [["奇", "qí"], ["怪", "guài"]]}, {"w": "睡觉", "t": [["睡", "shuì"], ["觉", "jiào"]]}, {"w": "羽毛", "t": [["羽", "yǔ"], ["毛", "máo"]]}, {"w": "聪明", "t": [["聪", "cōng"], ["明", "míng"]]}, {"w": "金鱼", "t": [["金", "jīn"], ["鱼", "yú"]]}, {"w": "漂亮", "t": [["漂", "piào"], ["亮", "liàng"]]}, {"w": "宠物", "t": [["宠", "chǒng"], ["物", "wù"]]}, {"w": "欢迎", "t": [["欢", "huān"], ["迎", "yíng"]]}, {"w": "认识", "t": [["认", "rèn"], ["识", "shí"]]}, {"w": "容易", "t": [["容", "róng"], ["易", "yì"]]}, {"w": "讨厌", "t": [["讨", "tǎo"], ["厌", "yàn"]]}, {"w": "吵架", "t": [["吵", "chǎo"], ["架", "jià"]]}, {"w": "彩虹", "t": [["彩", "cǎi"], ["虹", "hóng"]]}, {"w": "茄子", "t": [["茄", "qié"], ["子", "zi"]]}, {"w": "紫色", "t": [["紫", "zǐ"], ["色", "sè"]]}, {"w": "玉米", "t": [["玉", "yù"], ["米", "mǐ"]]}, {"w": "萝卜", "t": [["萝", "luó"], ["卜", "bo"]]}, {"w": "老鼠", "t": [["老", "lǎo"], ["鼠", "shǔ"]]}, {"w": "小猪", "t": [["小", "xiǎo"], ["猪", "zhū"]]}, {"w": "考试", "t": [["考", "kǎo"], ["试", "shì"]]}, {"w": "比赛", "t": [["比", "bǐ"], ["赛", "sài"]]}, {"w": "机器", "t": [["机", "jī"], ["器", "qì"]]}], "wpics": [{"w": "积木", "e": "🧱", "t": [["积", "jī"], ["木", "mù"]]}, {"w": "纸船", "e": "⛵", "t": [["纸", "zhǐ"], ["船", "chuán"]]}, {"w": "布娃娃", "e": "🪆", "t": [["布", "bù"], ["娃", "wá"], ["娃", "wá"]]}, {"w": "蛋糕", "e": "🎂", "t": [["蛋", "dàn"], ["糕", "gāo"]]}, {"w": "礼物", "e": "🎁", "t": [["礼", "lǐ"], ["物", "wù"]]}, {"w": "电影", "e": "🎬", "t": [["电", "diàn"], ["影", "yǐng"]]}, {"w": "睡觉", "e": "😴", "t": [["睡", "shuì"], ["觉", "jiào"]]}, {"w": "金鱼", "e": "🐠", "t": [["金", "jīn"], ["鱼", "yú"]]}, {"w": "宠物", "e": "🐕", "t": [["宠", "chǒng"], ["物", "wù"]]}, {"w": "彩虹", "e": "🌈", "t": [["彩", "cǎi"], ["虹", "hóng"]]}, {"w": "茄子", "e": "🍆", "t": [["茄", "qié"], ["子", "zi"]]}, {"w": "玉米", "e": "🌽", "t": [["玉", "yù"], ["米", "mǐ"]]}, {"w": "萝卜", "e": "🥕", "t": [["萝", "luó"], ["卜", "bo"]]}, {"w": "老鼠", "e": "🐭", "t": [["老", "lǎo"], ["鼠", "shǔ"]]}, {"w": "小猪", "e": "🐷", "t": [["小", "xiǎo"], ["猪", "zhū"]]}], "fill": [{"s": [["今", "jīn"], ["天", "tiān"], ["是", "shì"], ["我", "wǒ"], ["的", "de"], ["生", "shēng"], ["日", "rì"], ["，", ""], ["妈", "mā"], ["妈", "mā"], ["买", "mǎi"], ["了", "le"], ["一", "yí"], ["个", "gè"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "蛋糕", "at": [["蛋", "dàn"], ["糕", "gāo"]], "o": [{"w": "彩虹", "t": [["彩", "cǎi"], ["虹", "hóng"]]}, {"w": "茄子", "t": [["茄", "qié"], ["子", "zi"]]}]}, {"s": [["晚", "wǎn"], ["上", "shàng"], ["九", "jiǔ"], ["点", "diǎn"], ["了", "le"], ["，", ""], ["我", "wǒ"], ["要", "yào"], ["去", "qù"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "睡觉", "at": [["睡", "shuì"], ["觉", "jiào"]], "o": [{"w": "拼图", "t": [["拼", "pīn"], ["图", "tú"]]}, {"w": "考试", "t": [["考", "kǎo"], ["试", "shì"]]}]}, {"s": [["小", "xiǎo"], ["狗", "gǒu"], ["是", "shì"], ["我", "wǒ"], ["最", "zuì"], ["喜", "xǐ"], ["欢", "huān"], ["的", "de"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "宠物", "at": [["宠", "chǒng"], ["物", "wù"]], "o": [{"w": "玉米", "t": [["玉", "yù"], ["米", "mǐ"]]}, {"w": "机器", "t": [["机", "jī"], ["器", "qì"]]}]}, {"s": [["雨", "yǔ"], ["停", "tíng"], ["了", "le"], ["，", ""], ["天", "tiān"], ["上", "shàng"], ["出", "chū"], ["现", "xiàn"], ["了", "le"], ["一", "yī"], ["道", "dào"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "彩虹", "at": [["彩", "cǎi"], ["虹", "hóng"]], "o": [{"w": "纸船", "t": [["纸", "zhǐ"], ["船", "chuán"]]}, {"w": "积木", "t": [["积", "jī"], ["木", "mù"]]}]}, {"s": [["兔", "tù"], ["子", "zi"], ["最", "zuì"], ["喜", "xǐ"], ["欢", "huān"], ["吃", "chī"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "萝卜", "at": [["萝", "luó"], ["卜", "bo"]], "o": [{"w": "蛋糕", "t": [["蛋", "dàn"], ["糕", "gāo"]]}, {"w": "电影", "t": [["电", "diàn"], ["影", "yǐng"]]}]}], "orders": [{"tiles": [{"w": "我们", "t": [["我", "wǒ"], ["们", "men"]]}, {"w": "一起", "t": [["一", "yì"], ["起", "qǐ"]]}, {"w": "玩", "t": [["玩", "wán"]]}, {"w": "积木", "t": [["积", "jī"], ["木", "mù"]]}]}, {"tiles": [{"w": "妹妹", "t": [["妹", "mèi"], ["妹", "mèi"]]}, {"w": "收到", "t": [["收", "shōu"], ["到", "dào"]]}, {"w": "了", "t": [["了", "le"]]}, {"w": "很多", "t": [["很", "hěn"], ["多", "duō"]]}, {"w": "礼物", "t": [["礼", "lǐ"], ["物", "wù"]]}]}, {"tiles": [{"w": "天上", "t": [["天", "tiān"], ["上", "shàng"]]}, {"w": "有", "t": [["有", "yǒu"]]}, {"w": "一道", "t": [["一", "yī"], ["道", "dào"]]}, {"w": "彩虹", "t": [["彩", "cǎi"], ["虹", "hóng"]]}]}, {"tiles": [{"w": "小猪", "t": [["小", "xiǎo"], ["猪", "zhū"]]}, {"w": "在", "t": [["在", "zài"]]}, {"w": "吃", "t": [["吃", "chī"]]}, {"w": "玉米", "t": [["玉", "yù"], ["米", "mǐ"]]}]}]}, {"id": "g8", "title": "二下 第16–19课", "tt": [["二", "èr"], ["下", "xià"], [" ", ""], ["第", "dì"], ["1", ""], ["6", ""], ["–", ""], ["1", ""], ["9", ""], ["课", "kè"]], "chars": [{"c": "持", "py": "chí", "base": "chi", "tone": 2, "ini": "ch", "poly": false}, {"c": "静", "py": "jìng", "base": "jing", "tone": 4, "ini": "j", "poly": false}, {"c": "绘", "py": "huì", "base": "hui", "tone": 4, "ini": "h", "poly": false}, {"c": "趣", "py": "qù", "base": "qu", "tone": 4, "ini": "q", "poly": false}, {"c": "借", "py": "jiè", "base": "jie", "tone": 4, "ini": "j", "poly": false}, {"c": "次", "py": "cì", "base": "ci", "tone": 4, "ini": "c", "poly": false}, {"c": "英", "py": "yīng", "base": "ying", "tone": 1, "ini": "y", "poly": false}, {"c": "遍", "py": "biàn", "base": "bian", "tone": 4, "ini": "b", "poly": false}, {"c": "架", "py": "jià", "base": "jia", "tone": 4, "ini": "j", "poly": false}, {"c": "箱", "py": "xiāng", "base": "xiang", "tone": 1, "ini": "x", "poly": false}, {"c": "盒", "py": "hé", "base": "he", "tone": 2, "ini": "h", "poly": false}, {"c": "案", "py": "àn", "base": "an", "tone": 4, "ini": "", "poly": false}, {"c": "附", "py": "fù", "base": "fu", "tone": 4, "ini": "f", "poly": false}, {"c": "近", "py": "jìn", "base": "jin", "tone": 4, "ini": "j", "poly": false}, {"c": "满", "py": "mǎn", "base": "man", "tone": 3, "ini": "m", "poly": false}, {"c": "始", "py": "shǐ", "base": "shi", "tone": 3, "ini": "sh", "poly": false}, {"c": "样", "py": "yàng", "base": "yang", "tone": 4, "ini": "y", "poly": false}, {"c": "候", "py": "hòu", "base": "hou", "tone": 4, "ini": "h", "poly": false}, {"c": "知", "py": "zhī", "base": "zhi", "tone": 1, "ini": "zh", "poly": false}, {"c": "指", "py": "zhǐ", "base": "zhi", "tone": 3, "ini": "zh", "poly": false}, {"c": "逛", "py": "guàng", "base": "guang", "tone": 4, "ini": "g", "poly": false}, {"c": "夜", "py": "yè", "base": "ye", "tone": 4, "ini": "y", "poly": false}, {"c": "市", "py": "shì", "base": "shi", "tone": 4, "ini": "sh", "poly": false}, {"c": "烤", "py": "kǎo", "base": "kao", "tone": 3, "ini": "k", "poly": false}, {"c": "肠", "py": "cháng", "base": "chang", "tone": 2, "ini": "ch", "poly": false}, {"c": "翅", "py": "chì", "base": "chi", "tone": 4, "ini": "ch", "poly": false}, {"c": "射", "py": "shè", "base": "she", "tone": 4, "ini": "sh", "poly": false}, {"c": "碰", "py": "pèng", "base": "peng", "tone": 4, "ini": "p", "poly": false}, {"c": "饮", "py": "yǐn", "base": "yin", "tone": 3, "ini": "y", "poly": false}, {"c": "料", "py": "liào", "base": "liao", "tone": 4, "ini": "l", "poly": false}, {"c": "踢", "py": "tī", "base": "ti", "tone": 1, "ini": "t", "poly": false}, {"c": "筝", "py": "zhēng", "base": "zheng", "tone": 1, "ini": "zh", "poly": false}, {"c": "但", "py": "dàn", "base": "dan", "tone": 4, "ini": "d", "poly": false}, {"c": "闹", "py": "nào", "base": "nao", "tone": 4, "ini": "n", "poly": false}, {"c": "摊", "py": "tān", "base": "tan", "tone": 1, "ini": "t", "poly": false}, {"c": "阵", "py": "zhèn", "base": "zhen", "tone": 4, "ini": "zh", "poly": false}, {"c": "引", "py": "yǐn", "base": "yin", "tone": 3, "ini": "y", "poly": false}, {"c": "群", "py": "qún", "base": "qun", "tone": 2, "ini": "q", "poly": false}, {"c": "套", "py": "tào", "base": "tao", "tone": 4, "ini": "t", "poly": false}, {"c": "圈", "py": "quān", "base": "quan", "tone": 1, "ini": "q", "poly": false}, {"c": "馆", "py": "guǎn", "base": "guan", "tone": 3, "ini": "g", "poly": false}, {"c": "院", "py": "yuàn", "base": "yuan", "tone": 4, "ini": "y", "poly": false}, {"c": "植", "py": "zhí", "base": "zhi", "tone": 2, "ini": "zh", "poly": false}, {"c": "海", "py": "hǎi", "base": "hai", "tone": 3, "ini": "h", "poly": false}, {"c": "岸", "py": "àn", "base": "an", "tone": 4, "ini": "", "poly": false}, {"c": "参", "py": "cān", "base": "can", "tone": 1, "ini": "c", "poly": false}, {"c": "观", "py": "guān", "base": "guan", "tone": 1, "ini": "g", "poly": false}, {"c": "野", "py": "yě", "base": "ye", "tone": 3, "ini": "y", "poly": false}, {"c": "泳", "py": "yǒng", "base": "yong", "tone": 3, "ini": "y", "poly": false}, {"c": "沙", "py": "shā", "base": "sha", "tone": 1, "ini": "sh", "poly": false}, {"c": "捡", "py": "jiǎn", "base": "jian", "tone": 3, "ini": "j", "poly": false}, {"c": "壳", "py": "ké", "base": "ke", "tone": 2, "ini": "k", "poly": false}, {"c": "区", "py": "qū", "base": "qu", "tone": 1, "ini": "q", "poly": false}, {"c": "处", "py": "chù", "base": "chu", "tone": 4, "ini": "ch", "poly": false}, {"c": "街", "py": "jiē", "base": "jie", "tone": 1, "ini": "j", "poly": false}, {"c": "整", "py": "zhěng", "base": "zheng", "tone": 3, "ini": "zh", "poly": false}, {"c": "齐", "py": "qí", "base": "qi", "tone": 2, "ini": "q", "poly": false}, {"c": "离", "py": "lí", "base": "li", "tone": 2, "ini": "l", "poly": false}, {"c": "城", "py": "chéng", "base": "cheng", "tone": 2, "ini": "ch", "poly": false}, {"c": "浇", "py": "jiāo", "base": "jiao", "tone": 1, "ini": "j", "poly": false}, {"c": "桶", "py": "tǒng", "base": "tong", "tone": 3, "ini": "t", "poly": false}, {"c": "厕", "py": "cè", "base": "ce", "tone": 4, "ini": "c", "poly": false}, {"c": "所", "py": "suǒ", "base": "suo", "tone": 3, "ini": "s", "poly": false}, {"c": "告", "py": "gào", "base": "gao", "tone": 4, "ini": "g", "poly": false}, {"c": "诉", "py": "sù", "base": "su", "tone": 4, "ini": "s", "poly": false}, {"c": "珍", "py": "zhēn", "base": "zhen", "tone": 1, "ini": "zh", "poly": false}, {"c": "惜", "py": "xī", "base": "xi", "tone": 1, "ini": "x", "poly": false}, {"c": "滴", "py": "dī", "base": "di", "tone": 1, "ini": "d", "poly": false}, {"c": "约", "py": "yuē", "base": "yue", "tone": 1, "ini": "y", "poly": false}, {"c": "浪", "py": "làng", "base": "lang", "tone": 4, "ini": "l", "poly": false}, {"c": "费", "py": "fèi", "base": "fei", "tone": 4, "ini": "f", "poly": false}, {"c": "流", "py": "liú", "base": "liu", "tone": 2, "ini": "l", "poly": false}, {"c": "连", "py": "lián", "base": "lian", "tone": 2, "ini": "l", "poly": false}, {"c": "线", "py": "xiàn", "base": "xian", "tone": 4, "ini": "x", "poly": false}, {"c": "断", "py": "duàn", "base": "duan", "tone": 4, "ini": "d", "poly": false}, {"c": "猜", "py": "cāi", "base": "cai", "tone": 1, "ini": "c", "poly": false}, {"c": "摇", "py": "yáo", "base": "yao", "tone": 2, "ini": "y", "poly": false}, {"c": "渴", "py": "kě", "base": "ke", "tone": 3, "ini": "k", "poly": false}, {"c": "低", "py": "dī", "base": "di", "tone": 1, "ini": "d", "poly": false}], "pics": [{"c": "箱", "e": "📦"}, {"c": "夜", "e": "🌃"}, {"c": "翅", "e": "🍗"}, {"c": "饮", "e": "🥤"}, {"c": "筝", "e": "🪁"}, {"c": "圈", "e": "⭕"}, {"c": "海", "e": "🌊"}, {"c": "泳", "e": "🏊"}, {"c": "沙", "e": "🏖️"}, {"c": "壳", "e": "🐚"}, {"c": "城", "e": "🏙️"}, {"c": "桶", "e": "🪣"}, {"c": "滴", "e": "💧"}, {"c": "线", "e": "🧵"}], "words": [{"w": "安静", "t": [["安", "ān"], ["静", "jìng"]]}, {"w": "有趣", "t": [["有", "yǒu"], ["趣", "qù"]]}, {"w": "借书", "t": [["借", "jiè"], ["书", "shū"]]}, {"w": "英文", "t": [["英", "yīng"], ["文", "wén"]]}, {"w": "箱子", "t": [["箱", "xiāng"], ["子", "zi"]]}, {"w": "盒子", "t": [["盒", "hé"], ["子", "zi"]]}, {"w": "附近", "t": [["附", "fù"], ["近", "jìn"]]}, {"w": "开始", "t": [["开", "kāi"], ["始", "shǐ"]]}, {"w": "时候", "t": [["时", "shí"], ["候", "hòu"]]}, {"w": "知道", "t": [["知", "zhī"], ["道", "dào"]]}, {"w": "夜市", "t": [["夜", "yè"], ["市", "shì"]]}, {"w": "鸡翅", "t": [["鸡", "jī"], ["翅", "chì"]]}, {"w": "饮料", "t": [["饮", "yǐn"], ["料", "liào"]]}, {"w": "踢球", "t": [["踢", "tī"], ["球", "qiú"]]}, {"w": "风筝", "t": [["风", "fēng"], ["筝", "zhēng"]]}, {"w": "热闹", "t": [["热", "rè"], ["闹", "nào"]]}, {"w": "一群", "t": [["一", "yī"], ["群", "qún"]]}, {"w": "图书馆", "t": [["图", "tú"], ["书", "shū"], ["馆", "guǎn"]]}, {"w": "医院", "t": [["医", "yī"], ["院", "yuàn"]]}, {"w": "海边", "t": [["海", "hǎi"], ["边", "biān"]]}, {"w": "参观", "t": [["参", "cān"], ["观", "guān"]]}, {"w": "游泳", "t": [["游", "yóu"], ["泳", "yǒng"]]}, {"w": "沙子", "t": [["沙", "shā"], ["子", "zi"]]}, {"w": "贝壳", "t": [["贝", "bèi"], ["壳", "ké"]]}, {"w": "城市", "t": [["城", "chéng"], ["市", "shì"]]}, {"w": "整齐", "t": [["整", "zhěng"], ["齐", "qí"]]}, {"w": "水桶", "t": [["水", "shuǐ"], ["桶", "tǒng"]]}, {"w": "厕所", "t": [["厕", "cè"], ["所", "suǒ"]]}, {"w": "告诉", "t": [["告", "gào"], ["诉", "sù"]]}, {"w": "珍惜", "t": [["珍", "zhēn"], ["惜", "xī"]]}, {"w": "浪费", "t": [["浪", "làng"], ["费", "fèi"]]}, {"w": "口渴", "t": [["口", "kǒu"], ["渴", "kě"]]}], "wpics": [{"w": "箱子", "e": "📦", "t": [["箱", "xiāng"], ["子", "zi"]]}, {"w": "夜市", "e": "🏮", "t": [["夜", "yè"], ["市", "shì"]]}, {"w": "鸡翅", "e": "🍗", "t": [["鸡", "jī"], ["翅", "chì"]]}, {"w": "饮料", "e": "🥤", "t": [["饮", "yǐn"], ["料", "liào"]]}, {"w": "踢球", "e": "⚽", "t": [["踢", "tī"], ["球", "qiú"]]}, {"w": "风筝", "e": "🪁", "t": [["风", "fēng"], ["筝", "zhēng"]]}, {"w": "图书馆", "e": "🏛️", "t": [["图", "tú"], ["书", "shū"], ["馆", "guǎn"]]}, {"w": "医院", "e": "🏥", "t": [["医", "yī"], ["院", "yuàn"]]}, {"w": "游泳", "e": "🏊", "t": [["游", "yóu"], ["泳", "yǒng"]]}, {"w": "贝壳", "e": "🐚", "t": [["贝", "bèi"], ["壳", "ké"]]}, {"w": "城市", "e": "🏙️", "t": [["城", "chéng"], ["市", "shì"]]}, {"w": "水桶", "e": "🪣", "t": [["水", "shuǐ"], ["桶", "tǒng"]]}, {"w": "厕所", "e": "🚻", "t": [["厕", "cè"], ["所", "suǒ"]]}], "fill": [{"s": [["图", "tú"], ["书", "shū"], ["馆", "guǎn"], ["里", "lǐ"], ["很", "hěn"], ["＿", ""], ["＿", ""], ["，", ""], ["大", "dà"], ["家", "jiā"], ["都", "dōu"], ["在", "zài"], ["看", "kàn"], ["书", "shū"], ["。", ""]], "a": "安静", "at": [["安", "ān"], ["静", "jìng"]], "o": [{"w": "热闹", "t": [["热", "rè"], ["闹", "nào"]]}, {"w": "整齐", "t": [["整", "zhěng"], ["齐", "qí"]]}]}, {"s": [["夜", "yè"], ["市", "shì"], ["里", "lǐ"], ["人", "rén"], ["很", "hěn"], ["多", "duō"], ["，", ""], ["非", "fēi"], ["常", "cháng"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "热闹", "at": [["热", "rè"], ["闹", "nào"]], "o": [{"w": "安静", "t": [["安", "ān"], ["静", "jìng"]]}, {"w": "附近", "t": [["附", "fù"], ["近", "jìn"]]}]}, {"s": [["我", "wǒ"], ["们", "men"], ["要", "yào"], ["＿", ""], ["＿", ""], ["用", "yòng"], ["水", "shuǐ"], ["，", ""], ["不", "bú"], ["要", "yào"], ["浪", "làng"], ["费", "fèi"], ["。", ""]], "a": "珍惜", "at": [["珍", "zhēn"], ["惜", "xī"]], "o": [{"w": "参观", "t": [["参", "cān"], ["观", "guān"]]}, {"w": "告诉", "t": [["告", "gào"], ["诉", "sù"]]}]}, {"s": [["星", "xīng"], ["期", "qī"], ["六", "liù"], ["，", ""], ["我", "wǒ"], ["们", "men"], ["去", "qù"], ["海", "hǎi"], ["边", "biān"], ["捡", "jiǎn"], ["＿", ""], ["＿", ""], ["。", ""]], "a": "贝壳", "at": [["贝", "bèi"], ["壳", "ké"]], "o": [{"w": "风筝", "t": [["风", "fēng"], ["筝", "zhēng"]]}, {"w": "鸡翅", "t": [["鸡", "jī"], ["翅", "chì"]]}]}, {"s": [["天", "tiān"], ["气", "qì"], ["很", "hěn"], ["热", "rè"], ["，", ""], ["我", "wǒ"], ["口", "kǒu"], ["＿", ""], ["了", "le"], ["，", ""], ["想", "xiǎng"], ["喝", "hē"], ["水", "shuǐ"], ["。", ""]], "a": "渴", "at": [["渴", "kě"]], "o": [{"w": "饿", "t": [["饿", "è"]]}, {"w": "冷", "t": [["冷", "lěng"]]}]}], "orders": [{"tiles": [{"w": "哥哥", "t": [["哥", "gē"], ["哥", "gē"]]}, {"w": "在", "t": [["在", "zài"]]}, {"w": "公园", "t": [["公", "gōng"], ["园", "yuán"]]}, {"w": "里", "t": [["里", "lǐ"]]}, {"w": "放", "t": [["放", "fàng"]]}, {"w": "风筝", "t": [["风", "fēng"], ["筝", "zhēng"]]}]}, {"tiles": [{"w": "我们", "t": [["我", "wǒ"], ["们", "men"]]}, {"w": "一起", "t": [["一", "yì"], ["起", "qǐ"]]}, {"w": "去", "t": [["去", "qù"]]}, {"w": "图书馆", "t": [["图", "tú"], ["书", "shū"], ["馆", "guǎn"]]}, {"w": "看书", "t": [["看", "kàn"], ["书", "shū"]]}]}, {"tiles": [{"w": "星期天", "t": [["星", "xīng"], ["期", "qī"], ["天", "tiān"]]}, {"w": "我们", "t": [["我", "wǒ"], ["们", "men"]]}, {"w": "去", "t": [["去", "qù"]]}, {"w": "海边", "t": [["海", "hǎi"], ["边", "biān"]]}, {"w": "游泳", "t": [["游", "yóu"], ["泳", "yǒng"]]}]}, {"tiles": [{"w": "妈妈", "t": [["妈", "mā"], ["妈", "mā"]]}, {"w": "告诉", "t": [["告", "gào"], ["诉", "sù"]]}, {"w": "我", "t": [["我", "wǒ"]]}, {"w": "要", "t": [["要", "yào"]]}, {"w": "珍惜", "t": [["珍", "zhēn"], ["惜", "xī"]]}, {"w": "水", "t": [["水", "shuǐ"]]}]}]}], "titles": {"g3": {"title": "一下 第11–15课", "tt": [["一", "yī"], ["下", "xià"], [" ", ""], ["第", "dì"], ["1", ""], ["1", ""], ["–", ""], ["1", ""], ["5", ""], ["课", "kè"]]}, "g4": {"title": "一下 第16–19课", "tt": [["一", "yī"], ["下", "xià"], [" ", ""], ["第", "dì"], ["1", ""], ["6", ""], ["–", ""], ["1", ""], ["9", ""], ["课", "kè"]]}, "g5": {"title": "二上 第1–5课", "tt": [["二", "èr"], ["上", "shàng"], [" ", ""], ["第", "dì"], ["1", ""], ["–", ""], ["5", ""], ["课", "kè"]]}, "g6": {"title": "二上 第6–10课", "tt": [["二", "èr"], ["上", "shàng"], [" ", ""], ["第", "dì"], ["6", ""], ["–", ""], ["1", ""], ["0", ""], ["课", "kè"]]}}, "lc": [{"p": [["一", "yì"], ["＿", ""], ["书", "shū"]], "a": "本", "at": [["本", "běn"]]}, {"p": [["一", "yì"], ["＿", ""], ["鱼", "yú"]], "a": "条", "at": [["条", "tiáo"]]}, {"p": [["一", "yì"], ["＿", ""], ["猫", "māo"]], "a": "只", "at": [["只", "zhǐ"]]}, {"p": [["一", "yì"], ["＿", ""], ["花", "huā"]], "a": "朵", "at": [["朵", "duǒ"]]}, {"p": [["一", "yì"], ["＿", ""], ["树", "shù"]], "a": "棵", "at": [["棵", "kē"]]}, {"p": [["一", "yí"], ["＿", ""], ["车", "chē"]], "a": "辆", "at": [["辆", "liàng"]]}, {"p": [["一", "yì"], ["＿", ""], ["笔", "bǐ"]], "a": "支", "at": [["支", "zhī"]]}, {"p": [["一", "yí"], ["＿", ""], ["衣", "yī"], ["服", "fú"]], "a": "件", "at": [["件", "jiàn"]]}, {"p": [["一", "yì"], ["＿", ""], ["纸", "zhǐ"]], "a": "张", "at": [["张", "zhāng"]]}, {"p": [["一", "yì"], ["＿", ""], ["鞋", "xié"]], "a": "双", "at": [["双", "shuāng"]]}, {"p": [["一", "yí"], ["＿", ""], ["桥", "qiáo"]], "a": "座", "at": [["座", "zuò"]]}, {"p": [["一", "yì"], ["＿", ""], ["伞", "sǎn"]], "a": "把", "at": [["把", "bǎ"]]}, {"p": [["一", "yí"], ["＿", ""], ["蛋", "dàn"], ["糕", "gāo"]], "a": "块", "at": [["块", "kuài"]]}, {"p": [["一", "yì"], ["＿", ""], ["马", "mǎ"]], "a": "匹", "at": [["匹", "pǐ"]]}], "fy": [{"w": "大", "a": "小", "wt": [["大", "dà"]], "at": [["小", "xiǎo"]]}, {"w": "多", "a": "少", "wt": [["多", "duō"]], "at": [["少", "shǎo"]]}, {"w": "上", "a": "下", "wt": [["上", "shàng"]], "at": [["下", "xià"]]}, {"w": "左", "a": "右", "wt": [["左", "zuǒ"]], "at": [["右", "yòu"]]}, {"w": "前", "a": "后", "wt": [["前", "qián"]], "at": [["后", "hòu"]]}, {"w": "高", "a": "矮", "wt": [["高", "gāo"]], "at": [["矮", "ǎi"]]}, {"w": "长", "a": "短", "wt": [["长", "zhǎng"]], "at": [["短", "duǎn"]]}, {"w": "快", "a": "慢", "wt": [["快", "kuài"]], "at": [["慢", "màn"]]}, {"w": "冷", "a": "热", "wt": [["冷", "lěng"]], "at": [["热", "rè"]]}, {"w": "黑", "a": "白", "wt": [["黑", "hēi"]], "at": [["白", "bái"]]}, {"w": "开", "a": "关", "wt": [["开", "kāi"]], "at": [["关", "guān"]]}, {"w": "来", "a": "去", "wt": [["来", "lái"]], "at": [["去", "qù"]]}, {"w": "早", "a": "晚", "wt": [["早", "zǎo"]], "at": [["晚", "wǎn"]]}, {"w": "胖", "a": "瘦", "wt": [["胖", "pàng"]], "at": [["瘦", "shòu"]]}, {"w": "难", "a": "易", "wt": [["难", "nán"]], "at": [["易", "yì"]]}, {"w": "粗", "a": "细", "wt": [["粗", "cū"]], "at": [["细", "xì"]]}, {"w": "新", "a": "旧", "wt": [["新", "xīn"]], "at": [["旧", "jiù"]]}, {"w": "远", "a": "近", "wt": [["远", "yuǎn"]], "at": [["近", "jìn"]]}, {"w": "哭", "a": "笑", "wt": [["哭", "kū"]], "at": [["笑", "xiào"]]}, {"w": "买", "a": "卖", "wt": [["买", "mǎi"]], "at": [["卖", "mài"]]}], "ph": {"q_lc": [["选", "xuǎn"], ["一", "yí"], ["个", "gè"], ["量", "liàng"], ["词", "cí"], ["，", ""], ["填", "tián"], ["一", "yī"], ["填", "tián"], ["：", ""]], "h_lc": [["想", "xiǎng"], ["一", "yī"], ["想", "xiǎng"], ["，", ""], ["这", "zhè"], ["个", "ge"], ["东", "dōng"], ["西", "xī"], ["是", "shì"], ["什", "shén"], ["么", "me"], ["样", "yàng"], ["子", "zi"], ["的", "de"], ["？", ""], ["长", "cháng"], ["长", "cháng"], ["的", "de"], ["、", ""], ["小", "xiǎo"], ["小", "xiǎo"], ["的", "de"], ["，", ""], ["还", "hái"], ["是", "shì"], ["一", "yī"], ["朵", "duǒ"], ["一", "yī"], ["朵", "duǒ"], ["的", "de"], ["？", ""]], "h_lc2": [["读", "dú"], ["一", "yī"], ["读", "dú"], ["：", ""], ["一", "yī"], ["本", "běn"], ["书", "shū"], ["、", ""], ["一", "yī"], ["条", "tiáo"], ["鱼", "yú"], ["、", ""], ["一", "yī"], ["朵", "duǒ"], ["花", "huā"], ["、", ""], ["一", "yī"], ["只", "zhī"], ["猫", "māo"], ["。", ""]], "t_lc": [["量", "liàng"], ["词", "cí"], ["放", "fàng"], ["在", "zài"], ["数", "shù"], ["字", "zì"], ["和", "hé"], ["东", "dōng"], ["西", "xī"], ["中", "zhōng"], ["间", "jiān"], ["：", ""], ["一", "yī"], ["本", "běn"], ["书", "shū"], ["。", ""]], "q_fy": [["的", "de"], ["反", "fǎn"], ["义", "yì"], ["词", "cí"], ["是", "shì"], ["什", "shén"], ["么", "me"], ["？", ""]], "h_fy2": [["反", "fǎn"], ["义", "yì"], ["词", "cí"], ["的", "de"], ["意", "yì"], ["思", "si"], ["是", "shì"], ["相", "xiāng"], ["反", "fǎn"], ["的", "de"], ["，", ""], ["比", "bǐ"], ["如", "rú"], ["“", ""], ["大", "dà"], ["”", ""], ["和", "hé"], ["“", ""], ["小", "xiǎo"], ["”", ""], ["。", ""]], "h_fy3": [["把", "bǎ"], ["两", "liǎng"], ["个", "gè"], ["字", "zì"], ["放", "fàng"], ["在", "zài"], ["一", "yì"], ["起", "qǐ"], ["读", "dú"], ["一", "yī"], ["读", "dú"], ["，", ""], ["意", "yì"], ["思", "si"], ["相", "xiāng"], ["反", "fǎn"], ["吗", "ma"], ["？", ""]], "t_fy": [["反", "fǎn"], ["义", "yì"], ["词", "cí"], ["：", ""], ["意", "yì"], ["思", "si"], ["相", "xiāng"], ["反", "fǎn"], ["的", "de"], ["两", "liǎng"], ["个", "gè"], ["字", "zì"], ["。", ""]], "yd": [["语", "yǔ"], ["文", "wén"], ["园", "yuán"], ["地", "dì"]], "lc": [["量", "liàng"], ["词", "cí"]], "fy": [["反", "fǎn"], ["义", "yì"], ["词", "cí"]]}};
+ZH.groups.forEach(g => { if (ZH2.titles[g.id]) Object.assign(g, ZH2.titles[g.id]); });
+const ZH2G = ZH2.groups;
+const PH2Z = k => ZH2.ph[k];
+const GEN_ZH2 = {
+  zh2_lc(d){
+    const it = pick(ZH2.lc), others = shuffle(ZH2.lc.filter(x => x.a !== it.a));
+    const os = uniqOpts(it.a, others.map(x => x.a));
+    const show = it.p.map(t => t[0] === '＿' ? ['＿', ''] : t);
+    const eg = others.slice(0, 3).map(x => RB(x.p.map(t => t[0] === '＿' ? [x.a, x.at[0][1]] : t))).join('、');
+    return zq(RB(PH2Z('q_lc')), PL(PH2Z('q_lc')), {visual:panel(`<div class="zword">${d >= 4 ? show.map(t => t[0] === '＿' ? '<span class="zblank"></span>' : t[0]).join('') : RB(show).replace('＿', '<span class="zblank"></span>')}</div>`), kind:'choice', options:os.map(x => zopt(x, {big:1})), answer:it.a,
+      hints:[RB(PH2Z('h_lc')), `${RB(PH('h_readall'))} ${eg}`], explain:RB(it.p.map(t => t[0] === '＿' ? [it.a, it.at[0][1]] : t))});
+  },
+  zh2_fy(d){
+    const it = pick(ZH2.fy), others = shuffle(ZH2.fy.filter(x => x.w !== it.w && x.a !== it.w));
+    const os = uniqOpts(it.a, others.flatMap(x => [x.a, x.w]).filter(x => x !== it.w));
+    const ex = others[0];
+    return zq(`“<b class="zbig">${d >= 4 ? it.w : RB(it.wt)}</b>”` + RB(PH2Z('q_fy')), it.w + PL(PH2Z('q_fy')), {visual:'', kind:'choice', options:os.map(x => zopt(x, {big:1})), answer:it.a,
+      hints:[`${RB(PH2Z('t_fy'))} ${RB(ex.wt)} ↔ ${RB(ex.at)}`, RB(PH2Z('h_fy3'))], explain:`${RB(it.wt)} ↔ ${RB(it.at)}`});
+  }
+};
+ZH2G.forEach(g => {
+  GEN_ZH2['zh_rz_' + g.id] = d => zhRZ(g, d);
+  GEN_ZH2['zh_py_' + g.id] = d => zhPY(g, d);
+  GEN_ZH2['zh_cy_' + g.id] = d => zhCY(g, d);
+  GEN_ZH2['zh_jz_' + g.id] = d => zhJZ(g, d);
+  GEN_ZH2['zh_xz_' + g.id] = d => zhXZ(g, d);
+  ['rz', 'py', 'cy', 'jz'].forEach(k => { ADV[`zh_${k}_${g.id}`] = d => zhAdvGroup(k, g, Math.min(4, d)); });
+  ADV[`zh_xz_${g.id}`] = d => zhXZ(g, Math.min(4, d));
+});
+ZH.groups.filter(g => g.id === 'g5' || g.id === 'g6').forEach(g => { ['rz', 'py', 'cy', 'jz'].forEach(k => { ADV[`zh_${k}_${g.id}`] = d => zhAdvGroup(k, g, Math.min(4, d)); }); ADV[`zh_xz_${g.id}`] = d => zhXZ(g, Math.min(4, d)); });
+const SK2Z = {
+  zh2_lc:{name:'量词', sub:'liàng cí', icon:'个', syl:'语文园地：常用量词（本、条、只、朵、棵……）', tips:{t:[RB(PH2Z('t_lc')), RB(PH2Z('h_lc'))], ex:() => `<div class="pyhelp">${ZH2.lc.slice(0, 6).map(x => `<span>${RB(x.p.map(t => t[0] === '＿' ? [x.a, x.at[0][1]] : t))}</span>`).join('')}</div>`, cap:''}},
+  zh2_fy:{name:'反义词', sub:'fǎn yì cí', icon:'↔', syl:'语文园地：反义词（大—小、多—少……）', tips:{t:[RB(PH2Z('t_fy')), RB(PH2Z('h_fy3'))], ex:() => `<div class="pyhelp">${ZH2.fy.slice(0, 6).map(x => `<span>${RB(x.wt)}↔${RB(x.at)}</span>`).join('')}</div>`, cap:''}}
+};
+ZH2G.forEach(g => {
+  const sample = () => `<div class="pyhelp">${g.chars.slice(0, 10).map(c => `<span><ruby>${c.c}<rt>${c.py}</rt></ruby></span>`).join('')}</div>`;
+  SK2Z['zh_rz_' + g.id] = {name:'认字', sub:'rèn zì', icon:'字', syl:`《欢乐伙伴2.0》${g.title}：认读生字`, tips:{t:[RB(PH('t_rz1')), RB(PH('t_rz2'))], ex:sample, cap:g.title}};
+  SK2Z['zh_xz_' + g.id] = {name:'写字', sub:'xiě zì', icon:'写', syl:`${g.title}：按笔顺写生字（可以用 Apple Pencil）`, tips:{t:[RB(XPH.t_xz1), RB(XPH.h_rule), RB(XPH.t_xz2)], ex:() => `<div class="hzmini" data-ch="${(g.chars.find(c => hzData(c.c) && hzStrokes(c.c) <= 6) || g.chars[0]).c}" data-s="150"></div>`, cap:g.title}};
+  SK2Z['zh_py_' + g.id] = {name:'拼音', sub:'pīn yīn', icon:'pīn', syl:`${g.title}：生字的拼音和声调`, tips:{t:[RB(PH('t_py1')), RB(PH('h_tonesong'))], ex:sample, cap:g.title}};
+  SK2Z['zh_cy_' + g.id] = {name:'词语', sub:'cí yǔ', icon:'词', syl:`${g.title}：认读词语`, tips:{t:[RB(PH('t_cy1')), RB(PH('h_tryeach'))], ex:() => `<div class="pyhelp">${g.words.slice(0, 6).map(w => `<span>${RB(w.t)}</span>`).join('')}</div>`, cap:g.title}};
+  SK2Z['zh_jz_' + g.id] = {name:'句子', sub:'jù zi', icon:'句', syl:`${g.title}：读句子、填词语、排句子`, tips:{t:[RB(PH('t_jz1')), RB(PH('t_jz2'))], ex:() => `<div class="zsent">${RB(g.fill[0].s)}</div>`, cap:g.title}};
+});
+const zhGroupUnit = (g, i) => ({id:'y' + g.id, title:g.title, color:ZH_COLORS[(i + 2) % ZH_COLORS.length], skills:['zh_rz_', 'zh_xz_', 'zh_py_', 'zh_cy_', 'zh_jz_'].map(p => p + g.id)});
+const ZH_UNITS2 = [...ZH.groups.filter(g => g.id === 'g5' || g.id === 'g6'), ...ZH2G].map(zhGroupUnit)
+  .concat([{id:'yd', title:'语文园地', color:'#8456CF', skills:['zh2_lc', 'zh2_fy']}]);
+/* P1 华文 keeps 拼音乐园 + 一上/一下 only */
+ZH_UNITS.splice(0, ZH_UNITS.length, ...ZH_UNITS.filter(u => !u.skills.some(s => /_g[56]$/.test(s))));
+
+/* ---------- grades ---------- */
+SUBJECTS.forEach(x => { x.grade = 1; });
+SUBJECTS.push({id:'math2', label:'Maths', grade:2, units:UNITS2}, {id:'en2', label:'English', grade:2, units:EN_UNITS2}, {id:'zh2', label:'华文', grade:2, units:ZH_UNITS2});
+Object.assign(GEN, GEN2, GEN2E, GEN_ZH2);
+Object.assign(SK, SK2M, SK2E, SK2Z);
+Object.keys(SK2M).concat(Object.keys(SK2E), Object.keys(SK2Z)).forEach(id => { TIPS[id] = SK[id].tips; });
+const gradeOfSub = sid => (SUBJECTS.find(x => x.id === sid) || {grade:1}).grade;
+const gradeOf = id => { const s = subOf(id); return s ? s.grade : 1; };
+const curGrade = () => gradeOfSub(curSub());
+const subLabel = x => `P${x.grade} ${x.label}`;
+const BANDS_G = {1:['Not yet P1', 'P1 basic', 'P1 solid', 'P1 advanced', 'P2 ready'], 2:['Not yet P2', 'P2 basic', 'P2 solid', 'P2 advanced', 'P3 ready']};
+const lvName = (id, lvl) => gradeOf(id) === 2 ? (lvl === 5 ? (/^zh/.test(id) ? 'P2 Expert' : 'P3 Preview') : 'P2 Advanced') : (lvl === 5 ? 'P2 Preview' : 'P1 Advanced');
+function gradeTabs(){
+  const t = el('div', 'gradetabs');
+  [1, 2].forEach(g => {
+    const b = el('button', 'gtab' + (curGrade() === g ? ' on' : ''), `Primary ${g}`);
+    b.setAttribute('aria-pressed', curGrade() === g);
+    b.onclick = () => { if (curGrade() === g) return; sfx.tap(); const lab = SUBJECTS.find(x => x.id === curSub()).label; S.settings.subject = SUBJECTS.find(x => x.grade === g && x.label === lab).id; save(); render(); window.scrollTo(0, 0); fxAnim($('#' + view), 'pagein', 450); };
+    t.append(b);
+  });
+  return t;
+}
+
 /* ================= state & saving ================= */
 const KEY = 'p1-maths-quest-v1';
 const blank = () => ({v:1, skills:{}, xp:0, day:{date:'', xp:0}, streak:{n:0, last:''}, settings:{sound:true, unlockAll:false}, coins:0, goalDay:'', shop:{}, redeemed:[], coinLog:[], pin:'', updatedAt:0});
@@ -3101,7 +3664,7 @@ function renderHome(){
   const hello = el('div', 'hello', kibi(dayXP() >= GOAL ? 'wow' : 'happy', {scale:4}) + `<div class="bub">${dayXP() >= GOAL ? 'You reached today’s goal! Amazing!' : next ? `Let’s play: ${SK[next].name}!` : 'You mastered everything! Try a review.'}</div>`);
   home.append(hello);
   home.append(palCard());
-  if (SUB.id !== 'math') dictCards(SUB.id).forEach(c => home.append(c));
+  if (!SUB.id.startsWith('math')) dictCards(SUB.id).forEach(c => home.append(c));
   const rec1 = ORDER.some(id => sk(id).lvl >= 1) ? recommend(SUB.id) : null;
   if (rec1){
     const rc = el('div', 'reviewcard reco', `<div><small>${icon('bulb', 2)} KIBI RECOMMENDS</small><h3>${SK[rec1.id].name}</h3><p>${SK[rec1.id].name} ${rec1.why}.</p></div>`);
@@ -3132,7 +3695,7 @@ function renderHome(){
       b.dataset.id = id;
       b.onclick = () => { sfx.tap(); nodeSheet(id); };
       if (id === next){ w.append(el('div', 'startbub', s.lvl ? 'NEXT' : 'START')); w.append(el('div', 'kibimark', kibi('happy', {scale:3}))); if (OFFS[(ni - 1) % OFFS.length] > 0) w.classList.add('flip'); }
-      if (s.adv) b.append(el('span', 'nbadge', badgeHTML(s.adv)));
+      if (s.adv) b.append(el('span', 'nbadge', badgeHTML(s.adv, id)));
       w.append(b, el('div', 'nstars', starHTML(s.lvl)), el('div', 'nlabel', SK[id].name + (SK[id].sub ? `<small>${SK[id].sub}</small>` : '')));
       nodes.append(w);
     });
@@ -3144,15 +3707,16 @@ function renderHome(){
 }
 const starHTML = n => [0, 1, 2].map(i => i < n ? icon('star', 3) : icon('star', 3, {Y:'#C9D0DC', h:'#E6EBF2'})).join('');
 function subjTabs(){
-  const t = el('div', 'subjtabs');
-  SUBJECTS.forEach(x => {
+  const wrap = el('div', 'subjwrap'); wrap.append(gradeTabs());
+  const t = el('div', 'subjtabs'); wrap.append(t);
+  SUBJECTS.filter(x => x.grade === curGrade()).forEach(x => {
     const ids = x.units.flatMap(u => u.skills), st = totalStars(ids);
     const b = el('button', 'stab' + (x.id === curSub() ? ' on' : ''), `<b>${x.label}</b><span>${icon('star', 2)} ${st}/${ids.length * 3}</span>`);
     b.setAttribute('aria-pressed', x.id === curSub());
     b.onclick = () => { sfx.tap(); S.settings.subject = x.id; save(); render(); window.scrollTo(0, 0); fxAnim($('#' + view), 'pagein', 450); };
     t.append(b);
   });
-  return t;
+  return wrap;
 }
 const nodeIcon = id => SK[id].icon[0] === '#' ? icon(SK[id].icon.slice(1), 4, {o:'rgba(30,26,43,.85)'}) : SK[id].icon;
 
@@ -3166,8 +3730,8 @@ $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeM
 
 function nodeSheet(id){
   const s = sk(id), open = unlocked(id), u = unitOf(id), a = s.adv || 0;
-  const ch = open && s.lvl >= 3 ? `<div class="chal"><h4>${icon('bolt', 2)} Challenges</h4><div class="acts" style="margin-top:6px"><button class="btn adv1" id="adv4">${a >= 1 ? icon('check', 2, {W:'#fff'}) : ''}P1 ADVANCED</button><button class="btn adv2" id="adv5" ${a >= 1 ? '' : 'disabled'}>${a >= 1 ? '' : icon('lock', 2)}${a >= 2 ? icon('check', 2, {W:'#fff'}) : ''}P2 PREVIEW</button></div><div class="small">${a >= 2 ? 'Both badges won. Amazing!' : a >= 1 ? 'Next: questions from Primary 2!' : 'Harder P1 questions. Pass to open P2 Preview.'}</div></div>` : open && s.lvl > 0 ? '<div class="small" style="margin-top:6px">Get 3 stars to open the challenge levels.</div>' : '';
-  openModal(`<h3>${SK[id].name}${SK[id].sub ? ` <small class="hsub">${SK[id].sub}</small>` : ''}</h3><div class="sub">${SK[id].syl}</div><div class="nstars" style="font-size:26px;margin:0">${starHTML(s.lvl)}${a ? ' ' + badgeHTML(a) : ''}</div><div class="small" style="margin-top:6px">${open ? (s.lvl >= 3 ? 'Mastered! Practise to keep it strong.' : s.lvl === 0 ? 'New lesson. Kibi will show you how first.' : `Level ${s.lvl + 1} of 3: a little harder this time.`) : 'Finish the lesson before this one to unlock it.'}</div><div class="acts"><button class="btn" id="tipBtn">${icon('bulb', 3)}Tips</button>${open ? `<button class="btn" id="learnBtn">${icon('sun', 3)}Learn</button><button class="btn go" id="goBtn" style="background:${u.color}">${s.lvl >= 3 ? 'PRACTISE' : 'START'}</button>` : ''}</div>${ch}`, c => {
+  const ch = open && s.lvl >= 3 ? `<div class="chal"><h4>${icon('bolt', 2)} Challenges</h4><div class="acts" style="margin-top:6px"><button class="btn adv1" id="adv4">${a >= 1 ? icon('check', 2, {W:'#fff'}) : ''}${lvName(id, 4).toUpperCase()}</button><button class="btn adv2" id="adv5" ${a >= 1 ? '' : 'disabled'}>${a >= 1 ? '' : icon('lock', 2)}${a >= 2 ? icon('check', 2, {W:'#fff'}) : ''}${lvName(id, 5).toUpperCase()}</button></div><div class="small">${a >= 2 ? 'Both badges won. Amazing!' : a >= 1 ? (gradeOf(id) === 2 ? 'Next: an even harder level!' : 'Next: questions from Primary 2!') : `Harder questions. Pass to open ${lvName(id, 5)}.`}</div></div>` : open && s.lvl > 0 ? '<div class="small" style="margin-top:6px">Get 3 stars to open the challenge levels.</div>' : '';
+  openModal(`<h3>${SK[id].name}${SK[id].sub ? ` <small class="hsub">${SK[id].sub}</small>` : ''}</h3><div class="sub">${SK[id].syl}</div><div class="nstars" style="font-size:26px;margin:0">${starHTML(s.lvl)}${a ? ' ' + badgeHTML(a, id) : ''}</div><div class="small" style="margin-top:6px">${open ? (s.lvl >= 3 ? 'Mastered! Practise to keep it strong.' : s.lvl === 0 ? 'New lesson. Kibi will show you how first.' : `Level ${s.lvl + 1} of 3: a little harder this time.`) : 'Finish the lesson before this one to unlock it.'}</div><div class="acts"><button class="btn" id="tipBtn">${icon('bulb', 3)}Tips</button>${open ? `<button class="btn" id="learnBtn">${icon('sun', 3)}Learn</button><button class="btn go" id="goBtn" style="background:${u.color}">${s.lvl >= 3 ? 'PRACTISE' : 'START'}</button>` : ''}</div>${ch}`, c => {
     c.querySelector('#tipBtn').onclick = () => tipsSheet(id);
     const g = c.querySelector('#goBtn'); if (g) g.onclick = () => { closeModal(); startLesson(id); };
     const l = c.querySelector('#learnBtn'); if (l) l.onclick = () => { closeModal(); startLearn(id); };
@@ -3175,7 +3739,7 @@ function nodeSheet(id){
     const a5 = c.querySelector('#adv5'); if (a5) a5.onclick = () => { if (a5.disabled) return; closeModal(); startLesson(id, {lvl:5}); };
   });
 }
-const badgeHTML = a => `<span class="badge b${a}" title="${a >= 2 ? 'P2 Preview' : 'P1 Advanced'}">${a >= 2 ? 'P2' : 'ADV'}</span>`;
+const badgeHTML = (a, id) => `<span class="badge b${a}" title="${id ? lvName(id, a + 3) : ''}">${a >= 2 ? (id && gradeOf(id) === 2 ? 'P3' : 'P2') : 'ADV'}</span>`;
 function tipsSheet(id){
   const T = TIPS[id];
   openModal(`<h3>Tips: ${SK[id].name}</h3><ul class="tips">${T.t.map(x => `<li>${x}</li>`).join('')}</ul><div class="example">${T.ex()}<div class="cap">${T.cap}</div></div><div class="acts"><button class="btn" data-close>Close</button>${unlocked(id) ? '<button class="btn go" id="goBtn2">START</button>' : ''}</div>`, c => {
@@ -3758,7 +4322,7 @@ function showQ(demo){
   buildAnswer(q, ans);
   $('#hintBtn').disabled = false;
   if (LS.mode === 'test') wrap.prepend(el('div', 'modetag test', `${icon('star', 2)} LEVEL CHECK · no hints, just try your best`));
-  else if (LS.mode === 'challenge') wrap.prepend(el('div', 'modetag adv', `${icon('bolt', 2)} ${LVNAME[LS.adv].toUpperCase()} CHALLENGE`));
+  else if (LS.mode === 'challenge') wrap.prepend(el('div', 'modetag adv', `${icon('bolt', 2)} ${lvName(LS.id, LS.adv).toUpperCase()} CHALLENGE`));
   else if (LS.mode === 'learn' && !demo){ wrap.prepend(el('div', 'modetag', `${icon('bulb', 3)} LET’S DO IT TOGETHER (${LS.i} of 2)`)); showHint(true); }
   if (!demo && LS.mode !== 'test' && LS.mode !== 'learn' && q.helper && adaptFlags().earlyHelper){ vis.append(el('div', 'helper early', q.helper)); }
   updateCheck();
@@ -3802,7 +4366,7 @@ function buildAnswer(q, box){
 function key(k){
   const q = LS && LS.queue[LS.i]; if (!q || LS.demo || q.kind !== 'number' || !$('#sheet').hidden) return;
   if (k === 'del') LS.num = LS.num.slice(0, -1);
-  else if (LS.num.length < 3) LS.num = (LS.num === '0' ? '' : LS.num) + k;
+  else if (LS.num.length < 4) LS.num = (LS.num === '0' ? '' : LS.num) + k;
   sfx.tap(); drawNum(); updateCheck(); fxAnim($('#numbox'), 'sel', 200);
 }
 function drawNum(){
@@ -3937,8 +4501,8 @@ function finish(){
   const lines = [['Lesson finished', 10]];
   if (LS.grit) lines.push([`Never gave up × ${LS.grit}`, Math.min(15, LS.grit * 5)]);
   if (LS.mode === 'challenge'){
-    const s = sk(LS.id), need = LVNAME[LS.adv], pass = fr >= total - 1, lv = LS.adv - 3;
-    if (pass && (s.adv || 0) < lv){ s.adv = lv; lines.push([`${need} badge`, LS.adv === 5 ? 50 : 30]); msg = `${badgeHTML(lv)}<br>You passed the ${need} challenge for ${SK[LS.id].name}!${lv === 1 ? '<br>The P2 Preview challenge is now open.' : ''}`; }
+    const s = sk(LS.id), need = lvName(LS.id, LS.adv), pass = fr >= total - 1, lv = LS.adv - 3;
+    if (pass && (s.adv || 0) < lv){ s.adv = lv; lines.push([`${need} badge`, LS.adv === 5 ? 50 : 30]); msg = `${badgeHTML(lv, LS.id)}<br>You passed the ${need} challenge for ${SK[LS.id].name}!${lv === 1 ? '<br>The P2 Preview challenge is now open.' : ''}`; }
     else if (pass) msg = `Great work! You passed ${need} again.`;
     else msg = `Challenges are meant to be hard! Get ${total - 1} or more right on the first try to win the ${need} badge.`;
   } else if (LS.id){
@@ -3968,7 +4532,7 @@ function finish(){
   }
   const earned = lines.reduce((t, l) => t + l[1], 0);
   S.coins = (S.coins || 0) + earned;
-  logCoins(earned, LS.mode === 'dict' ? `听写/Spelling: ${LS.dictName}` : LS.mode === 'challenge' ? `${LVNAME[LS.adv]}: ${SK[LS.id].name}` : LS.id ? `Lesson: ${SK[LS.id].name}` : 'Mixed review');
+  logCoins(earned, LS.mode === 'dict' ? `听写/Spelling: ${LS.dictName}` : LS.mode === 'challenge' ? `${lvName(LS.id, LS.adv)}: ${SK[LS.id].name}` : LS.id ? `Lesson: ${SK[LS.id].name}` : 'Mixed review');
   logSession();
   save();
   const lvlA = LS.id ? sk(LS.id).lvl : 0, advA = LS.id ? (sk(LS.id).adv || 0) : 0, unitL = lines.find(l => /^Unit mastered/.test(l[0]));
