@@ -533,6 +533,11 @@ label.btn{display:inline-flex;align-items:center;justify-content:center;cursor:p
 .palbig .glow{filter:brightness(1.6)}
 @keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 .fxbanner .egg{width:auto}
+.eggpick{display:flex;gap:10px;flex:0 0 auto}
+.eggbtn{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;padding:8px 10px;box-shadow:var(--pf), var(--bevel);margin:4px}
+.eggbtn small{font:400 11px/1 var(--label)}
+.palslot .stages{display:flex;gap:4px}.palslot .stages i{width:10px;height:10px;background:#D5DCE6;box-shadow:inset 0 0 0 2px var(--line)}.palslot .stages i.on{background:#F6C23E}
+@media (max-width:560px){ .palcard{flex-wrap:wrap} .eggpick{width:100%;justify-content:center} }
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -2913,28 +2918,33 @@ function editDict(L){
   });
 }
 
-/* ================= Pixel Pals: original creatures that hatch and grow as the child learns ================= */
-const PALS = [{"id":"sprout","name":"Sprouty","evo":"Bloomtail","el":"leaf","pal":{"B":"#7BD15A","b":"#4E9F2F","L":"#D9F5B8","E":"#1E1A2B","W":"#FFFFFF","C":"#F4A3A0","A":"#4E9F2F","a":"#2F7A1F","F":"#4E9F2F","P":"#FF8FB8","Y":"#FFE066"},"baby":["................","................",".......AA.......","......AaaA......",".......aa.......",".....BBBBBB.....","...BBBBBBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["....................","........PPPP........",".....AAPYYP..AA.....","....AaA.PPPP.AaA....","......BBBBBBBB......","....BBBBBBBBBBBB....","...BBBBBBBBBBBBBB...","..BBBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.",".BBBEEEBBBBBBEEEBBB.",".BBCBBBBLLLLBBBBCBB.","ABBBBBBLLLLLLBBBBBBA","AABBBBBLLLLLLBBBBBAA",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"ember","name":"Embo","evo":"Blazor","el":"fire","pal":{"B":"#FF8A3D","b":"#D9622B","L":"#FFE1B0","E":"#1E1A2B","W":"#FFFFFF","C":"#FF5C5C","A":"#FFD23F","a":"#E5533D","F":"#B5452F"},"baby":["................",".......aa.......","......aAAa......","......aAAa......",".....aAAAAa.....",".....BBBBBB.....","...BBBBBBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":[".........aa.........","......a.aAAa.a......",".....aAaAAAAaAa.....","....aAAAAAAAAAAa....","....aAABBBBBBAAa....","....BBBBBBBBBBBB....","...BBBBBBBBBBBBBB...","..BBBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.",".BBBEEEBBBBBBEEEBBB.",".BBCBBBBLLLLBBBBCBB.","aaBBBBBLLLLLLBBBBBaa","aABBBBBLLLLLLBBBBBAa",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"drip","name":"Dribble","evo":"Tidewing","el":"water","pal":{"B":"#5AB4F0","b":"#2F7FC8","L":"#D6F0FF","E":"#1E1A2B","W":"#FFFFFF","C":"#F4A3A0","A":"#9FE3FF","a":"#2F7FC8","F":"#2F7FC8"},"baby":["................","................",".......BB.......",".......BB.......","......BBBB......",".....BBBBBB.....","...BBBABBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["....................",".........BB.........","........BBBB........",".......BBBBBB.......","......BBBBBBBB......","....BBABBBBBBBBB....","...BBBBBBBBBBBBBB...","..BBBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.","AABBEEEBBBBBBEEEBBAA","AAaCBBBBLLLLBBBBCaAA","aABBBBBLLLLLLBBBBBAa","AABBBBBLLLLLLBBBBBAA",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"zap","name":"Zippo","evo":"Voltaro","el":"spark","pal":{"B":"#4FD6D0","b":"#1F9E99","L":"#D9FFF9","E":"#1E1A2B","W":"#FFFFFF","C":"#FF8A5C","A":"#FFD23F","a":"#C98A06","F":"#1A7F7B"},"baby":["....A......A....","....AA....AA....",".....A....A.....",".....AA..AA.....","......A..A......",".....BBBBBB.....","...BBBBBBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["...a............a...","...aA..........Aa...","....A..........A....","....AA........AA....",".....ABBBBBBBBA.....","....BBBBBBBBBBBB....","...BBBBBBBBBBBBBB...","..BBBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.",".BBBEEEBBBBBBEEEBBB.",".BBCBBBBLLLLBBBBCBB.","ABBBBBBLLLLLLBBBBBBa","AABBBBBLLLLLLBBBBBaa",".ABBBBBLLLLLLBBBBBa.","..BBBBBBLLLLBBBBBB.a","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"pebble","name":"Pebbo","evo":"Bouldrake","el":"rock","pal":{"B":"#A7A2B5","b":"#77718A","L":"#D7D3E0","E":"#1E1A2B","W":"#FFFFFF","C":"#E59A9A","A":"#6BC84A","a":"#3E7A2A","F":"#5D5870"},"baby":["................","................","................","................","......AAAA......",".....aAAAAa.....","...BBBBBBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".bBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBb.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["....................","....................","....................","......AAAAAAAA......",".....aAAaaAAaB......","....aBBBBBBBBBBa....","...BBBBBBBBBBBBBB...","..BbBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.",".BBBEEEBBBBBBEEEBBB.",".BBCBBBBLLLLBBBBCBB.","BBBBBBBLLLLLLBBBBBBB","BbBBBBBLLLLLLBBBbBbB",".ABBBBBLLLLLLBBBBBA.","..BBbBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"puff","name":"Puffle","evo":"Nimbuzz","el":"sky","pal":{"B":"#F4F7FF","b":"#C9D3EE","L":"#FFFFFF","E":"#1E1A2B","W":"#FFFFFF","C":"#FFB3C7","A":"#BFD7FF","a":"#7FA6E6","F":"#9FB2DA"},"baby":["................","................","................","................","....BBBBBBBB....",".....BBBBBB.....","AA.BBBBBBBBBB.AA","AAABBBBBBBBBBAAA","aABBBBBBBBBBBBAa",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["....................","....................","........BBBB........",".....BBB....BBB.....","......BBBBBBBB......","....BBBBBBBBBBBB....","...BBBBBBBBBBBBBB...","AAABBBBBBBBBBBBBBAAA","AAAABBBBBBBBBBBBAAAA","aAABWEEBBBBBBEEWBAAa","aaBBEEEBBBBBBEEEBBaa",".BBCBBBBLLLLBBBBCBB.","ABBBBBBLLLLLLBBBBBBA","AABBBBBLLLLLLBBBBBAA",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"note","name":"Tuneko","evo":"Melodrix","el":"music","pal":{"B":"#B58CFF","b":"#8456CF","L":"#EADCFF","E":"#1E1A2B","W":"#FFFFFF","C":"#FF9AC8","A":"#1E1A2B","a":"#3C2A5E","F":"#6A3FB5"},"baby":[".........A......",".........AA.....",".........A.A....",".........A......","........AA......",".....BBBBBB.....","...BBBBBBBBBB...","..BBBBBBBBBBBB..",".BBBBBBBBBBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":["......AA.....AA.....","......AAAAAAAA......",".....AA.....AA......",".....AA.....AA......","......BBBBBBBB......","....BBBBBBBBBBBB....","...BBBBBBBBBBBBBB...","..BBBBBBBBBBBBBBBB..","..BBBBBBBBBBBBBBBB..",".BBBWEEBBBBBBEEWBBB.",".BBBEEEBBBBBBEEEBBBA",".BBCBBBBLLLLBBBBCBBA","ABBBBBBLLLLLLBBBBBAA","AABBBBBLLLLLLBBBBBAA",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]},{"id":"nova","name":"Twinko","evo":"Novastar","el":"star","pal":{"B":"#3D4C9E","b":"#283273","L":"#7F8FE0","E":"#FFFFFF","W":"#1E1A2B","C":"#F4A3A0","A":"#FFD23F","a":"#E5A80F","F":"#283273"},"baby":["................",".............A..","...A............","............A...","................",".....BBBBBB.....","...BBBBAABBBB...","..BBBBAAAABBBB..",".BBBBBBAABBBBBB.",".BBWEBBBBBBEWBB.",".BBEEBBBBBBEEBB.",".BCBBBLLLLBBBCB.",".BBBBLLLLLLBBBB.","..BBBLLLLLLBBB..","..bBBBBbbBBBBb..","...FF......FF..."],"adult":[".................A..","..A.................","..................A.","....................","......BBBBBBBB......","....BBBBBAABBBBB....","...BBBBBAAAABBBBB...","..BBBBBAAAAAABBBBB..","..BBBBBBAAAABBBBBB..",".BBBWEEBABBABEEWBBB.",".BBBEEEBBBBBBEEEBBB.",".BBCBBBBLLLLBBBBCBB.","ABBBBBBLLLLLLBBBBBBA","AABBBBBLLLLLLBBBBBAA",".ABBBBBLLLLLLBBBBBA.","..BBBBBBLLLLBBBBBB..","..bBBBBBBbbBBBBBBb..","...BBbbBBBBBBbbBB...","...FFF..bbbb..FFF...","...................."]}];
-const EGG_NEED = 60, EVO_NEED = 250;
-const ELNAME = {leaf:'Leaf', fire:'Fire', water:'Water', spark:'Spark', rock:'Rock', sky:'Sky', music:'Music', star:'Star'};
+/* ================= Pixel Pals: grass, fire and water buddies that hatch and grow ================= */
+const PALS = [{"id":"leaf","el":"leaf","names":["Sprigo","Leafyro","Bloomdon"],"pal":{"S":"#3E9A4C","B":"#7ED88C","h":"#B8F3B8","b":"#4FAE63","L":"#F6FBE6","l":"#DDEBC2","F":"#4FAE63","E":"#1F2238","W":"#FFFFFF","s":"#9CC8FF","C":"#FFA3B5","A":"#4CC25A","a":"#2E8A3E","v":"#A9EE8F","P":"#FF9EC4","p":"#FF6FA5","Y":"#FFE27A","o":"#2f5235"},"forms":[[".......aa..aa.......","......aAAa.aAAa.....","......aAvAhAvAa.....",".....hhaAASAAah.....","....hhBBBBSBBBBB....","...hhBBBBBBBBBBBB...","..hhBBBBBBBBBBBBBB..",".hhBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBEEBBBBBBEEBBBb.",".hBBEWEEBBBBEWEEBbb.","..BBEWEEBBBBEWEEBb..","..hBEEEsBBBBEEEsbb..","...bbEEBBBBBBEEbb...",".....CBBBBBBBBC.....",".....hBBBBBBBBb.....",".....hBLLLLLLBb.....",".....hBLLLLLLBb.....",".....FBBLLLLBBF.....","....FFFFFFFFFFFF....",".....FFFF..FFFF....."],[".......aa......aa.......","......aAAa....aAAa......",".....aAvAAa..aAAvAa.....",".....aAAvAahhaAvAAa.....","......aAAAASSAAAAa......",".....hhBBBSSSSBBBBB.....","....hhBBBBBSSBBBBBBB....","...hhBBBBBBBBBBBBBBBb...","...hBBBBBBBBBBBBBBBBb...","...hBBBBBBBBBBBBBBBBb...","...hBBBEEBBBBBBEEBBBb...","...hBBEWEEBBBBEWEEBBb...","...hBBEEEsBBBBEEEsBbb...","....bBBEEBBBBBBEEBbb....",".....CCCBBBBBBBBCCC.....",".......BBBBBBBBBB.......","..aA.hhhBBBBBBBBBBh.Aa..","..AAahBBBLLLLLLBBBBaAA..","..aAhBBBLLLLLLLLBBBbAa..","....hBBBLLLLLLLLBBbb....",".....bBBLLLLLLLLBbb.....","......bBLLLLLLLLbb......",".......BBLLLLLLBB.......",".....FFFBbbllbBBFFF.....",".....FFFFF....FFFFF.....","......FFF......FFF......"],["..........PPP.PPP...........","........PPpPPPPPpPP.........",".......PPpYYpPpYYpPP........","........PPpPPPPPpPP.........",".........aAPPPPPAah.........",".......aAAAaAAAaAAAah.......","......aAAvAAaBBBaAAvAa......",".....hhBBBBBBBBBBBBBBBB.....","....hhBBBBBBBBBBBBBBBBBb....","....hBBBBBBBBBBBBBBBBBBB....","...hhBBBBBBBBBBBBBBBBBBBb...","...hBBBEEEBBBBBBBEEEBBBbb...","....BBBEWEEBBBBBBEWEEBBb....","....hBBEEEsBBBBBBEEEsBbb....",".....bBBEEBBBBBBBBEEBbb.....","......CCCBBBBBBBBBBCCC......",".......bBBBBBBBBBBBbb.......","........BBBBBBBBBBBB........",".......hhBBBBLLBBBBBB.......","..aA.hhhBBBLLLLLLBBBBBh.Aa..","..AAahBBBBLLLLLLLLBBBBBaAA..","..AAAaBBBLLLLLLLLLLBBBaAAA..","..aAABBBBLLLLLLLLLLBBBbAAa..",".....bBBBLLLLLLLLLLBBbb.....","......BBBLLLLLLLLLLBBb......","......hBBLLLLLLLLLLBbb......",".......BBBLLLLLLLLBBB.......","......FFBBBLLLLLLBBBFF......","......FFFFFbbbbbbFFFFF......",".......FFF........FFF......."]]},{"id":"fire","el":"fire","names":["Embi","Blazby","Pyradon"],"pal":{"B":"#FF8F57","h":"#FFC294","b":"#E0602E","L":"#FFF0D6","l":"#FFD8A8","F":"#C2481F","E":"#1F2238","W":"#FFFFFF","s":"#9CC8FF","C":"#FF5F6D","A":"#FFC93C","a":"#FF5A33","Y":"#FFF3A8","R":"#E5332B","w":"#FF6E3A","d":"#B5361A","o":"#603621"},"forms":[[".........a..........","........aAa.........","........aAYa........",".....hhaAYYAahh.....","....ddBBaAYaBBdd....","...hdBBBBBBBBBBdB...","..hhBBBBBBBBBBBBBB..",".hhBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBEEBBBBBBEEBBBb.",".hBBEWEEBBBBEWEEBbb.","..BBEWEEBBBBEWEEBb..","..hBEEEsBBBBEEEsbb..","...bbEEBBBBBBEEbb...",".....CBBBBBBBBC.....",".....hBBBBBBBBb.....",".....hBLLLLLLBb.....",".....hBLLLLLLBb.....",".....FBBLLLLBBF.....","....FFFFFFFFFFFF....",".....FFFF..FFFF....."],["..........a.a...........","........a.aAa.a.........","........aAaAAaAa........","....d..aAAYAYAAa...d....","..dd..haAYYYYYAaBh..dd..","..d..hhBaAYYYAaBBBB..d..","....hhBBBBBBBBBBBBBB....","...hhBBBBBBBBBBBBBBBb...","...hBBBBBBBBBBBBBBBBb...","...hBBBBBBBBBBBBBBBBb...","...hBBBEEBBBBBBEEBBBb...","...hBBEWEEBBBBEWEEBBb...","...hBBEEEsBBBBEEEsBbb...","....bBBEEBBBBBBEEBbb....",".....CCCBBBBBBBBCCC.....",".......BBBBBBBBBB.......","..Rw.hhhBBBBBBBBBBh.wR..","..RRwhBBBLLLLLLBBBBwRR..","..RwhBBBLLLLLLLLBBBbwR..","....hBBBLLLLLLLLBBbb....",".....bBBLLLLLLLLBbb.....","......bBLLLLLLLLbb......",".......BBLLLLLLBB.......",".....FFFBbbllbBBFFF.....",".....FFFFF....FFFFF.....","......FFF......FFF......"],["............a.a.............","........a..aAaAa..a.........","........aa.aAAAa.aa.........","......daAaaAAYAAaaAa.d......",".....ddaAAAAYYYAAAAa.dd.....","....dd.haAAYYYYYAAaBh.dd....","...dd.hhBaAYYYYYAaBBBB.dd...",".....hhBBBBBBBBBBBBBBBB.....","....hhBBBBBBBBBBBBBBBBBb....","....hBBBBBBBBBBBBBBBBBBB....","...hhBBBBBBBBBBBBBBBBBBBb...","...hBBBEEEBBBBBBBEEEBBBbb...","....BBBEWEEBBBBBBEWEEBBb....",".RRwhBBEEEsBBBBBBEEEsBbbwRR.",".RRRwbBBEEBBBBBBBBEEBbbwRRR.",".RRRRwCCCBBBBBBBBBBCCCwRRRR.",".RRw...bBBBBBBBBBBBbb...wRR.",".Rw.....BBBBBBBBBBBB.....wR.",".......hhBBBBLLBBBBBB.......",".....hhhBBBLLLLLLBBBBBh.....","....hhBBBBLLLLLLLLBBBBBb....","....hBBBBLLLLLLLLLLBBBBb....","....hBBBBLLLLLLLLLLBBBbb....",".....bBBBLLLLLLLLLLBBbb.....","......BBBLLLLLLLLLLBBb......","......hBBLLLLLLLLLLBbb......",".......BBBLLLLLLLLBBB.......","......FFBBBLLLLLLBBBFF......","......FFFFFbbbbbbFFFFF......",".......FFF........FFF......."]]},{"id":"water","el":"water","names":["Bubi","Splashy","Tidalon"],"pal":{"B":"#6CC6F5","h":"#B7E8FF","b":"#3C93D6","L":"#F0FBFF","l":"#CDEBFA","F":"#2F79BD","E":"#1F2238","W":"#FFFFFF","s":"#FFFFFF","C":"#FF9DB6","A":"#3FE0D0","a":"#1FA8B5","v":"#A8FFF5","o":"#294b5d","q":"#BDF3FF"},"forms":[["....................",".........A......q...","........aAa....q.q..",".....hhhaAAahhh.q...","....hhBBBaAaBBBB....","...hhBBBBBBBBBBBB...","..hhBBBBBBBBBBBBBB..",".hhBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBb.",".hBBBEEBBBBBBEEBBBb.",".hBBEWEEBBBBEWEEBbb.","..BBEWEEBBBBEWEEBb..","..hBEEEsBBBBEEEsbb..","...bbEEBBBBBBEEbb...",".....CBBBBBBBBC.....",".....hBBBBBBBBb.....",".....hBLLLLLLBb.....",".....hBLLLLLLBb.....",".....FBBLLLLBBF.....","....FFFFFFFFFFFF....",".....FFFF..FFFF....."],["............A...........","..........aAAa..........","........aAAvAAa.........",".......aAAvAAAAa........","......hhaaAAAAaBBh......",".....hhBBBaaaBBBBBB.....","....hhBBBBBBBBBBBBBB....","aA.hhBBBBBBBBBBBBBBBb.Aa","aAAhBBBBBBBBBBBBBBBBbAAa","aA.hBBBBBBBBBBBBBBBBb.Aa","a..hBBBEEBBBBBBEEBBBb..a","...hBBEWEEBBBBEWEEBBb...","...hBBEEEsBBBBEEEsBbb...","....bBBEEBBBBBBEEBbb....",".....CCCBBBBBBBBCCC.....",".......BBBBBBBBBB.......",".....hhhBBBBBBBBBBh.....","....hhBBBLLLLLLBBBBb....","....hBBBLLLLLLLLBBBb....","....hBBBLLLLLLLLBBbb....",".....bBBLLLLLLLLBbb.....","......bBLLLLLLLLbb......",".......BBLLLLLLBB.......",".....FFFBbbllbBBFFF.....",".....FFFFF....FFFFF.....","......FFF......FFF......"],[".............AA.............","..........aAAvAAa...........","........aAAvAAAAAAa.......q.",".......aAvAAAaaAAvAAa....q.q","......aAAAahhhhhaAAAAa....q.",".......aahBBBBBBBBaaa.......","......hhBBBBBBBBBBBBBB......",".....hhBBBBBBBBBBBBBBBB.....","aA..hhBBBBBBBBBBBBBBBBBb..Aa","aAA.hBBBBBBBBBBBBBBBBBBB.AAa","aAAAhBBBBBBBBBBBBBBBBBBBAAAa","aAAhBBBEEEBBBBBBBEEEBBBbbAAa","aA..BBBEWEEBBBBBBEWEEBBb..Aa","....hBBEEEsBBBBBBEEEsBbb....",".....bBBEEBBBBBBBBEEBbb.....","......CCCBBBBBBBBBBCCC......",".......bBBBBBBBBBBBbb.......","........BBBBBBBBBBBB........",".......hhBBBBLLBBBBBB.......",".....hhhBBBLLLLLLBBBBBh.....","....hhBBBBLLLLLLLLBBBBBb....","....hBBBBLLLLLLLLLLBBBBb....","....hBBBBLLLLLLLLLLBBBbb....",".....bBBBLLLLLLLLLLBBbb.....","......BBBLLLLLLLLLLBBb......","......hBBLLLLLLLLLLBbb......",".......BBBLLLLLLLLBBB.......","......FFBBBLLLLLLBBBFF......","......FFFFFbbbbbbFFFFF......",".......FFF........FFF......."]]}];
+const EGG_NEED = 60, EVO_AT = [150, 400];
+const ELNAME = {leaf:'Grass', fire:'Fire', water:'Water'};
+const OLDPAL = {sprout:'leaf', ember:'fire', drip:'water'};
 const palById = id => PALS.find(p => p.id === id);
+const palName = (id, form) => { const p = palById(id); return p ? p.names[form || 0] : ''; };
 function palState(){
   const P = S.pal || (S.pal = {own:{}, buddy:null, egg:null, eggDay:''});
-  if (!P.egg && !P.buddy && !Object.keys(P.own).length) P.egg = {id:pick(PALS).id, xp:0};
+  if (!P.v2){
+    const own = {}; Object.entries(P.own || {}).forEach(([k, v]) => { const n = OLDPAL[k] || (palById(k) ? k : null); if (n) own[n] = {xp:v.xp || 0, form:Math.min(2, v.form || 0), at:v.at}; });
+    P.own = own; P.buddy = OLDPAL[P.buddy] || (own[P.buddy] ? P.buddy : Object.keys(own)[0] || null);
+    if (P.egg && !palById(OLDPAL[P.egg.id] || P.egg.id)) P.egg = null; else if (P.egg) P.egg.id = OLDPAL[P.egg.id] || P.egg.id;
+    P.v2 = 1;
+  }
   return P;
 }
 function palSprite(id, form, scale = 4, cls = ''){
   const p = palById(id); if (!p) return '';
-  const rows = (form ? p.adult : p.baby).map(r => r.replace(/ /g, '.'));
-  const pal = Object.assign({}, p.pal);
-  const W = rows[0].length + 2, H = rows.length + 2;
-  const g = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => (y > 0 && y < H - 1 && x > 0 && x < W - 1 && pal[rows[y - 1][x - 1]]) ? rows[y - 1][x - 1] : '.'));
+  const rows = p.forms[form || 0];
+  const W = rows[0].length + 2, H = rows.length + 2, pal = p.pal;
+  const g = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => (y > 0 && y < H - 1 && x > 0 && x < W - 1 && pal[rows[y - 1][x - 1]] && rows[y - 1][x - 1] !== 'o') ? rows[y - 1][x - 1] : '.'));
   const out = g.map(r => r.slice());
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === '.'){
-    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const X = x + dx, Y = y + dy; if (X >= 0 && X < W && Y >= 0 && Y < H && g[Y][X] !== '.'){ out[y][x] = 'o'; break; } }
+    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const X = x + dx, Y = y + dy; if (X >= 0 && X < W && Y >= 0 && Y < H && g[Y][X] !== '.'){ out[y][x] = 'O'; break; } }
   }
-  pal.o = '#1E1A2B';
-  return gridSVG(out.map(r => r.join('')), pal, scale, 'pal ' + cls, form ? p.evo : p.name);
+  return gridSVG(out.map(r => r.join('')), Object.assign({}, pal, {O:pal.o}), scale, 'pal ' + cls, p.names[form || 0]);
 }
 function eggSprite(id, scale = 4, cracked = false){
   const p = palById(id) || PALS[0], W = 12, H = 14;
@@ -2947,7 +2957,7 @@ function eggSprite(id, scale = 4, cracked = false){
   for (let y = 0; y < H + 2; y++) for (let x = 0; x < W + 2; x++) if (g[y][x] === '.'){ for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const X = x + dx, Y = y + dy; if (X >= 0 && X < W + 2 && Y >= 0 && Y < H + 2 && g[Y][X] !== '.'){ out[y][x] = 'o'; break; } } }
   return gridSVG(out.map(r => r.join('')), {c:'#FFF6E0', S:p.pal.B, k:'#1E1A2B', o:'#1E1A2B'}, scale, 'egg', 'Mystery egg');
 }
-/* XP from every lesson feeds the egg first, otherwise the buddy */
+
 function palGain(xp){
   const P = palState(); const ev = [];
   if (P.egg){
@@ -2956,68 +2966,74 @@ function palGain(xp){
     else ev.push({type:'egg', xp, left:EGG_NEED - P.egg.xp});
   } else if (P.buddy){
     const b = P.own[P.buddy]; b.xp += xp;
-    if (!b.form && b.xp >= EVO_NEED){ b.form = 1; ev.push({type:'evolve', id:P.buddy}); }
+    if (b.form < 2 && b.xp >= EVO_AT[b.form]){ b.form++; ev.push({type:'evolve', id:P.buddy, form:b.form}); }
     else ev.push({type:'buddy', id:P.buddy, xp});
   }
   return ev;
 }
-/* a new egg arrives when today's goal is reached (one a day) or a unit is mastered */
 function palNewEgg(reason){
-  const P = palState(); if (P.egg) return null;
+  const P = palState(); if (P.egg || !Object.keys(P.own).length) return null;
   if (reason === 'goal' && P.eggDay === today()) return null;
   const left = PALS.filter(p => !P.own[p.id]); if (!left.length) return null;
   P.egg = {id:pick(left).id, xp:0}; if (reason === 'goal') P.eggDay = today();
   return P.egg.id;
 }
+const toNext = b => b.form < 2 ? Math.max(0, EVO_AT[b.form] - b.xp) : 0;
 function palLine(ev){
   if (!ev) return '';
   if (ev.type === 'egg') return `<div class="palline">${eggSprite(palState().egg.id, 2)}<span>Your egg +${ev.xp} XP · ${ev.left} more to hatch!</span></div>`;
-  if (ev.type === 'buddy'){ const b = palState().own[ev.id], p = palById(ev.id); return `<div class="palline">${palSprite(ev.id, b.form, 2)}<span>${b.form ? p.evo : p.name} +${ev.xp} XP${b.form ? '' : ` · ${Math.max(0, EVO_NEED - b.xp)} to evolve`}</span></div>`; }
+  if (ev.type === 'buddy'){ const b = palState().own[ev.id]; return `<div class="palline">${palSprite(ev.id, b.form, 2)}<span>${palName(ev.id, b.form)} +${ev.xp} XP${b.form < 2 ? ` · ${toNext(b)} to evolve` : ''}</span></div>`; }
   return '';
 }
-/* home card */
 function palCard(){
   const P = palState(); const c = el('div', 'reviewcard palcard');
+  if (!P.egg && !Object.keys(P.own).length){
+    c.innerHTML = `<div class="palrow"><div><small>CHOOSE YOUR FIRST EGG</small><h3>Grass, Fire or Water?</h3><p>Learn to hatch it!</p></div></div>`;
+    const pickRow = el('div', 'eggpick');
+    PALS.forEach(p => { const b = el('button', 'eggbtn', `${eggSprite(p.id, 4)}<small>${ELNAME[p.el]}</small>`); b.onclick = () => { P.egg = {id:p.id, xp:0}; save(); sfx.star(); fxAnim(b, 'popok', 400); setTimeout(render, 300); }; pickRow.append(b); });
+    c.append(pickRow); return c;
+  }
   let left = '';
-  if (P.buddy){ const b = P.own[P.buddy], p = palById(P.buddy); left = `<div class="palme">${palSprite(P.buddy, b.form, 4)}</div><div><small>MY BUDDY · ${ELNAME[p.el].toUpperCase()}</small><h3>${b.form ? p.evo : p.name}</h3>${b.form ? '<p>Fully grown!</p>' : `<div class="meter"><i style="width:${Math.min(100, b.xp / EVO_NEED * 100)}%"></i></div><p>${Math.max(0, EVO_NEED - b.xp)} XP to evolve</p>`}</div>`; }
-  if (P.egg) left += `<div class="palegg">${eggSprite(P.egg.id, 3)}<div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><small>${EGG_NEED - P.egg.xp} XP to hatch</small></div>`;
-  if (!P.buddy && P.egg) left = `<div class="palme">${eggSprite(P.egg.id, 4)}</div><div><small>MYSTERY EGG</small><h3>Hatch your first pal!</h3><div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><p>Play lessons to hatch it: ${EGG_NEED - P.egg.xp} XP to go</p></div>`;
+  if (P.buddy){ const b = P.own[P.buddy], p = palById(P.buddy); left = `<div class="palme">${palSprite(P.buddy, b.form, b.form ? 3 : 4)}</div><div><small>MY BUDDY · ${ELNAME[p.el].toUpperCase()}</small><h3>${palName(P.buddy, b.form)}</h3>${b.form < 2 ? `<div class="meter"><i style="width:${Math.min(100, (b.xp - (b.form ? EVO_AT[0] : 0)) / (EVO_AT[b.form] - (b.form ? EVO_AT[0] : 0)) * 100)}%"></i></div><p>${toNext(b)} XP to evolve</p>` : '<p>Fully grown!</p>'}</div>`; }
+  if (P.egg){
+    if (P.buddy) left += `<div class="palegg">${eggSprite(P.egg.id, 3)}<div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><small>${EGG_NEED - P.egg.xp} XP to hatch</small></div>`;
+    else left = `<div class="palme">${eggSprite(P.egg.id, 4)}</div><div><small>MY EGG · ${ELNAME[palById(P.egg.id).el].toUpperCase()}</small><h3>Hatch your first pal!</h3><div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><p>Play lessons to hatch it: ${EGG_NEED - P.egg.xp} XP to go</p></div>`;
+  }
   c.innerHTML = `<div class="palrow">${left}</div>`;
-  const b = el('button', 'btn dark', `PALS ${Object.keys(P.own).length}/${PALS.length}`); b.title = 'My Pals'; b.onclick = palBook;
+  const b = el('button', 'btn dark', `PALS ${Object.keys(P.own).length}/${PALS.length}`); b.onclick = palBook;
   c.append(b);
   return c;
 }
 function palBook(){
   const P = palState();
-  openModal(`<h3>My Pixel Pals</h3><div class="sub">Learn to hatch eggs. Your buddy grows with every lesson. Reach today’s goal or master a unit to get a new egg.</div><div class="palgrid">${PALS.map(p => { const o = P.own[p.id]; return o ? `<button class="palslot${P.buddy === p.id ? ' on' : ''}" data-id="${p.id}">${palSprite(p.id, o.form, 3)}<b>${o.form ? p.evo : p.name}</b><small>${ELNAME[p.el]}${P.buddy === p.id ? ' · buddy' : ''}</small></button>` : `<div class="palslot locked">${P.egg && P.egg.id === p.id ? eggSprite(p.id, 3) : '<span class="qm">?</span>'}<b>???</b><small>${P.egg && P.egg.id === p.id ? 'in your egg' : 'not found yet'}</small></div>`; }).join('')}</div><div class="acts"><button class="btn go" data-close>DONE</button></div>`, c => {
+  openModal(`<h3>My Pixel Pals</h3><div class="sub">Learn to hatch eggs. Your buddy grows with every lesson and evolves twice. Reach today’s goal or master a unit to get a new egg.</div><div class="palgrid">${PALS.map(p => { const o = P.own[p.id]; return o ? `<button class="palslot${P.buddy === p.id ? ' on' : ''}" data-id="${p.id}">${palSprite(p.id, o.form, 3)}<b>${palName(p.id, o.form)}</b><small>${ELNAME[p.el]}${P.buddy === p.id ? ' · buddy' : ''}</small><span class="stages">${[0, 1, 2].map(f => `<i class="${f <= o.form ? 'on' : ''}"></i>`).join('')}</span></button>` : `<div class="palslot locked">${P.egg && P.egg.id === p.id ? eggSprite(p.id, 3) : '<span class="qm">?</span>'}<b>???</b><small>${P.egg && P.egg.id === p.id ? 'in your egg' : ELNAME[p.el] + ' pal'}</small></div>`; }).join('')}</div><div class="acts"><button class="btn go" data-close>DONE</button></div>`, c => {
     c.querySelectorAll('button.palslot').forEach(b => b.onclick = () => { P.buddy = b.dataset.id; save(); sfx.tap(); closeModal(); render(); });
   });
 }
-/* celebration overlay: hatching and evolving */
 function palShow(ev, done){
   const p = palById(ev.id); if (!p){ done && done(); return; }
   const ov = el('div', 'palov'); document.body.append(ov);
   const close = () => { ov.remove(); render(); done && done(); };
   const final = (form, title) => {
-    ov.innerHTML = `<div class="palstage"><div class="palbig stamp">${palSprite(ev.id, form, 10)}</div><h2>${title}</h2><p>${ELNAME[p.el]} pal</p><button class="btn go wide">YAY!</button></div>`;
+    ov.innerHTML = `<div class="palstage"><div class="palbig stamp">${palSprite(ev.id, form, form === 2 ? 8 : 10)}</div><h2>${title}</h2><p>${ELNAME[p.el]} pal</p><button class="btn go wide">YAY!</button></div>`;
     ov.querySelector('button').onclick = close; burstAt(ov.querySelector('.palbig'), {n:22, star:true, r:150}); sfx.fanfare(); confetti();
   };
   if (ev.type === 'hatch'){
     ov.innerHTML = `<div class="palstage"><div class="palbig wob">${eggSprite(ev.id, 10)}</div><h2>Something is hatching…</h2></div>`;
-    if (REDUCE){ final(0, `You hatched ${p.name}!`); return; }
-    sfx.tap(); setTimeout(() => { sfx.tap(); }, 600);
+    if (REDUCE){ final(0, `You hatched ${p.names[0]}!`); return; }
+    sfx.tap(); setTimeout(sfx.tap, 600);
     setTimeout(() => { ov.querySelector('.palbig').innerHTML = eggSprite(ev.id, 10, true); sfx.unlock(); }, 1300);
-    setTimeout(() => { ov.classList.add('flash'); }, 2000);
-    setTimeout(() => { ov.classList.remove('flash'); final(0, `You hatched ${p.name}!`); }, 2350);
+    setTimeout(() => ov.classList.add('flash'), 2000);
+    setTimeout(() => { ov.classList.remove('flash'); final(0, `You hatched ${p.names[0]}!`); }, 2350);
   } else {
-    ov.innerHTML = `<div class="palstage"><div class="palbig">${palSprite(ev.id, 0, 10)}</div><h2>What? ${p.name} is evolving!</h2></div>`;
-    if (REDUCE){ final(1, `${p.name} evolved into ${p.evo}!`); return; }
+    const to = ev.form || 1, from = to - 1;
+    ov.innerHTML = `<div class="palstage"><div class="palbig">${palSprite(ev.id, from, 10)}</div><h2>What? ${p.names[from]} is evolving!</h2></div>`;
+    if (REDUCE){ final(to, `${p.names[from]} evolved into ${p.names[to]}!`); return; }
     const box = ov.querySelector('.palbig'); let k = 0;
-    const flick = () => { k++; box.innerHTML = palSprite(ev.id, k % 2, 10, 'glow'); tone([400 + k * 60], .05, 'triangle', .06); if (k < 12) setTimeout(flick, Math.max(90, 380 - k * 28)); else { ov.classList.add('flash'); setTimeout(() => { ov.classList.remove('flash'); final(1, `${p.name} evolved into ${p.evo}!`); }, 350); } };
+    const flick = () => { k++; box.innerHTML = palSprite(ev.id, k % 2 ? to : from, k % 2 && to === 2 ? 8 : 10, 'glow'); tone([400 + k * 60], .05, 'triangle', .06); if (k < 12) setTimeout(flick, Math.max(90, 380 - k * 28)); else { ov.classList.add('flash'); setTimeout(() => { ov.classList.remove('flash'); final(to, `${p.names[from]} evolved into ${p.names[to]}!`); }, 350); } };
     setTimeout(flick, 700);
   }
 }
-
 /* ================= state & saving ================= */
 const KEY = 'p1-maths-quest-v1';
 const blank = () => ({v:1, skills:{}, xp:0, day:{date:'', xp:0}, streak:{n:0, last:''}, settings:{sound:true, unlockAll:false}, coins:0, goalDay:'', shop:{}, redeemed:[], coinLog:[], pin:'', updatedAt:0});
