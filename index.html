@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>MeQuest</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -546,6 +546,11 @@ label.btn{display:inline-flex;align-items:center;justify-content:center;cursor:p
 .frac{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font:700 calc(24px * var(--k))/1 var(--display);vertical-align:middle}
 .frac i{display:block;width:100%;min-width:1.1em;height:3px;background:currentColor;margin:3px 0}
 .choice .frac{font-size:calc(28px * var(--k))}
+
+/* stop iPad/iPhone double-tap zoom and text selection while playing */
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}
+*:not(input):not(textarea):not(select){-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.hzwrap,.hztgt,.freepad,.freepad canvas{touch-action:none}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -724,7 +729,10 @@ button,.node,.choice,.tile,.slot,.stab{touch-action:manipulation;-webkit-tap-hig
 /* challenge, learn, check, report */
 .modetag{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin:0 0 10px;padding:6px 10px;background:#FFF4CF;color:var(--ink);font:400 13px/1.2 var(--label);letter-spacing:.04em;box-shadow:var(--pf)}
 .modetag.test{background:#E3EEFF}.modetag.adv{background:#EFE4FF}
-.qans.demo{pointer-events:none}
+.qans.demo{opacity:.7}
+.demotag{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#FFE58A}
+.skipdemo{background:#fff;font:700 13px/1 var(--display);padding:6px 10px;box-shadow:var(--pf);margin:2px 4px}
+#checkBtn.pulse{animation:bump 1s steps(3) infinite}
 .ht.good{background:#E8F6E2}
 .helper.early{margin-top:12px}
 .chal{margin-top:16px;padding:12px 14px;background:#F4EEFF;box-shadow:var(--pf)}
@@ -2580,7 +2588,7 @@ function recommend(subId){
 }
 
 /* ---------- learn first: I do, we do, you do ---------- */
-function openLessonUI(){ $('#lesson').hidden = false; document.body.style.overflow = 'hidden'; $('#lfoot').hidden = false; $('#hintBtn').hidden = false; $('.pbar').classList.remove('fire'); $('#pfill').style.width = '0%'; splash(LS.mode); }
+function openLessonUI(){ $('#checkBtn').classList.remove('pulse'); $('#checkBtn').textContent = 'CHECK'; $('#lesson').hidden = false; document.body.style.overflow = 'hidden'; $('#lfoot').hidden = false; $('#hintBtn').hidden = false; $('.pbar').classList.remove('fire'); $('#pfill').style.width = '0%'; splash(LS.mode); }
 function startLearn(id){
   LS = {mode:'learn', id, keys:new Set(), queue:[], i:0, firstRight:0, answered:0, combo:0, skips:0, wrongNow:0, hintLvl:0, usedHint:false, perSkill:{}};
   LS.queue = [makeQ(id, 0), makeQ(id, 0), makeQ(id, Math.min(1, sk(id).lvl))];
@@ -2591,16 +2599,20 @@ function showDemo(){
   LS.demo = {step:0};
   showQ(true);
   const wrap = $('#lbody .q');
-  wrap.prepend(el('div', 'modetag', `${icon('bulb', 3)} WATCH KIBI: I’ll show you how`));
-  wrap.querySelector('.qans').classList.add('demo');
+  const tag = el('div', 'modetag demotag', `${icon('bulb', 3)} WATCH KIBI FIRST · tap NEXT STEP`);
+  const sk1 = el('button', 'skipdemo', 'I know this! Skip ▶'); sk1.onclick = () => { const id = LS.id; sk(id).learned = true; save(); startLesson(id, {skipLearn:true}); };
+  tag.append(sk1); wrap.prepend(tag);
+  const qa = wrap.querySelector('.qans'); qa.classList.add('demo');
+  const nudge = e => { if (!LS || !LS.demo) return; e.preventDefault(); e.stopPropagation(); fxAnim($('#checkBtn'), 'bump', 400); fxAnim(tag, 'shake', 450); };
+  qa.addEventListener('click', nudge, true); qa.addEventListener('touchend', nudge, {capture:true, passive:false});
   $('#hintBtn').hidden = true;
-  const b = $('#checkBtn'); b.disabled = false; b.textContent = 'NEXT STEP';
+  const b = $('#checkBtn'); b.disabled = false; b.textContent = 'NEXT STEP ▶'; b.classList.add('pulse');
 }
 function demoStep(){
   const q = LS.queue[0], D = LS.demo, hb = $('#hintbox');
   if (q.kind === 'write'){
     if (D.step === 0 && LS.writer){ hb.hidden = false; hb.innerHTML = `<div class="ht"><span>${icon('bulb', 3)}</span><div>${RB(XPH.demo)} ${RB(XPH.h_rule)}</div></div>`; LS.writer.animateCharacter(); speak(q.say, 'zh'); D.step = 1; $('#checkBtn').textContent = 'TRY ONE TOGETHER'; return; }
-    LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#hintBtn').hidden = false; showQ(); return;
+    LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; showQ(); return;
   }
   const ht = x => typeof x === 'string' ? x : x.h;
   if (D.step < q.hints.length){
@@ -2623,7 +2635,7 @@ function demoStep(){
     $('#checkBtn').textContent = 'TRY ONE TOGETHER';
     return;
   }
-  LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#hintBtn').hidden = false; showQ();
+  LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; showQ();
 }
 function finishLearn(){
   const s = sk(LS.id); s.learned = true; logSession(); save();
@@ -3596,6 +3608,24 @@ function gradeTabs(){
   });
   return t;
 }
+
+
+/* iOS: block pinch and double-tap zoom, but never lose a quick second tap */
+(function(){
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), {passive:false}));
+  let last = 0;
+  document.addEventListener('touchend', e => {
+    const now = Date.now(), tg = e.target;
+    if (tg.closest && tg.closest('input, textarea, select, .hzwrap, .freepad')) { last = now; return; }
+    if (now - last < 350){
+      e.preventDefault();
+      const b = tg.closest && tg.closest('button, .choice, .tile, .slot, .node, label, a, [data-close]');
+      if (b && !b.disabled) b.click();
+    }
+    last = now;
+  }, {passive:false});
+  document.addEventListener('dblclick', e => e.preventDefault(), {passive:false});
+})();
 
 /* ================= state & saving ================= */
 const KEY = 'p1-maths-quest-v1';
