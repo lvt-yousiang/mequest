@@ -724,6 +724,171 @@ svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
 .loglist > div{align-items:center}
 .logx{margin-left:8px;min-width:32px;min-height:32px;background:#fff;box-shadow:var(--pf);font:700 16px/1 var(--display);color:var(--muted);padding:0 8px}
 .logx.sure{background:#FFE1DC;color:#B33A2A;font-size:12px}
+
+/* ===================== layout pass: tablets & phones, less scrolling ===================== */
+.hub{display:contents}
+.wideonly{display:none !important}
+.reviewcard{margin-bottom:18px}
+.hello{margin-bottom:14px}
+/* home hub as a tidy grid on tablets in portrait */
+@media (min-width:700px) and (orientation:portrait){
+  .hub .wideonly{display:flex !important}
+  .narrowonly{display:none !important}
+  .hub{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;container-type:inline-size}
+  .hub > *{margin:0 !important;min-width:0}
+  .hub > .hello,.hub > .palcard{grid-column:1 / -1}
+  .hub > .hello{margin-bottom:-4px !important}
+  .hub .reviewcard{padding:12px 14px;gap:10px}
+  .hub .reviewcard h3{font-size:20px}
+  .hub .reviewcard p{font-size:14px}
+  .hub .reviewcard .btn{min-height:52px;font-size:18px;padding-left:14px;padding-right:14px}
+  .hub .bosscard .bossme svg{width:72px;height:auto}
+  .hub > :last-child:nth-child(odd):not(.hello):not(.palcard){grid-column:1 / -1}
+}
+/* home: sidebar + path on landscape tablets */
+@media (orientation:landscape) and (min-width:880px){
+  #home{max-width:1320px}
+  #home:not([hidden]){display:grid;grid-template-columns:minmax(330px, 400px) minmax(0, 1fr);column-gap:28px;align-items:start}
+  #home > :not(.hub):not(.pathcol){grid-column:1 / -1}
+  .hub{display:flex;flex-direction:column;gap:12px;position:sticky;top:12px;max-height:calc(100dvh - 120px);overflow:auto;padding:4px 6px 12px 4px;container-type:inline-size;scrollbar-width:thin}
+  .hub > *{margin:0 !important;flex:0 0 auto}
+  .hub .wideonly{display:flex !important}
+  .narrowonly{display:none !important}
+  .hub .hello{margin:0 0 2px !important}
+  .hub .hello .kibi{width:64px}
+  .hub .hello .bub{font-size:17px}
+  .hub .reviewcard{padding:12px 14px;gap:10px}
+  .hub .reviewcard h3{font-size:19px}
+  .hub .reviewcard p{font-size:13.5px}
+  .hub .reviewcard .btn{min-height:48px;font-size:17px;padding-left:12px;padding-right:12px}
+  .pathcol{min-width:0}
+  .pathcol .unit:first-child{margin-top:0}
+}
+/* cards inside a narrow hub: stack the pal buttons in a row under the pal */
+@container (max-width:460px){
+  .palcard{flex-wrap:wrap}
+  .palbtns{flex-direction:row !important;flex:1 1 100% !important;flex-wrap:wrap}
+  .palbtns .btn{flex:1;min-width:0;min-height:48px !important;font-size:16px !important;padding-left:6px;padding-right:6px}
+  .bosscard{flex-wrap:wrap}
+  .bosscard > div:nth-child(2){flex:1;min-width:150px}
+  .bosscard > .btn{flex:1 1 100%}
+  .bosscard .bossme svg{width:60px;height:auto}
+}
+
+/* lesson: landscape tablets/phones with limited height -> number pad in 2 rows of 6 */
+@media (orientation:landscape) and (max-height:900px) and (min-width:640px){
+  .keypad:not(.pinpad){grid-template-columns:repeat(6,minmax(0,calc(64px * var(--k))));gap:8px;width:100%;justify-content:center}
+  .keypad:not(.pinpad) button{height:calc(54px * var(--k));font-size:calc(26px * var(--k));margin:3px}
+  .keypad:not(.pinpad) > span{display:none}
+  .keypad:not(.pinpad) .del{order:1}
+  .numbox{height:calc(60px * var(--k))}
+  .q{gap:12px}
+  .qhead .kibi{width:calc(56px * var(--k))}
+  .arena{padding:4px 10px}
+  .arena svg{max-height:60px;width:auto}
+  .ltop{padding-bottom:6px}
+}
+/* the pal's speech bubble during lessons sits beside it, not over the question */
+.ltop .buddyb .petbub.help{top:50%;bottom:auto;right:calc(100% + 8px);left:auto;transform:translateY(-50%)}
+/* pictures: never taller than the space we have */
+@media (max-height:760px){
+  .qvis svg{max-height:30dvh;max-width:100%}
+  .choices{gap:10px}
+  .choice{min-height:calc(56px * var(--k));padding:8px 12px 10px;font-size:calc(22px * var(--k))}
+  .arena svg{max-height:52px;width:auto}
+  .arena{padding:4px 8px}
+  .arena .ar-mid b{font-size:15px}
+}
+
+/* play overlay: always fits the screen */
+.playov{overflow:auto;align-items:center}
+.playstage{max-height:calc(100dvh - 24px);overflow:auto}
+@media (max-height:760px){
+  .playstage{padding:10px;gap:8px}
+  .playfield{height:min(34dvh,260px)}
+  .playfield.soccer{height:min(40dvh,300px)}
+  .playbtns .btn{min-height:46px;font-size:16px}
+  .tkey{height:calc(70px * var(--k))}
+}
+@media (orientation:landscape) and (max-height:600px){
+  .playstage{width:min(900px,100%);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:12px}
+  .playtop{grid-column:1 / -1}
+  .playfield,.playfield.soccer{grid-column:1;grid-row:2 / span 2;height:calc(100dvh - 110px)}
+  .playbtns{grid-column:2;grid-row:2}
+  .playbtns .btn{flex:1 1 100%}
+  .playarea{grid-column:2;grid-row:3}
+  .tkey{width:calc(30px * var(--k));height:calc(64px * var(--k))}
+}
+
+/* pal detail: two columns when there is room */
+@media (min-width:700px){
+  .mcard:has(.paldet){max-width:900px;width:calc(100% - 32px)}
+  .paldet{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);column-gap:24px;align-items:start}
+  .paldet .pdl{position:sticky;top:0}
+  .paldet .pdr .ah:first-child{margin-top:0}
+  .paldet > .acts{grid-column:1 / -1}
+}
+@media (max-height:760px){ .paldet .pdtop{padding:8px} .paldet .pdtop svg{max-height:120px;width:auto} }
+
+/* shop: more rewards per row, smaller cards */
+@media (min-width:700px){ .shopgrid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px} }
+@media (orientation:landscape) and (min-width:880px){ #shop{max-width:1320px} .shopgrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))} }
+.rcard{padding:12px;gap:8px}
+.rcard .remo{font-size:calc(34px * var(--k))}
+@media (max-width:560px){
+  .shopgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .rcard{padding:10px 8px}
+  .rcard b{font-size:15px}
+  .rcard .btn{min-height:48px;font-size:17px}
+  .shophead{padding:12px;gap:10px;margin-bottom:16px}
+  .shophead h2{font-size:24px}
+}
+
+/* phone landscape: prompt on the left, answers on the right */
+@media (orientation:landscape) and (max-height:500px){
+  .q:has(.qgrid.solo){display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:center;column-gap:14px;row-gap:6px}
+  .q:has(.qgrid.solo) > *{grid-column:2}
+  .q:has(.qgrid.solo) > .qhead{grid-column:1;grid-row:span 3;align-self:center}
+  .q:has(.qgrid.solo) > .modetag,.q:has(.qgrid.solo) > .arena{grid-column:1 / -1}
+  .buddyb svg{max-height:32px;width:auto}
+  .arena{padding:2px 8px}
+  .arena svg{max-height:34px;width:auto}
+  .arena .hp{height:10px}
+  .arena .ar-mid b{font-size:13px}
+  .arena .ar-mid small{display:none}
+  .modetag{margin-bottom:4px;padding:4px 8px}
+}
+
+@media (orientation:portrait) and (max-height:700px){
+  .arena{padding:2px 8px;gap:6px}
+  .arena svg{max-height:38px;width:auto}
+  .arena .ar-mid small{display:none}
+  .arena .hp{height:10px}
+  .q:has(.arena) .qhead .kibi{display:none}
+}
+
+/* phones: compact home hub so the path starts sooner */
+@media (max-width:560px){
+  .hello{margin:0 0 8px;gap:10px}
+  .hello .kibi{width:58px}
+  .hello .bub{font-size:16px;padding:8px 12px}
+  .reviewcard{margin-bottom:12px;padding:10px 12px;gap:10px}
+  .reviewcard h3{font-size:19px}
+  .reviewcard p{font-size:13.5px}
+  .reviewcard .btn{min-height:48px;font-size:17px;padding-left:12px;padding-right:12px}
+  .palcard .palme svg{width:64px;height:auto}
+  .palbtns .btn{min-height:46px !important;font-size:15px !important;white-space:nowrap}
+  .bosscard{flex-wrap:nowrap !important}
+  .bosscard .bossme svg{width:56px;height:auto}
+  .bosscard .bdesc{display:none}
+  .bosscard > div:nth-child(2){min-width:0 !important}
+  .bosscard > .btn{flex:0 0 auto !important}
+  .bosscard h3{font-size:19px}
+  .subjtabs,.gtabs{margin-bottom:10px}
+}
+
+@media (min-width:700px) and (orientation:portrait){ .hub .hello .kibi{width:72px} .hub .hello .bub{font-size:19px} }
+.rcard .btn{margin-top:auto}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -2219,12 +2384,13 @@ function zhXZ(g, d){
 }
 function freeH(extra){
   const lb = $('#lbody'); if (!lb) return 300;
-  const used = [...lb.querySelectorAll('.qhead, .modetag')].reduce((t, e) => t + e.offsetHeight + 16, 0);
+  const side = matchMedia('(orientation:landscape) and (max-height:500px)').matches && lb.querySelector('.q:has(.qgrid.solo)');
+  const used = [...lb.querySelectorAll(side ? '.modetag, .arena' : '.qhead, .modetag, .arena')].reduce((t, e) => t + e.offsetHeight + 16, 0);
   return lb.clientHeight - used - extra - 24;
 }
 function buildWrite(q, box){
   LS.writeDone = false; LS.writeMist = 0; LS.writer = null;
-  const avail = Math.min(box.clientWidth || 340, 400, Math.max(130, freeH(78)));
+  const avail = Math.min(box.clientWidth || 340, 400, Math.max(130, freeH(118)));
   const s = Math.round(avail);
   const wrap = el('div', 'hzwrap', TZG(s)); wrap.style.width = wrap.style.height = s + 'px';
   const tgt = el('div', 'hztgt'); wrap.append(tgt);
@@ -3030,7 +3196,7 @@ function dictRecord(q, ok){
 function buildDict(q, box){
   LS.writeDone = false; LS.writeMist = 0; LS.writer = null; LS.dIdx = 0;
   const row = el('div', 'drow'); q.chars.forEach(() => row.append(el('span', 'dcell')));
-  const s = Math.round(Math.min(box.clientWidth || 320, 360, Math.max(130, freeH(84))));
+  const s = Math.round(Math.min(box.clientWidth || 320, 360, Math.max(130, freeH(120))));
   const wrap = el('div', 'hzwrap', TZG(s)); wrap.style.width = wrap.style.height = s + 'px';
   box.append(row, wrap);
   const next = () => {
@@ -3980,7 +4146,7 @@ function bossCard(){
   const pool = bossPool(), e = bossEl(), mine = palById(P.buddy).el;
   const c = el('div', 'reviewcard bosscard' + (B.won ? ' won' : ''));
   const adv = BEATS[mine] === e ? `<b class="adv">${ELNAME[mine]} beats ${ELNAME[e]}: double damage!</b>` : BEATS[e] === mine ? `<span>${ELNAME[e]} is strong against ${ELNAME[mine]}. Be careful!</span>` : '';
-  c.innerHTML = `<div class="bossme">${bossSprite(e, 2)}</div><div><small>WEEKLY BOSS · ${ELNAME[e].toUpperCase()}</small><h3>${BOSSNAME[e]}</h3><p>${B.won ? `Defeated this week! 🏆 ×${B.wins}. A new boss comes on Monday.` : pool.length < 3 ? 'Finish 3 lessons to unlock the boss battle.' : `Answer questions so ${palName(P.buddy, P.own[P.buddy].form)} can attack! ${adv}`}</p></div>`;
+  c.innerHTML = `<div class="bossme">${bossSprite(e, 2)}</div><div><small>WEEKLY BOSS · ${ELNAME[e].toUpperCase()}</small><h3>${BOSSNAME[e]}</h3><p>${B.won ? `Defeated this week! 🏆 ×${B.wins}. A new boss comes on Monday.` : pool.length < 3 ? 'Finish 3 lessons to unlock the boss battle.' : `<span class="bdesc">Answer questions so ${palName(P.buddy, P.own[P.buddy].form)} can attack!</span> ${adv}`}</p></div>`;
   if (!B.won && pool.length >= 3){ const b = el('button', 'btn warm', 'BATTLE!'); b.onclick = startBoss; c.append(b); }
   return c;
 }
@@ -4068,12 +4234,12 @@ function cardModal(id, form){
 /* ---------- pal detail page ---------- */
 function palDetail(id){
   const P = palState(), o = P.own[id], p = palById(id), lvl = palFrLvl(id), fr = palFr(id), nextAt = FR_AT[lvl] || null;
-  openModal(`<div class="paldet"><div class="pdtop" style="background:${ELCOL[p.el][0]}">${palSprite(id, o.form, o.form ? 4 : 5)}</div><h3>${palName(id, o.form)} <small class="hsub">${nickOf(id) ? p.names[o.form] + ' · ' : ''}${ELNAME[p.el]}</small></h3>
+  openModal(`<div class="paldet"><div class="pdl"><div class="pdtop" style="background:${ELCOL[p.el][0]}">${palSprite(id, o.form, o.form ? 4 : 5)}</div><h3>${palName(id, o.form)} <small class="hsub">${nickOf(id) ? p.names[o.form] + ' · ' : ''}${ELNAME[p.el]}</small></h3>
     <div class="frrow">${[0, 1, 2, 3].map(i => `<i class="${i < lvl ? 'on' : ''}">♥</i>`).join('')}<span>Friendship ${fr}${nextAt != null ? ` · next story at ${nextAt}` : ' · all stories unlocked!'}</span></div>
-    <p class="small">Pet ${palName(id, o.form)} (up to 5 times a day), feed berries 🍓 and finish lessons to grow your friendship.</p>
+    <p class="small">Pet ${palName(id, o.form)} (up to 5 times a day), feed berries 🍓 and finish lessons to grow your friendship.</p></div><div class="pdr">
     <h4 class="ah">Stories</h4><div class="stlist">${[0, 1, 2, 3].map(k => k < lvl ? `<button class="btn small" data-st="${k}">📖 Story ${k + 1}</button>` : `<button class="btn small" disabled>🔒 ${FR_AT[k]} ♥</button>`).join('')}</div>
     <h4 class="ah">Cards</h4><div class="cdlist">${[0, 1, 2, 3].map(f => (f < 3 ? f <= o.form : o.mega) ? `<button class="cdmini${f === 3 ? ' mega' : ''}" data-f="${f}" style="background:${ELCOL[p.el][0]}">${palSprite(id, f, 2, f === 2 ? 'raw' : '')}<small>${f === 3 ? 'MEGA' : p.names[f]}</small></button>` : `<div class="cdmini locked"><span class="qm">?</span><small>${f === 3 ? 'MEGA' : 'Stage ' + (f + 1)}</small></div>`).join('')}</div>
-    ${megaBlock(id)}
+    ${megaBlock(id)}</div>
     <div class="acts"><button class="btn" id="pdRen">Rename</button>${P.buddy === id ? '' : '<button class="btn" id="pdBud">Make buddy</button>'}<button class="btn go" data-close>DONE</button></div></div>`, c => {
     c.querySelectorAll('[data-st]').forEach(b => b.onclick = () => storyModal(id, +b.dataset.st));
     c.querySelectorAll('[data-f]').forEach(b => b.onclick = () => cardModal(id, +b.dataset.f));
@@ -4329,23 +4495,26 @@ function renderHome(){
   home.append(subjTabs());
   const next = ORDER.find(id => unlocked(id) && sk(id).lvl < 3) || null;
   const hello = el('div', 'hello', kibi(dayXP() >= GOAL ? 'wow' : 'happy', {scale:4}) + `<div class="bub">${dayXP() >= GOAL ? 'You reached today’s goal! Amazing!' : next ? `Let’s play: ${SK[next].name}!` : 'You mastered everything! Try a review.'}</div>`);
-  home.append(hello);
-  home.append(palCard());
-  { const bc = bossCard(); if (bc) home.append(bc); }
-  if (!SUB.id.startsWith('math')) dictCards(SUB.id).forEach(c => home.append(c));
+  const hub = el('div', 'hub'), pathc = el('div', 'pathcol');
+  home.append(hub, pathc);
+  hub.append(hello);
+  hub.append(palCard());
+  { const bc = bossCard(); if (bc) hub.append(bc); }
+  if (!SUB.id.startsWith('math')) dictCards(SUB.id).forEach(c => hub.append(c));
   const rec1 = ORDER.some(id => sk(id).lvl >= 1) ? recommend(SUB.id) : null;
   if (rec1){
     const rc = el('div', 'reviewcard reco', `<div><small>${icon('bulb', 2)} KIBI RECOMMENDS</small><h3>${SK[rec1.id].name}</h3><p>${SK[rec1.id].name} ${rec1.why}.</p></div>`);
     const b = el('button', 'btn go', rec1.btn); b.onclick = () => startLesson(rec1.id, rec1.lvl ? {lvl:rec1.lvl} : {});
-    rc.append(b); home.append(rc);
+    rc.append(b); hub.append(rc);
   }
   const lc = el('div', 'reviewcard check', `<div><h3>${SUB.label} level check</h3><p>About 10 minutes, no hints. Shows Mum and Dad how far you have got${S.place && ORDER.some(id => S.place[id]) ? ' (you can do it again any time)' : ''}.</p></div>`);
   { const b = el('button', 'btn dark', 'CHECK'); b.onclick = () => startTest(quickSkills(SUB.id), `${SUB.label} quick check`); lc.append(b); }
   if (ORDER.some(id => sk(id).lvl >= 1)){
     const rc = el('div', 'reviewcard', `<div><h3>${SUB.label} mixed review</h3><p>Questions from lessons you have played. Great for remembering!</p></div>`);
     const b = el('button', 'btn dark', 'GO'); b.onclick = () => startLesson(null);
-    rc.append(b); home.append(rc);
+    rc.append(b); hub.append(rc);
   }
+  { const lc2 = lc.cloneNode(true); lc2.classList.add('wideonly'); lc2.querySelector('button').onclick = lc.querySelector('button').onclick; hub.append(lc2); lc.classList.add('narrowonly'); }
   let ni = 0;
   SUB.units.forEach((u, ui) => {
     const sec = el('section', 'unit'); sec.style.setProperty('--u', u.color);
@@ -4367,10 +4536,10 @@ function renderHome(){
       w.append(b, el('div', 'nstars', starHTML(s.lvl)), el('div', 'nlabel', SK[id].name + (SK[id].sub ? `<small>${SK[id].sub}</small>` : '')));
       nodes.append(w);
     });
-    sec.append(nodes); home.append(sec);
+    sec.append(nodes); pathc.append(sec);
   });
-  home.append(lc);
-  home.append(el('div', 'ground'));
+  pathc.append(lc);
+  pathc.append(el('div', 'ground'));
   renderStats();
 }
 const starHTML = n => [0, 1, 2].map(i => i < n ? icon('star', 3) : icon('star', 3, {Y:'#C9D0DC', h:'#E6EBF2'})).join('');
@@ -5271,7 +5440,7 @@ function confetti(){
 }
 
 /* expose for testing */
-window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
+window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {ALLSK, SUBJECTS, playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
 
 render();
 setTimeout(connectRemote, 0);
