@@ -441,6 +441,8 @@ rt{font:700 .48em/1 var(--body);color:#6A6380;letter-spacing:0}
 .pindots i{width:22px;height:22px;background:#E6EBF2;box-shadow:var(--pf);margin:4px}
 .pindots i.on{background:var(--ink)}
 .pinpad{margin:0 auto;grid-template-columns:repeat(3,76px)}
+.keypad.pinpad{display:grid !important;grid-template-columns:repeat(3,76px) !important;justify-content:center !important;width:100% !important;max-width:none !important}
+.keypad.pinpad .padgap{visibility:hidden !important;pointer-events:none;display:block !important}
 .pinpad button{height:60px;font-size:28px}
 .sec{margin-top:18px}
 .sec h4{margin:0 0 8px;font:700 20px/1.2 var(--display)}
@@ -4496,7 +4498,8 @@ function askPin(title, onOK, setMode){
       } else if (val === S.pin){ closeModal(); onOK(); }
       else { val = ''; sub.textContent = 'That code is not right. Try again.'; sfx.think(); draw(); }
     };
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 'del', 0].forEach(k => {
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 'gap', 0, 'del'].forEach(k => {
+      if (k === 'gap'){ const g = el('button', 'padgap', ''); g.disabled = true; g.tabIndex = -1; g.setAttribute('aria-hidden', 'true'); pad.append(g); return; }
       const b = el('button', k === 'del' ? 'del' : '', k === 'del' ? '⌫' : String(k));
       b.setAttribute('aria-label', k === 'del' ? 'Delete' : String(k));
       b.onclick = () => { sfx.tap(); if (k === 'del') val = val.slice(0, -1); else if (val.length < 4) val += k; draw(); if (val.length === 4) setTimeout(done, 120); };
