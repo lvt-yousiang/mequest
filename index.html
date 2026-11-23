@@ -889,6 +889,146 @@ svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
 
 @media (min-width:700px) and (orientation:portrait){ .hub .hello .kibi{width:72px} .hub .hello .bub{font-size:19px} }
 .rcard .btn{margin-top:auto}
+/* ===================== 练字本 ===================== */
+.cbov{position:fixed;inset:0;z-index:85;background:#E9F4FF var(--clouds) 0 0/640px 360px repeat;display:flex;flex-direction:column;overflow:hidden;padding-top:env(safe-area-inset-top)}
+.cbbar{display:flex;align-items:center;gap:12px;padding:10px max(16px, env(safe-area-inset-left));max-width:1100px;width:100%;margin:0 auto}
+.cbbar > b{font:700 28px/1 var(--zhfont)}
+.cbtoday{margin-left:auto;font:700 16px/1 var(--display);background:#fff;padding:8px 10px;box-shadow:var(--pf)}
+.cbtabs{display:flex;gap:8px;padding:0 max(16px, env(safe-area-inset-left)) 8px;max-width:1100px;width:100%;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.cbtab{flex:1 0 auto;background:var(--stone) var(--noise) 0 0/24px 24px;font:700 16px/1 var(--display);padding:12px 12px;box-shadow:var(--pf), var(--bevel);margin:4px;min-height:48px;white-space:nowrap}
+.cbtab.on{background:#fff;box-shadow:var(--pf), inset 0 -5px 0 var(--sun)}
+.cbbody{flex:1;overflow:auto;padding:8px max(16px, env(safe-area-inset-left)) calc(24px + env(safe-area-inset-bottom));max-width:1100px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.cbhero{display:flex;align-items:center;gap:16px;background:#fff;padding:14px 16px;box-shadow:var(--pf), var(--drop);margin:4px}
+.cbhero h3{margin:0;font:700 24px/1.2 var(--zhfont)}
+.cbhero p{margin:6px 0 0;font:700 15px/1.35 var(--body);color:var(--muted)}
+.cbbigemo{font-size:54px;line-height:1}
+.cbtiles{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cbtile{width:96px;height:112px;background:#fff;box-shadow:var(--pf), var(--drop);margin:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative}
+.cbtile .zh{font:400 54px/1 var(--zhfont)}
+.cbtile small{font:400 11px/1 var(--label);color:var(--muted)}
+.cbtile.due small{color:#C9503B}
+.cbtile.done{background:#F0FBE9}
+.cbtile .gold,.cbcell.gold::after{position:absolute;right:-8px;top:-8px;background:#F6C23E;color:#7A4B00;font:700 13px/1 var(--zhfont);padding:5px;border-radius:50%;box-shadow:0 0 0 3px #fff, 0 0 0 5px #C98A06;font-style:normal}
+.cbst{display:inline-flex;gap:1px;font-size:16px;line-height:1;color:#D5DCE6}.cbst i{font-style:normal}.cbst i.on{color:#F6B81F}
+.cbgo{display:flex;justify-content:center}.cbgo .btn{max-width:420px}
+.cbsrc{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap}
+.cbsrc small{font:400 12px/1 var(--label);color:var(--muted)}
+.cbsrc select{font:700 16px/1.2 var(--body);padding:10px;border:0;box-shadow:inset 0 0 0 3px var(--line);background:#fff;max-width:100%}
+/* session */
+.cbsess{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1}
+.cbside{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:520px}
+.cbprog{display:flex;gap:6px;justify-content:center}.cbprog i{width:28px;height:10px;background:#D5DCE6;box-shadow:0 0 0 2px var(--ink)}.cbprog i.ok{background:#6BC84A}.cbprog i.now{background:var(--sun)}
+.cbsteps{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.cbsteps span{display:flex;align-items:center;gap:6px;background:#fff;padding:6px 10px;box-shadow:var(--pf);margin:3px;font:700 16px/1 var(--zhfont);color:var(--muted)}
+.cbsteps span b{display:grid;place-items:center;width:22px;height:22px;background:#E6EBF2;font:700 13px/1 var(--display)}
+.cbsteps span small{font:400 10px/1 var(--label)}
+.cbsteps span.on{color:var(--ink);background:#FFF3C4}.cbsteps span.on b{background:var(--sun)}
+.cbsteps span.ok{color:#2E7F34}.cbsteps span.ok b{background:#6BC84A;color:#fff}
+.cbq{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.cbbig{font:400 64px/1.3 var(--zhfont)}.cbbig rt{font:700 18px/1 var(--body);color:#C9503B}
+.cbpy{font:700 34px/1.1 var(--body);color:#C9503B}
+.cbword{font-size:30px !important;line-height:2 !important}
+.cbbtns{display:flex;gap:8px}
+.cbpad{display:flex;justify-content:center;width:100%}
+.hzwrap.alive svg,.hzwrap.alive .hztgt{transition:opacity .4s}
+.cbscene{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;overflow:hidden;z-index:5}
+.cbemo{font-size:min(30vw,150px);line-height:1;filter:drop-shadow(0 6px 0 rgba(0,0,0,.12))}
+.an-flicker .cbemo{animation:anflick .25s steps(2) 8 alternate, anpop .5s steps(5) both}
+.an-drop .cbemo{animation:androp 1.2s cubic-bezier(.3,1.6,.5,1) both}
+.an-rise .cbemo{animation:anrise 1.4s steps(10) both}
+.an-spin .cbemo{animation:anpop .5s steps(5) both, anspin 2s linear .5s 2}
+.an-grow .cbemo{transform-origin:50% 100%;animation:angrow 1.4s steps(8) both}
+.an-swim .cbemo{animation:answim 2.2s ease-in-out both}
+.an-fly .cbemo{animation:anfly 2.2s ease-in-out both}
+.an-walk .cbemo{animation:anwalk 2.4s steps(14) both}
+.an-bounce .cbemo{animation:anpop .4s steps(4) both, anbounce .5s ease-in-out .4s 4}
+.an-pulse .cbemo{animation:anpop .4s steps(4) both, anpulse .5s steps(2) .4s 4}
+.an-wave .cbemo{transform-origin:70% 90%;animation:anpop .4s steps(4) both, anwave .35s steps(2) .4s 6 alternate}
+.an-blink .cbemo{animation:anpop .4s steps(4) both, anblink 1.2s steps(1) .4s 2}
+.an-rain .cbemo{animation:androp 1s ease-in both, anrain .4s steps(2) 1s 4}
+.an-drift .cbemo{animation:andrift 2.4s ease-in-out both}
+.an-bloom .cbemo{animation:anbloom 1.2s steps(6) both}
+.an-twinkle .cbemo{animation:anpop .4s steps(4) both, antwk .4s steps(2) .4s 5}
+.an-roll .cbemo{animation:anroll 2s ease-in-out both}
+.an-card .cbcardfly{font:400 min(26vw,130px)/1 var(--zhfont);color:#C98A06;text-shadow:0 0 18px #FFE58A;animation:ancard 1.4s steps(8) both}
+@keyframes anpop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes anflick{to{transform:scale(1.1,0.92)}}
+@keyframes androp{0%{transform:translateY(-120%)}100%{transform:none}}
+@keyframes anrise{0%{transform:translateY(80%);opacity:0}100%{transform:none;opacity:1}}
+@keyframes anspin{to{transform:rotate(360deg)}}
+@keyframes angrow{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+@keyframes answim{0%{transform:translateX(-130%) rotate(0)}40%{transform:translateX(0) translateY(-10%)}70%{transform:translateX(15%) translateY(5%)}100%{transform:none}}
+@keyframes anfly{0%{transform:translate(-120%,60%) rotate(-20deg)}50%{transform:translate(10%,-30%) rotate(10deg)}100%{transform:none}}
+@keyframes anwalk{0%{transform:translateX(-120%)}50%{transform:translateX(0) translateY(-6%)}60%{transform:translateY(0)}100%{transform:none}}
+@keyframes anbounce{50%{transform:translateY(-18%)}}
+@keyframes anpulse{50%{transform:scale(1.18)}}
+@keyframes anwave{to{transform:rotate(-18deg)}}
+@keyframes anblink{40%{transform:scaleY(.1)}50%{transform:none}}
+@keyframes anrain{to{transform:translateY(6%)}}
+@keyframes andrift{0%{transform:translateX(-80%);opacity:0}40%{opacity:1}100%{transform:none}}
+@keyframes anbloom{0%{transform:scale(0) rotate(-90deg)}100%{transform:none}}
+@keyframes antwk{50%{transform:scale(.8) rotate(15deg);filter:brightness(1.4)}}
+@keyframes anroll{0%{transform:translateX(-140%)}80%{transform:translateX(8%)}100%{transform:none}}
+@keyframes ancard{0%{transform:scale(.6);opacity:0}50%{transform:scale(1.15);opacity:1}100%{transform:none}}
+.hzwrap.alive .hztgt{opacity:.25}
+.cbres{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cbres .btn{margin-top:8px;max-width:360px}
+.cbmean{font:700 20px/1 var(--display)}
+.cbstars .cbst{font-size:34px}
+.goldstamp{display:inline-block;background:#F6C23E;color:#7A4B00;font:700 26px/1 var(--zhfont);padding:10px 14px;border-radius:50%;box-shadow:0 0 0 4px #fff, 0 0 0 7px #C98A06;transform:rotate(-12deg);animation:stamp .5s steps(4) both}
+.goldstamp.small{font-size:14px;padding:5px 7px}
+@keyframes stamp{0%{transform:scale(2.4) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.cbdone{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:12px}
+.cbdone h2{margin:0;font:700 32px/1.1 var(--zhfont)}
+.cbreward{font:700 20px/1.3 var(--display);background:#FFF3C4;padding:10px 14px;box-shadow:var(--pf)}
+/* album */
+.cbalhead{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:12px 16px;box-shadow:var(--pf);margin:4px;font:700 20px/1 var(--zhfont)}
+.cbalhead span{font:700 16px/1 var(--display)}
+.cbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.cbcell{position:relative;aspect-ratio:1/1.1;background:#F2F5FA;box-shadow:var(--pf);margin:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.cbcell .zh{font:400 32px/1 var(--zhfont);color:#C9D1DD}
+.cbcell.got{background:#fff;box-shadow:var(--pf), var(--bevel)}.cbcell.got .zh{color:var(--ink)}
+.cbcell .cbst{font-size:11px}
+.cbcell.gold{background:#FFF6D6}.cbcell.gold::after{content:"金";font-size:10px;padding:3px;right:-6px;top:-6px}
+.cbcard{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+/* flash */
+.cbflash{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cbflashbox{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:440px}
+.cbflashch{font:400 min(52vw,220px)/1 var(--zhfont);animation:anpop .3s steps(3) both}
+.cbtimer{width:100%;max-width:300px;height:12px;background:#E6EBF2;box-shadow:var(--pf)}
+.cbtimer i{display:block;height:100%;background:var(--sun);animation:cbt linear both}
+@keyframes cbt{from{width:100%}to{width:0}}
+/* parts */
+.cbparts{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.cbtarget{display:flex;flex-direction:column;align-items:center}
+.cbmerge{display:flex;align-items:center;gap:10px;min-height:110px}
+.cbslot,.cbpart{width:84px;height:84px;display:grid;place-items:center;background:#fff;box-shadow:var(--pf);font:400 54px/1 var(--zhfont);margin:4px}
+.cbslot{background:#F2F5FA;color:#C9D1DD;font-family:var(--display)}.cbslot.filled{background:#FFF3C4;color:var(--ink);font-family:var(--zhfont)}
+.cbplus{font:700 30px/1 var(--display);color:var(--muted)}
+.cbjoin{display:inline-flex;width:110px;height:110px;background:#fff;box-shadow:var(--pf), var(--drop);align-items:center;justify-content:center;overflow:hidden}
+.cbjoin.lr .zh{font:400 96px/1 var(--zhfont);transform:scaleX(.5);width:50%;display:grid;place-items:center}
+.cbjoin.tb{flex-direction:column}.cbjoin.tb .zh{font:400 96px/1 var(--zhfont);transform:scaleY(.5);height:50%;display:grid;place-items:center}
+.cbmerge.merge .cbjoin{animation:anpulse .3s steps(2) 2}
+.cbmerged{display:grid;place-items:center;width:110px;height:110px;background:#FFF3C4;box-shadow:var(--pf), var(--drop);font:400 90px/1 var(--zhfont);animation:anpop .4s steps(4) both}
+.cbopts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:560px}
+.cbopt{font-size:40px !important;min-width:84px}
+.cbopt.used{opacity:.35}.cbopt.right{background:var(--goodbg)}
+.cbopt rt{font:700 14px/1 var(--body)}
+/* home card */
+.cbhome{background:#FFF1E6}
+.cbhome small{display:block;font:400 12px/1.2 var(--label);color:#B35A1F;letter-spacing:.05em}
+.cbhome h3{font-family:var(--zhfont) !important}
+.cbmini{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.cbmini span{width:34px;height:34px;display:grid;place-items:center;background:#fff;box-shadow:var(--pf);font:400 24px/1 var(--zhfont);margin:3px}
+.cbmini span.ok{background:#DFF5D3;color:#2E7F34}
+/* landscape: info beside the writing grid */
+@media (orientation:landscape) and (min-width:700px){
+  .cbsess{flex-direction:row;align-items:center;justify-content:center;gap:28px}
+  .cbside{max-width:470px}
+  .cbpad{width:auto;flex:0 1 auto}
+}
+@media (max-height:760px){ .cbbar{padding-top:6px;padding-bottom:6px} .cbtab{min-height:42px;padding:8px 10px;font-size:14px} .cbbig{font-size:48px} .cbword{font-size:24px !important} .cbhero{padding:10px 12px} }
+@media (max-width:560px){ .cbsteps span small{display:none} .cbsteps span{padding:5px 8px;font-size:15px} .cbbig{font-size:46px} .cbword{font-size:24px !important} .cbsess{gap:6px} .cbtile{width:64px;height:84px} .cbtile .zh{font-size:40px} .cbtab{font-size:14px;padding:10px 8px} .cbslot,.cbpart{width:64px;height:64px;font-size:42px} .cbopt{font-size:32px !important;min-width:64px} }
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -4430,6 +4570,334 @@ function playPal(){
 /* buddy chats during lessons */
 function buddySay(t){ const b = $('#buddyb'); if (!b || b.hidden) return; b.querySelectorAll('.petbub').forEach(x => x.remove()); const s = el('span', 'petbub help', t); b.append(s); setTimeout(() => s.remove(), 1500); }
 
+/* ================= 练字本 Copybook =================
+   Daily 5 characters · 3 steps each (trace → faint → memory) · stars & gold stamp ·
+   pictograph chars come alive · 字卡图鉴 · 闪现记忆 · 部件拼字 · spaced review */
+const CB_DAILY = 5, CB_GAP = [1, 2, 4, 7, 14, 30];
+/* pictographs that come alive: emoji, animation, meaning */
+const CB_ANIM = {
+  '火':['🔥','flicker','fire'], '水':['💧','drop','water'], '山':['⛰️','rise','mountain'], '日':['☀️','spin','sun'], '月':['🌙','rise','moon'],
+  '木':['🌳','grow','tree'], '林':['🌳🌳','grow','woods'], '森':['🌲🌳🌲','grow','forest'], '树':['🌳','grow','tree'], '鱼':['🐟','swim','fish'],
+  '鸟':['🐦','fly','bird'], '马':['🐎','walk','horse'], '牛':['🐄','walk','cow'], '羊':['🐑','walk','sheep'], '虫':['🐛','walk','bug'],
+  '人':['🚶','walk','person'], '口':['👄','pulse','mouth'], '目':['👁️','blink','eye'], '耳':['👂','wave','ear'], '手':['✋','wave','hand'],
+  '足':['🦶','walk','foot'], '雨':['🌧️','rain','rain'], '云':['☁️','drift','cloud'], '风':['🍃','spin','wind'], '花':['🌸','bloom','flower'],
+  '草':['🌿','grow','grass'], '竹':['🎋','grow','bamboo'], '米':['🍚','bounce','rice'], '田':['🌾','grow','field'], '石':['🪨','drop','stone'],
+  '天':['🌈','rise','sky'], '星':['⭐','twinkle','star'], '心':['❤️','pulse','heart'], '车':['🚗','roll','car'], '门':['🚪','pulse','door'],
+  '瓜':['🍉','bounce','melon'], '果':['🍎','drop','fruit'], '书':['📖','pulse','book'], '笔':['✏️','wave','pen'], '猫':['🐱','bounce','cat'],
+  '狗':['🐶','bounce','dog'], '鸡':['🐔','walk','chicken'], '鸭':['🦆','swim','duck'], '兔':['🐰','bounce','rabbit'], '龙':['🐉','fly','dragon'],
+  '雪':['❄️','rain','snow'], '电':['⚡','flicker','electricity'], '光':['✨','twinkle','light'], '叶':['🍃','drift','leaf'], '船':['⛵','swim','boat'],
+  '家':['🏠','rise','home'], '牙':['🦷','pulse','tooth'], '头':['🙂','bounce','head'], '冰':['🧊','drop','ice'], '蛋':['🥚','bounce','egg'],
+  '球':['⚽','bounce','ball'], '灯':['💡','flicker','lamp'], '爸':['👨','bounce','dad'], '妈':['👩','bounce','mum'], '象':['🐘','walk','elephant'],
+  '虾':['🦐','swim','shrimp'], '苗':['🌱','grow','sprout'], '糖':['🍬','spin','sweet'], '茶':['🍵','pulse','tea'], '衣':['👕','wave','clothes'],
+  '帽':['🧢','bounce','hat'], '伞':['☂️','rise','umbrella'], '钟':['⏰','pulse','clock'], '河':['🌊','swim','river'], '海':['🌊','swim','sea'],
+  '上':['⬆️','rise','up'], '下':['⬇️','drop','down'], '小':['🐜','walk','small'], '大':['🐘','walk','big'], '桥':['🌉','rise','bridge'],
+  '笑':['😄','bounce','laugh'], '哭':['😢','drop','cry'], '飞':['🕊️','fly','fly'], '走':['🚶','walk','walk'], '跑':['🏃','walk','run'],
+  '吃':['😋','pulse','eat'], '唱':['🎤','wave','sing'], '画':['🎨','spin','draw'], '雷':['⚡','flicker','thunder'], '春':['🌷','bloom','spring'],
+  '夏':['🌞','spin','summer'], '秋':['🍂','drift','autumn'], '冬':['⛄','bounce','winter'], '果':['🍎','drop','fruit'], '桃':['🍑','drop','peach'],
+  '月':['🌙','rise','moon'], '刀':['🔪','wave','knife'], '尺':['📏','wave','ruler'], '口':['👄','pulse','mouth'], '牛':['🐄','walk','cow']
+};
+/* 部件拼字: char → [part1, part2, layout lr|tb] */
+const CB_PARTS = {
+  '明':['日','月','lr'], '林':['木','木','lr'], '森':['木','林','tb'], '休':['亻','木','lr'], '好':['女','子','lr'], '他':['亻','也','lr'],
+  '们':['亻','门','lr'], '你':['亻','尔','lr'], '妈':['女','马','lr'], '吗':['口','马','lr'], '河':['氵','可','lr'], '清':['氵','青','lr'],
+  '晴':['日','青','lr'], '情':['忄','青','lr'], '请':['讠','青','lr'], '睛':['目','青','lr'], '江':['氵','工','lr'], '海':['氵','每','lr'],
+  '洗':['氵','先','lr'], '和':['禾','口','lr'], '秋':['禾','火','lr'], '花':['艹','化','tb'], '草':['艹','早','tb'], '苗':['艹','田','tb'],
+  '男':['田','力','tb'], '思':['田','心','tb'], '尖':['小','大','tb'], '从':['人','人','lr'], '众':['人','从','tb'], '字':['宀','子','tb'],
+  '安':['宀','女','tb'], '早':['日','十','tb'], '星':['日','生','tb'], '叶':['口','十','lr'], '听':['口','斤','lr'], '吃':['口','乞','lr'],
+  '唱':['口','昌','lr'], '话':['讠','舌','lr'], '语':['讠','吾','lr'], '认':['讠','人','lr'], '红':['纟','工','lr'], '打':['扌','丁','lr'],
+  '拍':['扌','白','lr'], '地':['土','也','lr'], '村':['木','寸','lr'], '校':['木','交','lr'], '杯':['木','不','lr'], '灯':['火','丁','lr'],
+  '粉':['米','分','lr'], '妹':['女','未','lr'], '姐':['女','且','lr'], '奶':['女','乃','lr'], '爸':['父','巴','tb'], '岩':['山','石','tb'],
+  '想':['相','心','tb'], '相':['木','目','lr'], '时':['日','寸','lr'], '体':['亻','本','lr'], '住':['亻','主','lr'], '位':['亻','立','lr'],
+  '鸭':['甲','鸟','lr'], '鸡':['又','鸟','lr'], '李':['木','子','tb'], '呢':['口','尼','lr'], '吧':['口','巴','lr'], '把':['扌','巴','lr'],
+  '很':['彳','艮','lr'], '对':['又','寸','lr'], '欢':['又','欠','lr'], '朋':['月','月','lr'], '双':['又','又','lr'], '多':['夕','夕','tb'],
+  '炎':['火','火','tb'], '晚':['日','免','lr'], '机':['木','几','lr'], '妙':['女','少','lr'], '笑':['竹','夭','tb'], '国':['囗','玉','in'],
+  '看':['手','目','tb'], '尘':['小','土','tb'], '岁':['山','夕','tb'], '雪':['雨','彐','tb'], '室':['宀','至','tb'], '空':['穴','工','tb']
+};
+CB_PARTS['笑'] = null; CB_PARTS['国'] = null; CB_PARTS['看'] = null; /* keep the game honest: only simple left-right / top-bottom joins */
+
+const cbS = () => { const C = S.cb = S.cb || {chars:{}, day:{}, src:'auto'}; C.chars = C.chars || {}; C.day = C.day || {}; return C; };
+const cbDate = n => { const d = new Date(Date.now() + n * 864e5); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+function cbGroups(){ const g = curGrade(); return g >= 2 ? [...ZH.groups.filter(x => x.id === 'g5' || x.id === 'g6'), ...ZH2G] : ZH.groups.filter(x => ['g1', 'g2', 'g3', 'g4'].includes(x.id)); }
+function cbInfo(c){
+  const ci = charInfo(c);
+  const allG = [...ZH.groups, ...ZH2G];
+  const w = allG.flatMap(g => g.words).find(w => w.w.length > 1 && w.w.includes(c));
+  return {c, py:ci ? ci.py : (w ? w.t.find(t => t[0] === c)[1] : ''), word:w || null};
+}
+function cbPool(src){
+  src = src || cbS().src || 'auto';
+  if (src.startsWith('d')){ const L = dictLists().find(x => x.id === src.slice(1)); if (L) return [...new Set(L.words.join('').split('').filter(c => isHan(c) && hzData(c)))]; src = 'auto'; }
+  const gs = src === 'auto' ? cbGroups() : [...ZH.groups, ...ZH2G].filter(g => g.id === src);
+  return [...new Set(gs.flatMap(g => g.chars.map(x => x.c)).filter(c => hzData(c)))];
+}
+function cbPlan(){
+  const C = cbS(), D = C.day;
+  if (D.date === today() && D.plan && D.plan.length) return D;
+  const pool = cbPool(), seen = C.chars;
+  const due = Object.keys(seen).filter(c => hzData(c) && seen[c].due && seen[c].due <= today()).sort((a, b) => (seen[a].best || 0) - (seen[b].best || 0) || (seen[a].due < seen[b].due ? -1 : 1)).slice(0, 3);
+  const fresh = pool.filter(c => !seen[c] && !due.includes(c));
+  let plan = due.concat(fresh).slice(0, CB_DAILY);
+  if (plan.length < CB_DAILY){ const weak = Object.keys(seen).filter(c => hzData(c) && !plan.includes(c)).sort((a, b) => (seen[a].best || 0) - (seen[b].best || 0)); plan = plan.concat(weak).slice(0, CB_DAILY); }
+  C.day = {date:today(), plan, done:{}, berry:false};
+  save(); return C.day;
+}
+function cbRecord(c, stars, gold){
+  const C = cbS(), r = C.chars[c] = C.chars[c] || {best:0, gold:false, n:0, box:0};
+  r.n++; r.last = today(); r.best = Math.max(r.best || 0, stars); if (gold) r.gold = true;
+  r.box = stars >= 3 ? Math.min(CB_GAP.length - 1, (r.box || 0) + 1) : stars === 2 ? (r.box || 0) : 0;
+  r.due = cbDate(CB_GAP[r.box]);
+  save();
+}
+function cbCredit(xp){
+  S.xp += xp; if (S.day.date !== today()) S.day = {date:today(), xp:0}; S.day.xp += xp;
+  if (S.streak.last !== today()){ S.streak.n = S.streak.last === yesterday() ? S.streak.n + 1 : 1; S.streak.last = today(); }
+  if (S.day.xp >= GOAL && S.goalDay !== today()) S.goalDay = today();
+  save();
+}
+const cbSay = c => { const I = cbInfo(c); speak(I.word ? `${c}，${I.word.w}的${c}` : c, 'zh'); };
+const cbStars = n => `<span class="cbst">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}">★</i>`).join('')}</span>`;
+
+/* ---------- overlay shell ---------- */
+let CBV = null;
+function cbOpen(tab = 'today'){
+  if (CBV) CBV.remove();
+  CBV = el('div', 'cbov'); document.body.append(CBV); document.body.style.overflow = 'hidden';
+  cbTab(tab);
+}
+function cbClose(){ if (CBV){ CBV.remove(); CBV = null; } document.body.style.overflow = ''; try{ speechSynthesis.cancel(); }catch(e){} render(); }
+function cbFrame(tab, inner){
+  const D = cbPlan(), done = Object.keys(D.done).length;
+  CBV.innerHTML = `<div class="cbbar"><button class="iconbtn" id="cbX" aria-label="Close">${icon('cross', 3)}</button><b class="zh">练字本</b><span class="cbtoday">今天 ${done}/${D.plan.length}</span></div>
+    <div class="cbtabs">${[['today', '✍️ 今天'], ['album', '📚 字卡图鉴'], ['flash', '⚡ 闪现记忆'], ['parts', '🧩 部件拼字']].map(([k, t]) => `<button class="cbtab${k === tab ? ' on' : ''}" data-t="${k}">${t}</button>`).join('')}</div>
+    <div class="cbbody"></div>`;
+  CBV.querySelector('#cbX').onclick = cbClose;
+  CBV.querySelectorAll('.cbtab').forEach(b => b.onclick = () => { sfx.tap(); cbTab(b.dataset.t); });
+  const body = CBV.querySelector('.cbbody'); if (inner) body.append(inner); return body;
+}
+function cbTab(t){ ({today:cbToday, album:cbAlbum, flash:cbFlash, parts:cbParts})[t](); }
+
+/* ---------- today ---------- */
+function cbToday(){
+  const body = cbFrame('today'), C = cbS(), D = cbPlan(), done = Object.keys(D.done).length;
+  const srcs = [['auto', '课本生字'], ...cbGroups().map(g => [g.id, g.title]), ...dictLists().filter(L => L.lang === 'zh').map(L => ['d' + L.id, '听写：' + L.name])];
+  const tiles = D.plan.map(c => { const d = D.done[c], r = C.chars[c]; return `<div class="cbtile${d ? ' done' : ''}${r && r.due && r.due <= today() && !d ? ' due' : ''}"><span class="zh">${c}</span>${d ? cbStars(d.stars) + (d.gold ? '<em class="gold">金</em>' : '') : r ? '<small>复习</small>' : '<small>新字</small>'}</div>`; }).join('');
+  body.innerHTML = `<div class="cbhero">${palState().buddy ? palSprite(palState().buddy, palState().own[palState().buddy].form, 3) : kibi('happy', {scale:3})}<div><h3>${done >= D.plan.length && D.plan.length ? '今天的字都写完了！' : '今天写 ' + D.plan.length + ' 个字'}</h3><p>${done >= D.plan.length && D.plan.length ? 'Great job! Come back tomorrow, or play ⚡ 闪现记忆 and 🧩 部件拼字.' : 'Each character: ① trace ② faint lines ③ from memory. Finish all 5 to earn 1 🍓.'}</p></div></div>
+    <div class="cbtiles">${tiles || '<p class="small">No characters found for this list.</p>'}</div>
+    <div class="cbgo"></div>
+    <div class="cbsrc"><small>Characters from</small><select id="cbSrc">${srcs.map(([v, t]) => `<option value="${v}"${(C.src || 'auto') === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></div>`;
+  const go = body.querySelector('.cbgo');
+  const left = D.plan.filter(c => !D.done[c]);
+  if (left.length){ const b = el('button', 'btn go wide', done ? '继续 CONTINUE' : '开始 START'); b.onclick = () => cbSession(left, 'daily'); go.append(b); }
+  else if (D.plan.length){ const b = el('button', 'btn wide', '再练一遍 Practise again'); b.onclick = () => cbSession(D.plan.slice(), 'extra'); go.append(b); }
+  body.querySelector('#cbSrc').onchange = e => { C.src = e.target.value; if (!Object.keys(D.done).length) C.day = {}; save(); cbToday(); };
+}
+
+/* ---------- writing session: 3 steps per char ---------- */
+function cbSession(list, kind){
+  let idx = 0;
+  const STEPS = [['描红', 'Trace'], ['虚线', 'Faint lines'], ['默写', 'From memory']];
+  const run = () => {
+    if (!CBV) return;
+    if (idx >= list.length) return cbFinish(kind, list);
+    const c = list[idx], I = cbInfo(c);
+    const body = cbFrame('today');
+    body.innerHTML = `<div class="cbsess"><div class="cbside">
+        <div class="cbprog">${list.map((x, i) => `<i class="${i < idx ? 'ok' : i === idx ? 'now' : ''}"></i>`).join('')}</div>
+        <div class="cbsteps">${STEPS.map((s, i) => `<span data-i="${i}"><b>${i + 1}</b>${s[0]}<small>${s[1]}</small></span>`).join('')}</div>
+        <div class="cbq"></div>
+        <div class="cbbtns"><button class="btn small" id="cbSay">🔊 读一读</button><button class="btn small" id="cbShow">👀 笔顺</button></div>
+      </div><div class="cbpad"></div></div>`;
+    const pad = body.querySelector('.cbpad'), q = body.querySelector('.cbq');
+    let step = 0, mist = 0, hinted = false, writer = null, wrap = null;
+    const box = () => {
+      const B = body.getBoundingClientRect(), land = matchMedia('(orientation:landscape) and (min-width:700px)').matches;
+      const w = land ? B.width * .56 : B.width - 24, h = land ? B.height - 52 : innerHeight - pad.getBoundingClientRect().top - 30;
+      return Math.round(Math.max(200, Math.min(w, h, 460)));
+    };
+    const ask = () => {
+      body.querySelectorAll('.cbsteps span').forEach(s => s.classList.toggle('on', +s.dataset.i === step));
+      body.querySelectorAll('.cbsteps span').forEach(s => s.classList.toggle('ok', +s.dataset.i < step));
+      const ctx = I.word ? `<div class="zword cbword">${I.word.t.map(t => t[0] === c && step === 2 ? `<ruby><span class="zblank"></span><rt>${t[1]}</rt></ruby>` : `<ruby>${t[0]}<rt>${t[1]}</rt></ruby>`).join('')}</div>` : '';
+      q.innerHTML = step < 2 ? `<div class="cbbig zh"><ruby>${c}<rt>${I.py}</rt></ruby></div>${ctx}` : `<div class="cbpy">${I.py}</div>${ctx}<p class="small">Write it from memory!</p>`;
+      pad.innerHTML = ''; const s = box();
+      wrap = el('div', 'hzwrap', TZG(s)); wrap.style.width = wrap.style.height = s + 'px';
+      const tgt = el('div', 'hztgt'); wrap.append(tgt); pad.append(wrap);
+      writer = HanziWriter.create(tgt, c, {width:s, height:s, padding:Math.round(s * .07), showCharacter:false, showOutline:step < 2,
+        outlineColor:step === 0 ? '#C9D3E0' : '#EEF2F7', strokeColor:'#1E1A2B', drawingColor:'#2F6FDE', drawingWidth:Math.max(12, Math.round(s / 20)),
+        highlightColor:'#F6C23E', strokeAnimationSpeed:1.2, delayBetweenStrokes:220, charDataLoader:hzLoader});
+      const quiz = () => writer.quiz({leniency:step === 2 ? 1.25 : 1.4, showHintAfterMisses:2, markStrokeCorrectAfterMisses:4, highlightOnComplete:true,
+        onMistake:() => { if (step === 2) mist++; fxAnim(wrap, 'shake', 400); tone([300], .06, 'sine', .05); },
+        onCorrectStroke:d => tone([523 * Math.pow(2, Math.min(d.strokeNum, 12) / 12)], .05, 'triangle', .05),
+        onComplete:() => setTimeout(next, 500)});
+      if (step === 0 && !(cbS().chars[c] || {}).n && !REDUCE) writer.animateCharacter({onComplete:() => { writer.hideCharacter(); setTimeout(quiz, 150); }});
+      else quiz();
+      if (step === 0) cbSay(c);
+    };
+    const next = () => {
+      if (!CBV) return;
+      if (step < 2){ step++; sfx.good(); burstAt(wrap, {n:8, r:60}); setTimeout(ask, REDUCE ? 0 : 350); return; }
+      const stars = mist === 0 && !hinted ? 3 : mist <= 2 ? 2 : 1, gold = stars === 3;
+      cbRecord(c, stars, gold);
+      if (kind === 'daily'){ const D = cbPlan(); D.done[c] = {stars, gold}; save(); }
+      cbAlive(c, stars, gold, pad, q, () => { idx++; run(); });
+    };
+    body.querySelector('#cbSay').onclick = () => cbSay(c);
+    body.querySelector('#cbShow').onclick = () => { if (!writer) return; if (step === 2) hinted = true; writer.cancelQuiz && writer.cancelQuiz(); writer.animateCharacter({onComplete:() => { writer.hideCharacter(); ask(); }}); };
+    ask();
+  };
+  run();
+}
+/* the character comes alive */
+function cbAlive(c, stars, gold, pad, q, done){
+  const A = CB_ANIM[c], I = cbInfo(c);
+  const scene = el('div', 'cbscene' + (A ? ' an-' + A[1] : ' an-card'));
+  scene.innerHTML = A ? `<span class="cbemo">${A[0]}</span>` : `<span class="cbcardfly zh">${c}</span>`;
+  const wrap = pad.querySelector('.hzwrap'); if (wrap){ wrap.append(scene); wrap.classList.add('alive'); }
+  const sess = pad.closest('.cbsess'); if (sess){ sess.querySelectorAll('.cbsteps span').forEach(x => { x.classList.remove('on'); x.classList.add('ok'); }); const bb = sess.querySelector('.cbbtns'); if (bb) bb.hidden = true; }
+  if (stars === 3) sfx.star(); else sfx.good();
+  burstAt(wrap, {n:gold ? 26 : 14, cols:gold ? ['#FFD23F', '#FFF3A0', '#fff'] : ['#7BD15A', '#FFD23F', '#fff'], r:gold ? 140 : 90});
+  q.innerHTML = `<div class="cbres"><div class="cbbig zh"><ruby>${c}<rt>${I.py}</rt></ruby></div>${A ? `<div class="cbmean">${A[0]} ${A[2]}</div>` : ''}${I.word ? `<div class="zword cbword">${RB(I.word.t)}</div>` : ''}<div class="cbstars">${cbStars(stars)}</div>${gold ? '<div class="goldstamp zh">金字</div>' : stars === 2 ? '<p class="small">Great! Write it with no mistakes for the gold stamp.</p>' : '<p class="small">Good try! This character will come back for practice.</p>'}</div>`;
+  const b = el('button', 'btn go wide', '下一个 NEXT ▶'); b.onclick = () => { sfx.tap(); done(); };
+  q.append(b);
+  if (A) setTimeout(() => speak(c, 'zh'), 300);
+}
+function cbFinish(kind, list){
+  const D = cbPlan(), body = cbFrame('today');
+  let reward = '';
+  if (kind === 'daily' && Object.keys(D.done).length >= D.plan.length && !D.berry){
+    D.berry = true; const P = palState(); P.berries = (P.berries || 0) + 1; if (P.buddy) addFr(P.buddy, 2); cbCredit(20);
+    reward = `<p class="cbreward">🍓 +1 berry · ⚡ +20 XP${P.buddy ? ` · ${palName(P.buddy, P.own[P.buddy].form)} ♥ +2` : ''}</p>`;
+  }
+  const C = cbS(), golds = list.filter(c => (D.done[c] || {}).gold).length;
+  body.innerHTML = `<div class="cbdone">${kibi('wow', {scale:5})}<h2>写完了！Well done!</h2>${reward}
+    <div class="cbtiles">${list.map(c => `<div class="cbtile done"><span class="zh">${c}</span>${cbStars((C.chars[c] || {}).best || 0)}</div>`).join('')}</div>
+    <p>${golds ? `${golds} gold stamp${golds > 1 ? 's' : ''} today! 🏅 ` : ''}Your characters are now in the 📚 字卡图鉴.</p>
+    <div class="acts"><button class="btn" data-g="album">📚 图鉴</button><button class="btn warm" data-g="flash">⚡ 闪现记忆</button><button class="btn go" data-g="x">DONE</button></div></div>`;
+  confetti();
+  body.querySelectorAll('[data-g]').forEach(b => b.onclick = () => b.dataset.g === 'x' ? cbClose() : cbTab(b.dataset.g));
+}
+
+/* ---------- 字卡图鉴 ---------- */
+function cbAlbum(){
+  const body = cbFrame('album'), C = cbS();
+  const groups = cbGroups().map(g => ({t:g.title, cs:[...new Set(g.chars.map(x => x.c).filter(c => hzData(c)))]}));
+  const dl = dictLists().filter(L => L.lang === 'zh').map(L => ({t:'听写：' + L.name, cs:[...new Set(L.words.join('').split('').filter(c => isHan(c) && hzData(c)))]})).filter(x => x.cs.length);
+  const all = groups.concat(dl), have = new Set(Object.keys(C.chars));
+  const tot = new Set(all.flatMap(g => g.cs)).size, got = [...new Set(all.flatMap(g => g.cs))].filter(c => have.has(c)).length;
+  const golds = Object.values(C.chars).filter(r => r.gold).length;
+  body.innerHTML = `<div class="cbalhead"><b>已收集 ${got} / ${tot}</b><span>🏅 金字 ${golds}</span></div>` + all.map(g => `<h4 class="ah">${esc(g.t)} <small>${g.cs.filter(c => have.has(c)).length}/${g.cs.length}</small></h4><div class="cbgrid">${g.cs.map(c => { const r = C.chars[c]; return r ? `<button class="cbcell got${r.gold ? ' gold' : ''}" data-c="${c}"><span class="zh">${c}</span>${cbStars(r.best)}</button>` : `<div class="cbcell"><span class="zh">${c}</span></div>`; }).join('')}</div>`).join('');
+  body.querySelectorAll('.cbcell.got').forEach(b => b.onclick = () => cbCardModal(b.dataset.c));
+}
+function cbCardModal(c){
+  const r = cbS().chars[c] || {}, I = cbInfo(c), A = CB_ANIM[c];
+  openModal(`<div class="cbcard"><div class="hzmini" data-ch="${c}" data-s="170"></div><div><div class="cbbig zh"><ruby>${c}<rt>${I.py}</rt></ruby></div>${A ? `<div class="cbmean">${A[0]} ${A[2]}</div>` : ''}${I.word ? `<div class="zword cbword">${RB(I.word.t)}</div>` : ''}
+    <p>${cbStars(r.best || 0)} ${r.gold ? '<span class="goldstamp small zh">金字</span>' : ''}</p><p class="small">Written ${r.n || 0} time${r.n === 1 ? '' : 's'}${r.due ? ` · next review ${r.due <= today() ? 'today' : r.due}` : ''}</p></div></div>
+    <div class="acts"><button class="btn" id="cbAgain">✍️ 再写一次</button><button class="btn go" data-close>OK</button></div>`, m => {
+    initMinis(m);
+    m.querySelector('#cbAgain').onclick = () => { closeModal(); cbSession([c], 'extra'); };
+  });
+  cbSay(c);
+}
+
+/* ---------- ⚡ 闪现记忆 ---------- */
+function cbFlash(){
+  const body = cbFrame('flash'), C = cbS();
+  let pool = Object.keys(C.chars).filter(c => hzData(c));
+  if (pool.length < 3) pool = [...new Set(pool.concat(cbPlan().plan, cbPool().slice(0, 10)))];
+  body.innerHTML = `<div class="cbhero"><span class="cbbigemo">⚡</span><div><h3>闪现记忆 Flash memory</h3><p>A character appears for a few seconds, then hides. Write it from memory! 5 rounds. Best: ${C.flashBest || 0}/5</p></div></div><div class="cbgo"></div>`;
+  const b = el('button', 'btn go wide', '开始 START'); b.onclick = () => round(0, 0, shuffle(pool).slice(0, 5)); body.querySelector('.cbgo').append(b);
+  function round(i, score, list){
+    if (!CBV) return;
+    if (i >= list.length){
+      const best = Math.max(C.flashBest || 0, score); const nb = score > (C.flashBest || 0); C.flashBest = best; save();
+      const bd = cbFrame('flash');
+      bd.innerHTML = `<div class="cbdone">${kibi(score >= 4 ? 'wow' : 'happy', {scale:5})}<h2>${score}/${list.length} ${score >= 4 ? '🌟' : ''}</h2><p>${nb ? 'New best! ' : ''}${score >= 4 ? 'Amazing memory!' : 'Keep practising, your memory gets stronger every day.'}</p><div class="acts"><button class="btn go" id="again">PLAY AGAIN</button></div></div>`;
+      bd.querySelector('#again').onclick = cbFlash; if (score >= 4) confetti(); return;
+    }
+    const c = list[i], I = cbInfo(c), T = i < 2 ? 3000 : 2000;
+    const bd = cbFrame('flash');
+    bd.innerHTML = `<div class="cbflash"><div class="cbprog">${list.map((x, k) => `<i class="${k < i ? 'ok' : k === i ? 'now' : ''}"></i>`).join('')}</div><div class="cbpy">${I.py}</div><div class="cbflashbox"><span class="zh cbflashch">${c}</span><div class="cbtimer"><i style="animation-duration:${T}ms"></i></div></div><p class="small">Remember it!</p></div>`;
+    cbSay(c);
+    setTimeout(() => {
+      if (!CBV) return;
+      const box = bd.querySelector('.cbflashbox'), s = Math.round(Math.max(200, Math.min(box.clientWidth, innerHeight - box.getBoundingClientRect().top - 40, 400)));
+      box.innerHTML = ''; bd.querySelector('p.small').textContent = 'Now write it!';
+      const wrap = el('div', 'hzwrap', TZG(s)); wrap.style.width = wrap.style.height = s + 'px'; const tgt = el('div', 'hztgt'); wrap.append(tgt); box.append(wrap);
+      let m = 0;
+      const w = HanziWriter.create(tgt, c, {width:s, height:s, padding:Math.round(s * .07), showCharacter:false, showOutline:false, strokeColor:'#1E1A2B', drawingColor:'#2F6FDE', drawingWidth:Math.max(12, Math.round(s / 20)), highlightColor:'#F6C23E', charDataLoader:hzLoader});
+      w.quiz({leniency:1.3, showHintAfterMisses:2, markStrokeCorrectAfterMisses:4, onMistake:() => { m++; fxAnim(wrap, 'shake', 400); },
+        onComplete:() => { const ok = m <= 1; if (ok){ sfx.good(); burstAt(wrap, {n:12, r:70}); } else sfx.think();
+          const r = C.chars[c]; if (r){ r.last = today(); if (ok && r.box != null){ r.box = Math.min(CB_GAP.length - 1, r.box + 1); r.due = cbDate(CB_GAP[r.box]); } save(); }
+          bd.querySelector('p.small').textContent = ok ? '✔ 对了！' : `Almost! (${m} mistakes)`;
+          setTimeout(() => round(i + 1, score + (ok ? 1 : 0), list), 1100); }});
+    }, REDUCE ? 1500 : T);
+  }
+}
+
+/* ---------- 🧩 部件拼字 ---------- */
+function cbParts(){
+  const body = cbFrame('parts'), C = cbS();
+  const mine = new Set(cbPool('auto').concat(Object.keys(C.chars)));
+  let items = Object.entries(CB_PARTS).filter(([c, v]) => v && hzData(c) && charInfo(c));
+  const pref = items.filter(([c]) => mine.has(c));
+  items = (pref.length >= 6 ? pref : items);
+  body.innerHTML = `<div class="cbhero"><span class="cbbigemo">🧩</span><div><h3>部件拼字 Build a character</h3><p>Many characters are made of two parts, like 日 + 月 = 明. Find the parts! 6 rounds. Best: ${C.partsBest || 0}/6</p></div></div><div class="cbgo"></div>`;
+  const b = el('button', 'btn go wide', '开始 START'); b.onclick = () => round(0, 0, shuffle(items).slice(0, 6)); body.querySelector('.cbgo').append(b);
+  const allParts = [...new Set(Object.values(CB_PARTS).filter(Boolean).flatMap(v => [v[0], v[1]]))];
+  const joinHTML = (a, b2, lay) => `<span class="cbjoin ${lay}"><span class="zh">${a}</span><span class="zh">${b2}</span></span>`;
+  function round(i, score, list){
+    if (!CBV) return;
+    if (i >= list.length){
+      const nb = score > (C.partsBest || 0); C.partsBest = Math.max(C.partsBest || 0, score); save();
+      const bd = cbFrame('parts');
+      bd.innerHTML = `<div class="cbdone">${kibi(score >= 5 ? 'wow' : 'happy', {scale:5})}<h2>${score}/${list.length} 🧩</h2><p>${nb ? 'New best! ' : ''}Parts help you remember how to write a character.</p><div class="acts"><button class="btn go" id="again">PLAY AGAIN</button></div></div>`;
+      bd.querySelector('#again').onclick = cbParts; if (score >= 5) confetti(); return;
+    }
+    const [c, [p1, p2, lay]] = list[i], I = cbInfo(c), mode = i % 2 ? 'pick' : 'build';
+    const bd = cbFrame('parts');
+    let first = true;
+    const win = (wrapEl) => {
+      sfx.good(); burstAt(wrapEl, {n:14, r:80});
+      const j = bd.querySelector('.cbmerge'); if (j){ j.classList.add('merge'); setTimeout(() => { j.innerHTML = `<span class="zh cbmerged">${c}</span>`; }, REDUCE ? 0 : 600); }
+      speak(I.word ? `${c}，${I.word.w}` : c, 'zh');
+      setTimeout(() => round(i + 1, score + (first ? 1 : 0), list), 1800);
+    };
+    const miss = e => { first = false; sfx.think(); fxAnim(e, 'shake', 400); };
+    const prog = `<div class="cbprog">${list.map((x, k) => `<i class="${k < i ? 'ok' : k === i ? 'now' : ''}"></i>`).join('')}</div>`;
+    if (mode === 'build'){
+      const opts = shuffle([p1, p2, ...shuffle(allParts.filter(x => x !== p1 && x !== p2)).slice(0, 4)]);
+      bd.innerHTML = `<div class="cbparts">${prog}<div class="cbtarget"><div class="cbbig zh"><ruby>${c}<rt>${I.py}</rt></ruby></div>${I.word ? `<div class="zword cbword">${RB(I.word.t)}</div>` : ''}</div>
+        <p class="small">Which two parts make this character?</p><div class="cbmerge ${lay}"><span class="cbslot"></span><span class="cbplus">+</span><span class="cbslot"></span></div>
+        <div class="cbopts">${opts.map(o => `<button class="choice zh cbopt">${o}</button>`).join('')}</div></div>`;
+      const need = [p1, p2], got = [];
+      bd.querySelectorAll('.cbopt').forEach(btn => btn.onclick = () => {
+        const v = btn.textContent;
+        const k = need.findIndex((n, ix) => n === v && !got.includes(ix));
+        if (k < 0){ miss(btn); return; }
+        got.push(k); btn.disabled = true; btn.classList.add('used'); sfx.tap();
+        const slots = bd.querySelectorAll('.cbslot'); slots[k].textContent = v; slots[k].classList.add('zh', 'filled');
+        if (got.length === 2){ bd.querySelector('.cbmerge').innerHTML = joinHTML(p1, p2, lay); win(bd.querySelector('.cbmerge')); }
+      });
+    } else {
+      const others = shuffle(list.map(x => x[0]).concat(Object.keys(CB_PARTS).filter(k => CB_PARTS[k] && hzData(k))).filter(x => x !== c)).filter((x, k, a) => a.indexOf(x) === k).slice(0, 2);
+      const opts = shuffle([c, ...others]);
+      bd.innerHTML = `<div class="cbparts">${prog}<p class="small">Put the parts together. Which character do they make?</p>
+        <div class="cbmerge ${lay}"><span class="zh cbpart">${p1}</span><span class="cbplus">+</span><span class="zh cbpart">${p2}</span><span class="cbplus">=</span><span class="cbslot">?</span></div>
+        <div class="cbopts">${opts.map(o => { const ci = charInfo(o); return `<button class="choice zh cbopt" data-v="${o}"><ruby>${o}<rt>${ci ? ci.py : ''}</rt></ruby></button>`; }).join('')}</div></div>`;
+      bd.querySelectorAll('.cbopt').forEach(btn => btn.onclick = () => { if (btn.dataset.v !== c){ miss(btn); return; } btn.classList.add('right'); const m = bd.querySelector('.cbmerge'); m.innerHTML = joinHTML(p1, p2, lay); win(m); });
+    }
+  }
+}
+
+/* ---------- home card ---------- */
+function cbCard(){
+  const D = cbPlan(), C = cbS(), done = Object.keys(D.done).length, all = D.plan.length && done >= D.plan.length;
+  const c = el('div', 'reviewcard cbhome' + (all ? ' won' : ''));
+  c.innerHTML = `<div><small>✍️ 练字本 COPYBOOK</small><h3>${all ? '今天的字写完了！' : `今天 ${done}/${D.plan.length} 个字`}</h3><div class="cbmini">${D.plan.map(ch => `<span class="zh${D.done[ch] ? ' ok' : ''}">${ch}</span>`).join('')}</div></div>`;
+  const b = el('button', 'btn ' + (all ? 'dark' : 'go'), all ? '图鉴' : '练字'); b.onclick = () => { sfx.tap(); cbOpen(all ? 'album' : 'today'); };
+  c.append(b); return c;
+}
+
 /* ================= state & saving ================= */
 const KEY = 'p1-maths-quest-v1';
 const blank = () => ({v:1, skills:{}, xp:0, day:{date:'', xp:0}, streak:{n:0, last:''}, settings:{sound:true, unlockAll:false}, coins:0, goalDay:'', shop:{}, redeemed:[], coinLog:[], pin:'', updatedAt:0});
@@ -4500,6 +4968,7 @@ function renderHome(){
   hub.append(hello);
   hub.append(palCard());
   { const bc = bossCard(); if (bc) hub.append(bc); }
+  if (SUB.id.startsWith('zh')) hub.append(cbCard());
   if (!SUB.id.startsWith('math')) dictCards(SUB.id).forEach(c => hub.append(c));
   const rec1 = ORDER.some(id => sk(id).lvl >= 1) ? recommend(SUB.id) : null;
   if (rec1){
@@ -5440,7 +5909,7 @@ function confetti(){
 }
 
 /* expose for testing */
-window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {ALLSK, SUBJECTS, playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
+window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {cbOpen, cbS, cbPlan, cbTab, ALLSK, SUBJECTS, playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
 
 render();
 setTimeout(connectRemote, 0);
