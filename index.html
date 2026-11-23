@@ -695,6 +695,28 @@ svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
 .megaov{background:radial-gradient(circle,#5B3FB8,#1E1A2B)}
 .megaflash{animation:megaf 1.6s steps(8) both}
 @keyframes megaf{0%{filter:brightness(1)}40%{filter:brightness(3)}60%{filter:brightness(1)}80%{filter:brightness(4)}100%{filter:brightness(6)}}
+
+.playfield.soccer{display:block;background:#6CC24A;box-shadow:inset 0 0 0 4px #4FA33A;background-image:repeating-linear-gradient(90deg,#6CC24A 0 40px,#62B842 40px 80px);height:min(48vh,340px)}
+.soccer .scgoal{position:absolute;left:8%;right:8%;top:10px;height:46%;border:6px solid #fff;border-bottom:0;box-shadow:0 0 0 3px #1E1A2B}
+.soccer .scnet{position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 2px,transparent 2px 12px),repeating-linear-gradient(-45deg,rgba(255,255,255,.35) 0 2px,transparent 2px 12px)}
+.soccer .scaim{position:absolute;top:40%;width:28px;height:28px;margin-left:-14px;border-radius:50%;box-shadow:0 0 0 4px #FF5A5A,inset 0 0 0 4px #fff,inset 0 0 0 8px #FF5A5A;z-index:2}
+.soccer .sckeeper{position:absolute;bottom:-4px;transform:translateX(-50%);line-height:0;z-index:3}
+.soccer .sckeeper.diveL svg{transform:rotate(-35deg)}.soccer .sckeeper.diveR svg{transform:rotate(35deg)}
+.soccer .scspot{position:absolute;left:50%;bottom:16%;margin-left:-22px;font-size:40px;line-height:1;z-index:4}
+.soccer .playmsg{position:absolute;left:0;right:0;bottom:4px;color:#fff;text-shadow:2px 2px 0 #1E1A2B}
+.soccer .scshots{position:absolute;right:8px;top:calc(46% + 22px);display:flex;gap:4px}
+.soccer .scshots i{width:14px;height:14px;background:rgba(255,255,255,.5);box-shadow:0 0 0 2px #1E1A2B}
+.soccer .scshots i.g{background:#FFD23F}.soccer .scshots i.s{background:#FF5A5A}
+.kickbtn{font-size:22px}
+.simonbar{display:flex;gap:10px;align-items:center;justify-content:center;font:700 16px/1 var(--display);flex-wrap:wrap}
+.simonbar .sbest{color:var(--muted)}
+.toykeys{flex-wrap:wrap;justify-content:center}
+.tkey{background:#fff;box-shadow:var(--pf), inset 0 -10px 0 var(--kc,#E6EBF2)}
+.tkey b{font:700 15px/1 var(--display)}
+.tkey.lit{background:var(--kc);transform:translateY(3px);box-shadow:var(--pf), 0 0 14px var(--kc)}
+.tkey.hintk{animation:blink .5s steps(2) 4}
+.tkey:disabled{opacity:1}
+@media (max-width:560px){ .tkey{width:calc(34px * var(--k));height:calc(84px * var(--k))} }
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -4098,8 +4120,8 @@ function megaShow(id, done){
     burstAt(ov.querySelector('.palbig'), {n:30, cols:ELCOL[p.el].concat(['#FFD23F', '#fff']), r:160}); tone([523, 659, 784, 1047, 1319], .12, 'square', .07); }, REDUCE ? 50 : 1600);
 }
 
-/* ---------- play time with your pal: costs 1 berry (earned by learning), 60 s, max 3 a day ---------- */
-const PLAY_SECS = 60, PLAY_MAX = 3;
+/* ---------- play time with your pal: costs 1 berry (earned by learning), 90 s, max 3 a day ---------- */
+const PLAY_SECS = 90, PLAY_MAX = 3;
 function playPal(){
   const P = palState(), id = P.buddy; if (!id) return;
   const o = P.own[id], nm = palName(id, o.form), p = palById(id);
@@ -4108,30 +4130,129 @@ function playPal(){
   if (!(P.berries > 0)){ openModal(`<div class="palname">${palSprite(id, o.form, 4)}<h3>Play costs 1 🍓</h3><p>Finish a lesson to earn a berry, then come back to play with ${esc(nm)}!</p><div class="acts"><button class="btn go" data-close>OK</button></div></div>`); return; }
   P.berries--; o.plays++; save();
   const ov = el('div', 'playov'); document.body.append(ov);
-  let caught = 0, gave = false, left = PLAY_SECS;
+  let gave = false, left = PLAY_SECS, run = 0, over = false;
   const reward = () => { if (gave) return; gave = true; addFr(id, 2); save(); };
   ov.innerHTML = `<div class="playstage"><div class="playtop"><b>Play with ${esc(nm)}</b><button class="iconbtn" id="plX" aria-label="Close">${icon('cross', 3)}</button></div>
-    <div class="playfield"><div class="playpal">${palSprite(id, o.form, o.form ? 6 : 7)}</div><div class="playmsg">Pick a game!</div></div>
-    <div class="playbtns"><button class="btn" data-g="ball">⚽ Ball</button><button class="btn" data-g="piano">🎹 Piano</button><button class="btn" data-g="bubbles">🫧 Bubbles</button></div><div class="playarea"></div></div>`;
-  const field = ov.querySelector('.playfield'), pal = ov.querySelector('.playpal'), msg = ov.querySelector('.playmsg'), area = ov.querySelector('.playarea');
-  const happy = t => { msg.textContent = t; rigAct(pal.querySelector('svg'), pick(['cheer', 'hop', 'wave']), 1300); burstAt(pal, {n:8, cols:ELCOL[p.el].concat(['#FF7AA8']), r:60}); reward(); };
-  ov.querySelector('#plX').onclick = () => { clearInterval(tk); ov.remove(); render(); };
+    <div class="playfield"></div>
+    <div class="playbtns"><button class="btn" data-g="ball">⚽ Penalty</button><button class="btn" data-g="piano">🎹 Copy the tune</button><button class="btn" data-g="bubbles">🫧 Bubbles</button></div><div class="playarea"></div></div>`;
+  const field = ov.querySelector('.playfield'), area = ov.querySelector('.playarea');
+  let pal, msg;
+  const palSvg = () => pal && pal.querySelector('svg');
+  const plain = t => { run++; field.className = 'playfield'; field.innerHTML = `<div class="playpal">${palSprite(id, o.form, o.form ? 6 : 7)}</div><div class="playmsg">${t}</div>`; pal = field.querySelector('.playpal'); msg = field.querySelector('.playmsg'); };
+  const happy = t => { msg.textContent = t; rigAct(palSvg(), pick(['cheer', 'hop', 'wave']), 1300); burstAt(pal, {n:8, cols:ELCOL[p.el].concat(['#FF7AA8']), r:60}); reward(); };
+  plain('Pick a game!');
+  const close = () => { run++; clearInterval(tk); ov.remove(); render(); };
+  ov.querySelector('#plX').onclick = close;
   const tm = el('span', 'playtime', `⏱ ${left}s`); ov.querySelector('.playtop b').after(tm);
   const tk = setInterval(() => { if (!ov.isConnected){ clearInterval(tk); return; } left--; tm.textContent = `⏱ ${left}s`;
-    if (left <= 0){ clearInterval(tk); field.querySelectorAll('.pbub').forEach(x => x.remove()); area.innerHTML = ''; ov.querySelectorAll('[data-g]').forEach(x => x.disabled = true);
-      msg.textContent = `${nm} had so much fun! Time for a little rest. 😊`; const sv = pal.querySelector('svg'); if (sv) rigAct(sv, 'wave', 1600);
-      const d = el('button', 'btn go wide', 'BYE-BYE!'); d.onclick = () => { ov.remove(); render(); }; area.append(d); } }, 1000);
+    if (left <= 0){ clearInterval(tk); over = true; plain(`${nm} had so much fun! Time for a little rest. 😊`); area.innerHTML = ''; ov.querySelectorAll('[data-g]').forEach(x => x.disabled = true);
+      setTimeout(() => rigAct(palSvg(), 'wave', 1600), 100);
+      const d = el('button', 'btn go wide', 'BYE-BYE!'); d.onclick = close; area.append(d); } }, 1000);
+
   const games = {
-    ball(){ area.innerHTML = '<p class="small">Tap the ball to throw it!</p>'; const b = el('button', 'toyball', '⚽'); area.append(b);
-      b.onclick = () => { if (b.dataset.busy) return; b.dataset.busy = 1; const [x0, y0] = centerOf(b), [x1, y1] = centerOf(pal); b.style.visibility = 'hidden';
-        const f = el('div', 'flycoin', '<span style="font-size:40px">⚽</span>'); f.style.left = x0 + 'px'; f.style.top = y0 + 'px'; fxLayer().append(f);
-        const a = f.animate([{transform:'translate(0,0)'}, {transform:`translate(${(x1 - x0) / 2}px,${(y1 - y0) / 2 - 140}px) rotate(360deg)`, offset:.5}, {transform:`translate(${x1 - x0}px,${y1 - y0 - 40}px) rotate(720deg)`}], {duration:REDUCE ? 1 : 700, easing:'ease-out', fill:'forwards'});
-        a.onfinish = () => { f.remove(); caught++; tone([523, 784], .07, 'triangle', .08); happy(caught === 1 ? `${nm} caught it!` : `${caught} catches in a row!`); setTimeout(() => { b.style.visibility = ''; delete b.dataset.busy; }, 400); }; }; },
-    piano(){ area.innerHTML = '<p class="small">Play a tune! Watch ' + esc(nm) + ' dance.</p>'; const kb = el('div', 'toykeys'); const N = [['C', 523], ['D', 587], ['E', 659], ['F', 698], ['G', 784], ['A', 880], ['B', 988], ['C', 1047]];
-      N.forEach(([n, f], i) => { const k = el('button', 'tkey', n); k.onclick = () => { tone([f], .25, 'triangle', .12); rigAct(pal.querySelector('svg'), i % 3 === 2 ? 'wiggle' : 'dance', 1300); burstAt(k, {n:4, cols:['#FFD23F', '#FF7AA8'], r:30}); caught++; if (caught % 6 === 0) happy(`${nm} loves your music!`); else msg.textContent = '♪ ♫ ♪'; }; kb.append(k); }); area.append(kb); },
-    bubbles(){ area.innerHTML = '<p class="small">Pop the bubbles!</p>'; const spawn = () => { if (!ov.isConnected) return; for (let i = 0; i < 6; i++){ const bb = el('button', 'pbub', ''); bb.style.left = rand(5, 85) + '%'; bb.style.animationDelay = (i * .35) + 's'; bb.onclick = () => { bb.remove(); tone([880 + rand(0, 400)], .05, 'sine', .08); burstAt(bb, {n:6, cols:['#BDF3FF', '#FFFFFF'], r:30}); caught++; if (!field.querySelector('.pbub')){ happy(`${nm} popped them all with you!`); setTimeout(spawn, 1200); } }; field.append(bb); } }; field.querySelectorAll('.pbub').forEach(x => x.remove()); spawn(); }
+    /* ---- Penalty shoot-out: your pal is the goalkeeper ---- */
+    ball(){
+      const me = ++run;
+      field.className = 'playfield soccer';
+      field.innerHTML = `<div class="scgoal"><div class="scnet"></div><div class="scaim"></div><div class="sckeeper">${palSprite(id, o.form, o.form ? 3 : 3.6)}</div></div><div class="scspot">⚽</div><div class="playmsg">Tap KICK when the target is far from ${esc(nm)}!</div><div class="scshots"></div>`;
+      pal = field.querySelector('.sckeeper'); msg = field.querySelector('.playmsg');
+      const aim = field.querySelector('.scaim'), ball = field.querySelector('.scspot'), dots = field.querySelector('.scshots'), goal = field.querySelector('.scgoal');
+      let shot = 0, goals = 0, lvl = 0, busy = false, kx = 50, ax = 50, t0 = performance.now(), res = [];
+      const drawDots = () => dots.innerHTML = [0, 1, 2, 3, 4].map(i => `<i class="${res[i] === 1 ? 'g' : res[i] === 0 ? 's' : ''}"></i>`).join('');
+      drawDots();
+      area.innerHTML = ''; const kick = el('button', 'btn warm wide kickbtn', 'KICK! ⚽'); area.append(kick);
+      const loop = now => {
+        if (me !== run || !ov.isConnected) return;
+        const t = (now - t0) / 1000;
+        if (!busy){
+          kx = 50 + 34 * Math.sin(t * (1.3 + lvl * .25));
+          ax = 50 + 42 * Math.sin(t * (2.1 + lvl * .2) + 1.3);
+          pal.style.left = kx + '%'; aim.style.left = ax + '%';
+        }
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+      ball.style.cursor = 'pointer'; ball.onclick = () => kick.isConnected && kick.onclick();
+      kick.onclick = () => {
+        if (busy || shot >= 5) return; busy = true; sfx.tap();
+        const target = ax, reach = 10 + lvl * 5, dir = Math.sign(target - kx), dive = Math.min(Math.abs(target - kx), reach);
+        const kEnd = kx + dir * dive, saved = Math.abs(kEnd - target) < 12;
+        const gr = goal.getBoundingClientRect(), br = ball.getBoundingClientRect();
+        const tx = gr.left + gr.width * target / 100 - (br.left + br.width / 2), ty = gr.top + gr.height * .45 - (br.top + br.height / 2);
+        pal.style.transition = 'left .35s steps(4)'; pal.style.left = kEnd + '%'; pal.classList.toggle('diveL', dir < 0); pal.classList.toggle('diveR', dir > 0);
+        tone([300, 200], .05, 'square', .06);
+        ball.animate([{transform:'translate(0,0) scale(1)'}, {transform:`translate(${tx}px,${ty}px) scale(.55) rotate(540deg)`}], {duration:REDUCE ? 1 : 450, easing:'ease-out', fill:'forwards'}).onfinish = () => {
+          if (me !== run) return;
+          shot++;
+          if (saved){ res.push(0); msg.textContent = pick([`${nm} saved it!`, 'Blocked! Try again!', `Nice save, ${nm}!`]); rigAct(palSvg(), 'cheer', 1000); tone([440, 330], .1, 'triangle', .08); fxAnim(ball, 'shake', 300); }
+          else { res.push(1); goals++; lvl++; msg.textContent = pick(['GOAL!!! 🎉', 'What a kick! GOAL!', 'GOAL! Too fast for ' + nm + '!']); rigAct(palSvg(), 'sad', 900); burstAt(goal, {n:18, cols:['#FFD23F', '#FF7AA8', '#7BD15A', '#fff'], r:90}); sfx.good(); fxAnim(goal.querySelector('.scnet'), 'shake', 400); }
+          drawDots();
+          setTimeout(() => {
+            if (me !== run) return;
+            ball.getAnimations().forEach(a => a.cancel()); pal.style.transition = ''; pal.classList.remove('diveL', 'diveR'); busy = false;
+            if (shot >= 5){
+              kick.remove(); const stars = goals >= 4 ? '⭐⭐⭐' : goals >= 2 ? '⭐⭐' : goals ? '⭐' : '';
+              msg.textContent = `${goals}/5 goals! ${stars}`; if (goals > (o.bestGoals || 0)){ o.bestGoals = goals; save(); msg.textContent += ' New best!'; }
+              happy(msg.textContent);
+              const again = el('button', 'btn go wide', 'PLAY AGAIN'); again.onclick = () => games.ball(); area.append(again);
+            } else msg.textContent += ` (${5 - shot} left)`;
+          }, 900);
+        };
+      };
+    },
+    /* ---- Copy the tune: listen, then play it back ---- */
+    piano(){
+      plain(`Listen to ${esc(nm)}, then play the same tune!`); const me = run;
+      const N = [['Do', 523, '#FF6B6B'], ['Re', 587, '#FF9F43'], ['Mi', 659, '#FFD23F'], ['Fa', 698, '#7BD15A'], ['So', 784, '#3FC8C0'], ['La', 880, '#5AA8FF'], ['Ti', 988, '#9B7BFF'], ['Do', 1047, '#FF7AA8']];
+      area.innerHTML = `<div class="simonbar"><span class="slvl">Level 1</span><span class="sbest">Best ${o.simonBest || 0}</span><button class="btn small" id="sAgain">🔁 Listen again</button></div><div class="toykeys"></div><button class="btn go wide" id="sGo">START</button>`;
+      const kb = area.querySelector('.toykeys'), lv = area.querySelector('.slvl'), bestEl = area.querySelector('.sbest'), againB = area.querySelector('#sAgain'), goB = area.querySelector('#sGo');
+      let seq = [], pos = 0, level = 1, phase = 'idle', lives = 2, againLeft = 1;
+      const keys = N.map(([n, f, c], i) => { const k = el('button', 'tkey', `<b>${n}</b>`); k.style.setProperty('--kc', c); k.disabled = true; kb.append(k); return k; });
+      const range = () => level < 4 ? 5 : 8;
+      const lit = (i, ms = 380) => { const k = keys[i]; k.classList.add('lit'); tone([N[i][1]], ms / 1000, 'triangle', .13); setTimeout(() => k.classList.remove('lit'), ms - 40); };
+      const lock = on => keys.forEach(k => k.disabled = on);
+      const playSeq = () => {
+        phase = 'listen'; lock(true); againB.disabled = true; msg.textContent = `👂 Listen… (${seq.length} notes)`;
+        const gap = Math.max(420, 700 - level * 30);
+        seq.forEach((n, j) => setTimeout(() => { if (me !== run || over) return; lit(n, gap - 60); rigAct(palSvg(), j % 2 ? 'dance' : 'wiggle', gap); }, 500 + j * gap));
+        setTimeout(() => { if (me !== run || over) return; phase = 'play'; pos = 0; lock(false); againB.disabled = againLeft <= 0; msg.textContent = '🎹 Your turn!'; }, 500 + seq.length * gap);
+      };
+      const nextLevel = () => { lv.textContent = `Level ${level}`; while (seq.length < level + 2) seq.push(rand(0, range() - 1)); playSeq(); };
+      goB.onclick = () => { goB.remove(); sfx.tap(); seq = []; nextLevel(); };
+      againB.onclick = () => { if (phase !== 'play' || againLeft <= 0) return; againLeft--; playSeq(); };
+      keys.forEach((k, i) => k.onclick = () => {
+        if (phase !== 'play') return;
+        lit(i, 300);
+        if (i === seq[pos]){
+          pos++;
+          if (pos === seq.length){
+            phase = 'idle'; lock(true);
+            if (level > (o.simonBest || 0)){ o.simonBest = level; save(); bestEl.textContent = `Best ${level}`; }
+            happy(pick(['Perfect! 🎵', `${nm} loves it!`, 'You remembered it all!']));
+            level++; againLeft = 1; setTimeout(() => { if (me === run && !over) nextLevel(); }, 1300);
+          }
+        } else {
+          phase = 'idle'; lock(true); lives--; tone([200, 150], .15, 'sawtooth', .06); fxAnim(k, 'shake', 400); rigAct(palSvg(), 'sad', 900);
+          if (lives > 0){ msg.textContent = `Oops! Listen again carefully. (${lives} try left)`; setTimeout(() => { if (me === run && !over) playSeq(); }, 1300); }
+          else {
+            msg.textContent = `Game over! You reached level ${level}. 🎶`; keys[seq[pos]].classList.add('hintk');
+            const a = el('button', 'btn go wide', 'TRY AGAIN'); a.onclick = () => games.piano(); area.append(a);
+            if (level > 1) reward();
+          }
+        }
+      });
+    },
+    bubbles(){
+      plain('Pop the bubbles!'); const me = run; area.innerHTML = '<p class="small">Pop them all before they fly away!</p>'; let popped = 0;
+      const spawn = () => { if (me !== run || !ov.isConnected || over) return;
+        for (let i = 0; i < 6; i++){ const bb = el('button', 'pbub', ''); bb.style.left = rand(5, 85) + '%'; bb.style.animationDelay = (i * .35) + 's';
+          bb.onclick = () => { bb.remove(); popped++; tone([880 + rand(0, 400)], .05, 'sine', .08); burstAt(bb, {n:6, cols:['#BDF3FF', '#FFFFFF'], r:30}); if (!field.querySelector('.pbub')){ happy(`${popped} bubbles popped!`); setTimeout(spawn, 1200); } };
+          bb.addEventListener('animationend', () => { bb.remove(); if (!field.querySelector('.pbub')) setTimeout(spawn, 600); });
+          field.append(bb); } };
+      spawn();
+    }
   };
-  ov.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { sfx.tap(); caught = 0; ov.querySelectorAll('[data-g]').forEach(x => x.classList.toggle('go', x === b)); field.querySelectorAll('.pbub').forEach(x => x.remove()); games[b.dataset.g](); });
+  ov.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { if (over) return; sfx.tap(); ov.querySelectorAll('[data-g]').forEach(x => x.classList.toggle('go', x === b)); games[b.dataset.g](); });
 }
 /* buddy chats during lessons */
 function buddySay(t){ const b = $('#buddyb'); if (!b || b.hidden) return; b.querySelectorAll('.petbub').forEach(x => x.remove()); const s = el('span', 'petbub help', t); b.append(s); setTimeout(() => s.remove(), 1500); }
