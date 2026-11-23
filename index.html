@@ -717,6 +717,11 @@ svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
 .tkey.hintk{animation:blink .5s steps(2) 4}
 .tkey:disabled{opacity:1}
 @media (max-width:560px){ .tkey{width:calc(34px * var(--k));height:calc(84px * var(--k))} }
+
+.arbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.loglist > div{align-items:center}
+.logx{margin-left:8px;min-width:32px;min-height:32px;background:#fff;box-shadow:var(--pf);font:700 16px/1 var(--display);color:var(--muted);padding:0 8px}
+.logx.sure{background:#FFE1DC;color:#B33A2A;font-size:12px}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -4701,18 +4706,36 @@ function adminHistory(body){
     const box = el('div', 'adminlist');
     red.slice(0, 40).forEach(h => {
       const r = el('div', 'arow' + (h.refunded ? ' off' : ''), `<span class="em">${esc(h.e || '🎁')}</span><div class="an"><b>${esc(h.n)}</b><small>${fmtDate(h.d)}${h.refunded ? ' · refunded' : ''}</small></div><span class="price">${icon('kcoin', 2)}${h.p}</span>`);
+      const btns = el('div', 'arbtns');
       if (!h.refunded){
         const b = el('button', 'btn small ghost', 'Refund');
-        b.onclick = () => { if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = 'Sure?'; return; } h.refunded = true; S.coins = (S.coins || 0) + h.p; logCoins(h.p, `Refund: ${h.n}`); save(); renderAdmin(); renderStats(); };
-        r.append(b);
+        b.title = 'Give the K Coins back and remove it from the child’s list';
+        b.onclick = () => { if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = `Give back ${h.p}?`; return; } h.refunded = true; S.coins = (S.coins || 0) + h.p; logCoins(h.p, `Refund: ${h.n}`); save(); renderAdmin(); renderStats(); };
+        btns.append(b);
       }
+      const del = el('button', 'btn small ghost', 'Delete');
+      del.title = 'Remove this record only. K Coins do not change.';
+      del.onclick = () => { if (!del.dataset.sure){ del.dataset.sure = 1; del.textContent = 'Delete (no coins)?'; return; } S.redeemed = (S.redeemed || []).filter(x => x !== h); save(); renderAdmin(); };
+      btns.append(del); r.append(btns);
       box.append(r);
     });
     body.append(box);
+    body.append(el('p', 'small', 'Refund = give the K Coins back. Delete = only remove the record (use this if you already added the K Coins back by hand).'));
   }
   body.append(el('h4', 'ah', 'K Coin log'));
   const log = S.coinLog || [];
-  body.append(log.length ? el('div', 'histlist', log.slice(0, 50).map(l => `<div><span style="color:inherit">${esc(l.why)}</span><span class="${l.n >= 0 ? 'plus' : 'minus'}">${l.n >= 0 ? '+' : '−'}${Math.abs(l.n)} · ${fmtDate(l.d)}</span></div>`).join('')) : el('p', 'small', 'Nothing yet.'));
+  if (!log.length) body.append(el('p', 'small', 'Nothing yet.'));
+  else {
+    const hl = el('div', 'histlist loglist');
+    log.slice(0, 50).forEach(l => {
+      const row = el('div', '', `<span style="color:inherit">${esc(l.why)}</span><span class="${l.n >= 0 ? 'plus' : 'minus'}">${l.n >= 0 ? '+' : '−'}${Math.abs(l.n)} · ${fmtDate(l.d)}</span>`);
+      const x = el('button', 'logx', '×'); x.title = 'Remove this line (K Coins do not change)'; x.setAttribute('aria-label', 'Remove line');
+      x.onclick = () => { if (!x.dataset.sure){ x.dataset.sure = 1; x.textContent = 'Remove?'; x.classList.add('sure'); return; } S.coinLog = S.coinLog.filter(y => y !== l); save(); renderAdmin(); };
+      row.append(x); hl.append(row);
+    });
+    body.append(hl);
+    body.append(el('p', 'small', 'Removing a line only tidies the log. It does not change the K Coin balance.'));
+  }
 }
 
 
