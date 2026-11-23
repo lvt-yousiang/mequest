@@ -551,6 +551,150 @@ label.btn{display:inline-flex;align-items:center;justify-content:center;cursor:p
 html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}
 *:not(input):not(textarea):not(select){-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .hzwrap,.hztgt,.freepad,.freepad canvas{touch-action:none}
+
+/* Pals+ */
+.palme{position:relative;cursor:pointer}
+.palme.mood-sleepy svg{filter:saturate(.8) brightness(.95)}
+.zz{position:absolute;right:-14px;top:-12px;font:700 14px/1 var(--display);color:#5B6BC0;animation:zz 2s steps(4) infinite}
+.zz b{font-size:18px;margin-left:2px}.zz i{font-style:normal;font-size:22px;margin-left:2px}
+.sparkle{position:absolute;right:-12px;top:-10px;font:700 18px/1 var(--display);color:#F6C23E;animation:blink 1s steps(2) infinite}
+@keyframes zz{0%{opacity:.2;transform:translateY(4px)}50%{opacity:1}100%{opacity:.2;transform:translateY(-6px)}}
+.petbub{position:absolute;left:50%;top:-26px;transform:translateX(-50%);background:#fff;padding:4px 8px;font:700 13px/1 var(--display);box-shadow:var(--pf);white-space:nowrap;animation:popin .25s steps(3) both;z-index:5;pointer-events:none}
+.petbub.help{top:auto;bottom:-34px;left:auto;right:0;transform:none}
+.palbtns{display:flex;flex-direction:column;gap:6px;flex:0 0 auto !important}
+.palbtns .btn{min-width:96px}
+.palname{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.palname input{width:100%;font:700 24px/1 var(--display);padding:12px;border:0;box-shadow:inset 0 0 0 3px var(--line);text-align:center}
+.buddyb{position:relative;flex:0 0 auto;background:none;padding:0 4px;line-height:0;min-width:44px;min-height:44px;display:grid;place-items:center}
+.buddyb .hb{position:absolute;right:-2px;top:-4px;width:18px;height:18px;background:#F6C23E;color:#1E1A2B;font:700 13px/18px var(--display);font-style:normal;box-shadow:var(--pf);text-align:center}
+.buddyb.aura svg{filter:drop-shadow(0 0 6px #FFD23F)}
+.bosscard{background:#FFE6E1}
+.bosscard.won{background:#E8F6E2}
+.bosscard small{display:block;font:400 12px/1.2 var(--label);color:#B33A2A;letter-spacing:.05em}
+.bosscard .adv{color:#2E7F34}
+.bossme{flex:0 0 auto !important;line-height:0;animation:hop 1.6s steps(2) infinite}
+.arena{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:#2B2152 var(--noise) 0 0/24px 24px;padding:8px 12px;box-shadow:var(--pf);margin:4px;color:#fff}
+.arena .ar-me,.arena .ar-boss{line-height:0;position:relative}
+.arena .ar-boss.shadow svg{filter:brightness(.25) drop-shadow(0 0 4px #B98CFF);transform:scaleX(-1)}
+.arena .ar-boss.ko{animation:ko .8s steps(6) forwards}
+@keyframes ko{to{transform:translateY(20px) rotate(20deg);opacity:.2}}
+.arena .ar-mid{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center}
+.arena .ar-mid b{font:700 18px/1 var(--display)}
+.arena .ar-mid small{font:400 11px/1 var(--label);color:#FFD23F}
+.arena .hp{width:100%;max-width:220px;height:14px;background:#55302A;box-shadow:0 0 0 3px #000}
+.arena .hp i{display:block;height:100%;background:#FF5A5A;transition:width .4s steps(5)}
+.dmg{position:absolute;left:50%;top:-6px;font:700 22px/1 var(--display);color:#FFD23F;text-shadow:2px 2px 0 #000;animation:up .9s steps(6) forwards}
+.orb{display:block;width:22px;height:22px;border-radius:50%}
+.paldet .pdtop{display:flex;justify-content:center;padding:16px;box-shadow:var(--pf);margin:4px 4px 10px;line-height:0}
+.frrow{display:flex;align-items:center;gap:4px;font:700 15px/1 var(--display);color:var(--muted)}
+.frrow i{font-style:normal;color:#D5DCE6;font-size:20px}.frrow i.on{color:#FF6F9C}
+.frrow span{margin-left:8px}
+.stlist,.cdlist{display:flex;gap:8px;flex-wrap:wrap}
+.cdmini{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;box-shadow:var(--pf), var(--bevel);margin:4px;min-width:84px;line-height:1}
+.cdmini small{font:400 10px/1 var(--label);color:#1E1A2B}
+.cdmini.locked{background:#E6EBF2;box-shadow:var(--pf)}
+.storypal{display:flex;justify-content:center;line-height:0;margin:8px 0}
+.storybox .story{font:700 19px/1.6 var(--body)}
+.storybox .story.zh{font:400 24px/2.2 var(--zhfont)}
+.cardimg{display:flex;justify-content:center}
+@media (max-width:560px){ .arena{grid-template-columns:auto 1fr auto;padding:6px} .arena svg{max-width:64px;height:auto}
+  .palcard{flex-wrap:wrap} .palbtns{flex-direction:row !important;flex:1 1 100% !important;flex-wrap:wrap} .palbtns .btn{flex:1;min-width:0;padding-left:6px;padding-right:6px}
+  .bosscard{flex-wrap:wrap} .bosscard > div:nth-child(2){flex:1;min-width:160px} .bosscard > .btn{flex:1 1 100%}
+  .buddyb svg{max-height:44px;width:auto} }
+
+.playov{position:fixed;inset:0;z-index:88;background:#BDE7FF var(--clouds) 0 0/640px 360px repeat;display:grid;place-items:center;padding:12px}
+.playstage{width:min(640px,100%);display:flex;flex-direction:column;gap:10px;background:#fff;box-shadow:var(--pf), var(--drop);padding:14px}
+.playtop{display:flex;align-items:center;justify-content:space-between;gap:8px;font:700 22px/1 var(--display)}
+.playtime{margin-left:auto;font:700 16px/1 var(--display);background:#FFF3C4;padding:6px 8px;box-shadow:var(--pf)}
+.playfield{position:relative;height:min(42vh,300px);background:#E9F7E1;box-shadow:inset 0 -26px 0 #8FD16A;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.playpal{line-height:0}
+.playpal.dl{animation:dl .35s steps(3)}.playpal.dr{animation:dr .35s steps(3)}
+@keyframes dl{50%{transform:rotate(-12deg) translateY(-6px)}}@keyframes dr{50%{transform:rotate(12deg) translateY(-6px)}}
+.playmsg{font:700 18px/1.2 var(--display);margin-top:8px;text-align:center}
+.playbtns{display:flex;gap:8px;flex-wrap:wrap}.playbtns .btn{flex:1}
+.playarea{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:70px}
+.toyball{font-size:44px;background:none;line-height:1;padding:4px}
+.toykeys{display:flex;gap:4px}
+.tkey{width:calc(42px * var(--k));height:calc(96px * var(--k));background:#fff;box-shadow:var(--pf), inset 0 -8px 0 #E6EBF2;font:700 14px/1 var(--display);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;margin:2px}
+.tkey:active{background:#FFE58A}
+.pbub{position:absolute;bottom:-60px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 18%,rgba(190,240,255,.7) 20%,rgba(120,200,255,.35) 70%);box-shadow:0 0 0 3px rgba(80,150,220,.6);animation:bubup 6s linear infinite}
+@keyframes bubup{to{transform:translateY(-420px)}}
+
+/* ===== rigged sprite animation ===== */
+svg.rig .rg{transform-box:fill-box}
+svg.rig .rg-top{transform-origin:50% 100%;animation:rbob 2.4s steps(2) infinite var(--rd)}
+svg.rig .rg-eyes{transform-origin:50% 50%;animation:rblink 4.2s steps(1) infinite var(--rd)}
+svg.rig .rg-body{transform-origin:50% 100%;animation:rbreath 2.4s steps(2) infinite var(--rd)}
+svg.rig .rg-armL{transform-origin:100% 0;animation:rarmL 2.4s steps(2) infinite var(--rd)}
+svg.rig .rg-armR{transform-origin:0 0;animation:rarmR 2.4s steps(2) infinite var(--rd)}
+svg.rig .rg-earL{transform-origin:100% 100%;animation:rearL 3s steps(2) infinite var(--rd)}
+svg.rig .rg-earR{transform-origin:0 100%;animation:rearR 3s steps(2) infinite var(--rd)}
+svg.rig .rg-tail{transform-origin:0 100%;animation:rtail 1.6s steps(2) infinite var(--rd)}
+svg.rig .rg-legL,svg.rig .rg-legR{transform-origin:50% 0}
+@keyframes rbob{50%{transform:translateY(1px)}}
+@keyframes rbreath{50%{transform:scaleY(.96)}}
+@keyframes rblink{0%,92%,100%{transform:none}94%{transform:scaleY(.15)}}
+@keyframes rarmL{50%{transform:rotate(8deg)}}
+@keyframes rarmR{50%{transform:rotate(-8deg)}}
+@keyframes rearL{50%{transform:rotate(-10deg)}}
+@keyframes rearR{50%{transform:rotate(10deg)}}
+@keyframes rtail{50%{transform:rotate(-14deg)}}
+/* actions */
+svg.rig.act-wave .rg-armR{animation:rwave .35s steps(2) 4}
+@keyframes rwave{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(-70deg)}}
+svg.rig.act-cheer .rg-armL{animation:rupL .3s steps(2) 4}
+svg.rig.act-cheer .rg-armR{animation:rupR .3s steps(2) 4}
+svg.rig.act-cheer{animation:rhop .3s steps(3) 4}
+@keyframes rupL{0%,100%{transform:rotate(50deg)}50%{transform:rotate(80deg)}}
+@keyframes rupR{0%,100%{transform:rotate(-50deg)}50%{transform:rotate(-80deg)}}
+svg.rig.act-hop{animation:rhop .45s steps(3) 2}
+svg.rig.act-hop .rg-legL,svg.rig.act-hop .rg-legR{animation:rtuck .45s steps(2) 2}
+@keyframes rhop{50%{transform:translateY(-12%)}}
+@keyframes rtuck{50%{transform:scaleY(.6)}}
+svg.rig.act-look .rg-top{animation:rlook 1.4s steps(1) 1}
+@keyframes rlook{0%,100%{transform:none}25%{transform:translateX(-1px) rotate(-6deg)}60%{transform:translateX(1px) rotate(6deg)}}
+svg.rig.act-dance{animation:rdance .4s steps(2) 3}
+svg.rig.act-dance .rg-legL{animation:rstep .4s steps(2) 3}
+svg.rig.act-dance .rg-legR{animation:rstep .4s steps(2) 3 .2s}
+svg.rig.act-dance .rg-armL{animation:rupL .4s steps(2) 3}
+svg.rig.act-dance .rg-armR{animation:rarmR .4s steps(2) 3 .2s}
+@keyframes rdance{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes rstep{50%{transform:translateY(-2px)}}
+svg.rig.act-stretch .rg-armL{animation:rupL 1.2s steps(3) 1}
+svg.rig.act-stretch .rg-armR{animation:rupR 1.2s steps(3) 1}
+svg.rig.act-stretch .rg-body{animation:rtall 1.2s steps(3) 1}
+@keyframes rtall{50%{transform:scaleY(1.06)}}
+svg.rig.act-wiggle .rg-tail{animation:rtail .2s steps(2) 6}
+svg.rig.act-wiggle .rg-earL{animation:rearL .2s steps(2) 6}
+svg.rig.act-wiggle .rg-earR{animation:rearR .2s steps(2) 6}
+svg.rig.act-wiggle .rg-legL{animation:rstep .3s steps(2) 4}
+svg.rig.act-wiggle .rg-legR{animation:rstep .3s steps(2) 4 .15s}
+svg.rig.act-eat .rg-top{animation:reat .25s steps(2) 5}
+@keyframes reat{50%{transform:translateY(2px) scaleY(.94)}}
+svg.rig.act-pet .rg-eyes{animation:rhappyeye 1.2s steps(1) 1}
+svg.rig.act-pet .rg-top{animation:rlook .6s steps(1) 2}
+@keyframes rhappyeye{0%,100%{transform:scaleY(.3)}}
+svg.rig.act-sad .rg-top{animation:rdroop 1s steps(2) 1 forwards}
+svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
+@keyframes rdroop{100%{transform:translateY(1px) rotate(-4deg)}}
+.mood-sleepy svg.rig .rg-eyes{animation:none;transform:scaleY(.15)}
+.mood-sleepy svg.rig .rg-top{animation:rbob 4s steps(2) infinite}
+.mood-sleepy svg.rig .rg-body{animation:rbreath 4s steps(2) infinite}
+@media (prefers-reduced-motion: reduce){ svg.rig .rg, svg.rig{animation:none !important} }
+.megapal{filter:drop-shadow(0 0 3px rgba(255,214,64,.9))}
+.megabox{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.megaprev{line-height:0;padding:6px;background:#2B2152;box-shadow:var(--pf)}
+.megasil svg path{fill:#1E1A2B !important}
+.megasil svg{filter:none}
+.megareq{list-style:none;margin:0;padding:0;flex:1;min-width:220px;display:flex;flex-direction:column;gap:4px}
+.megareq li{display:flex;gap:8px;align-items:center;font:400 14px/1.2 var(--body)}
+.megareq li i{font-style:normal;width:18px;color:var(--muted)}.megareq li.ok i{color:#2E9A3A}
+.megareq li span{flex:1}.megareq li b{font:700 13px/1 var(--display);color:var(--muted)}
+.megareq li.ok span{text-decoration:line-through;color:var(--muted)}
+.cdmini.mega{box-shadow:var(--pf), 0 0 0 3px #FFD23F}
+.megaov{background:radial-gradient(circle,#5B3FB8,#1E1A2B)}
+.megaflash{animation:megaf 1.6s steps(8) both}
+@keyframes megaf{0%{filter:brightness(1)}40%{filter:brightness(3)}60%{filter:brightness(1)}80%{filter:brightness(4)}100%{filter:brightness(6)}}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -852,9 +996,60 @@ function icon(name, s = 3, pal){
   }
   return (ICON_CACHE[key] = gridSVG(out.map(r => r.join('')), Object.assign({}, ICP, pal || {}), s, 'ic'));
 }
+
+/* ---------- rigged sprites: split pixel art into body parts so limbs can move ---------- */
+function rigSVG(rows, pal, scale, cls, label, R, crop){
+  const H = crop || rows.length, W = rows[0].length, G = {};
+  const solid = (x, y) => y >= 0 && y < H && x >= 0 && x < W && rows[y][x] !== '.' && rows[y][x] !== 'O';
+  const part = (x, y) => {
+    const c = rows[y][x];
+    if (R.tail && R.tail.includes(c)) return 'tail';
+    if (y < R.headEnd) return R.eyes.includes(c) && y >= R.eyeTop ? (x < W / 2 ? 'eyeL' : 'eyeR') : (R.ears && R.ears.includes(c) ? (x < W / 2 ? 'earL' : 'earR') : 'head');
+    if (y >= R.legStart) return x < W / 2 ? 'legL' : 'legR';
+    if (R.armL && x >= R.armL[0] && x <= R.armL[1] && y >= R.armTop) return 'armL';
+    if (R.armR && x >= R.armR[0] && x <= R.armR[1] && y >= R.armTop) return 'armR';
+    return 'body';
+  };
+  const owner = Array.from({length:H}, () => Array(W).fill(null));
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (solid(x, y)) owner[y][x] = part(x, y);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rows[y][x] === 'O'){
+    let best = null; for (const [dx, dy] of [[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){ const X = x + dx, Y = y + dy; if (solid(X, Y)){ best = owner[Y][X]; break; } }
+    owner[y][x] = best || (y < R.headEnd ? 'head' : y >= R.legStart ? (x < W / 2 ? 'legL' : 'legR') : 'body');
+  }
+  for (let y = 0; y < H; y++){ let x = 0; const row = rows[y];
+    while (x < W){ const c = row[x]; if (c === '.'){ x++; continue; } const o = owner[y][x], x0 = x; while (x < W && row[x] === c && owner[y][x] === o) x++;
+      const g = G[o] = G[o] || {}; (g[c] = g[c] || []).push(`M${x0} ${y}h${x - x0}v1h-${x - x0}z`); } }
+  const order = ['tail', 'legL', 'legR', 'armL', 'armR', 'body', 'earL', 'earR', 'head', 'eyeL', 'eyeR'];
+  const grp = k => G[k] ? `<g class="rg rg-${k}">${Object.keys(G[k]).map(c => `<path fill="${pal[c]}" d="${G[k][c].join('')}"/>`).join('')}</g>` : '';
+  const inner = ['earL', 'earR', 'head', 'eyeL', 'eyeR'].some(k => G[k]) ? `<g class="rg rg-top">${['earL', 'earR', 'head'].map(grp).join('')}<g class="rg rg-eyes">${grp('eyeL')}${grp('eyeR')}</g></g>` : '';
+  const delay = -(Math.random() * 3).toFixed(2);
+  return `<svg class="px rig ${cls || ''}" style="--rd:${delay}s" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} viewBox="0 0 ${W} ${H}" width="${W * scale}" height="${H * scale}" shape-rendering="crispEdges">${['tail', 'legL', 'legR', 'armL', 'armR', 'body'].map(grp).join('')}${inner}</svg>`;
+}
+function autoRig(rows, extra = {}){
+  const H = rows.length, W = rows[0].length, has = (y, set) => [...rows[y]].some(c => set.includes(c));
+  let legStart = H; for (let y = Math.floor(H * .6); y < H; y++) if (has(y, 'F')){ legStart = y; break; }
+  let eyeTop = 0, eyeBot = 0; for (let y = 0; y < H; y++) if (has(y, 'E')){ if (!eyeTop) eyeTop = y; eyeBot = y; }
+  let belly = -1; for (let y = eyeBot + 1; y < H; y++) if (has(y, 'L')){ belly = y; break; }
+  const headEnd = belly > 0 ? Math.max(eyeBot + 2, belly - 1) : eyeBot + 3;
+  let lo = W, hi = -1; for (let y = headEnd; y < legStart; y++) [...rows[y]].forEach((c, x) => { if (c === 'L' || c === 'l' || c === 'v'){ lo = Math.min(lo, x); hi = Math.max(hi, x); } });
+  const R = {headEnd, legStart, eyes:'EWs', eyeTop, armTop:headEnd + 1, ears:extra.ears || '', tail:extra.tail || ''};
+  if (hi > 0){ R.armL = [0, lo - 3]; R.armR = [hi + 3, W]; }
+  return R;
+}
+const KIBI_RIG = {headEnd:15, legStart:23, eyes:'ELe', eyeTop:10, armTop:16, armL:[0, 5], armR:[16, 21]};
+const RIGX = {leaf:{ears:'P', tail:'T'}, fire:{ears:'aA', tail:''}, water:{ears:'HG', tail:'K'}};
+/* random little behaviours so pals and Kibi feel alive */
+const IDLE_ACTS = ['wave', 'hop', 'look', 'dance', 'stretch', 'wiggle'];
+function rigAct(svg, act, ms = 1400){ if (!svg || REDUCE) return; IDLE_ACTS.concat(['cheer', 'sad', 'eat', 'pet']).forEach(a => svg.classList.remove('act-' + a)); void svg.getBoundingClientRect(); svg.classList.add('act-' + act); clearTimeout(svg._ra); svg._ra = setTimeout(() => svg.classList.remove('act-' + act), ms); }
+setTimeout(() => { if (!REDUCE) setInterval(() => {
+  if (document.hidden) return;
+  const all = [...document.querySelectorAll('svg.rig')].filter(s => s.isConnected && s.getBoundingClientRect().width > 30 && !s.closest('.palsleep'));
+  if (all.length) rigAct(pick(all), pick(IDLE_ACTS));
+}, 2600); }, 0);
+
 function kibi(mood = 'normal', opts = {}){
   const rows = KIBI.moods[mood] || KIBI.moods.normal;
-  return gridSVG(rows, KIBI.pal, opts.scale || 4, 'kibi', 'Kibi', opts.head ? 17 : 0);
+  return rigSVG(rows, KIBI.pal, opts.scale || 4, 'kibi', 'Kibi', KIBI_RIG, opts.head ? 17 : 0);
 }
 function paintIcons(root = document){ root.querySelectorAll('i[data-icon]').forEach(i => { i.outerHTML = icon(i.dataset.icon, +(i.dataset.s || 3)); }); }
 $('#brandKibi').outerHTML = kibi('happy', {head:true, scale:3});
@@ -2588,7 +2783,7 @@ function recommend(subId){
 }
 
 /* ---------- learn first: I do, we do, you do ---------- */
-function openLessonUI(){ $('#checkBtn').classList.remove('pulse'); $('#checkBtn').textContent = 'CHECK'; $('#lesson').hidden = false; document.body.style.overflow = 'hidden'; $('#lfoot').hidden = false; $('#hintBtn').hidden = false; $('.pbar').classList.remove('fire'); $('#pfill').style.width = '0%'; splash(LS.mode); }
+function openLessonUI(){ $('#checkBtn').classList.remove('pulse'); $('#checkBtn').textContent = 'CHECK'; $('#lesson').hidden = false; document.body.style.overflow = 'hidden'; $('#lfoot').hidden = false; $('#hintBtn').hidden = false; $('.pbar').classList.remove('fire'); $('#pfill').style.width = '0%'; splash(LS.mode === 'boss' && LS.boss.mega ? 'mega' : LS.mode); buddyBar(); }
 function startLearn(id){
   LS = {mode:'learn', id, keys:new Set(), queue:[], i:0, firstRight:0, answered:0, combo:0, skips:0, wrongNow:0, hintLvl:0, usedHint:false, perSkill:{}};
   LS.queue = [makeQ(id, 0), makeQ(id, 0), makeQ(id, Math.min(1, sk(id).lvl))];
@@ -2945,7 +3140,7 @@ const EGG_NEED = 60, EVO_AT = [150, 400];
 const ELNAME = {leaf:'Grass', fire:'Fire', water:'Water'};
 const OLDPAL = {sprout:'leaf', ember:'fire', drip:'water'};
 const palById = id => PALS.find(p => p.id === id);
-const palName = (id, form) => { const p = palById(id); return p ? p.names[form || 0] : ''; };
+const palName = (id, form) => { const p = palById(id); if (!p) return ''; const o = ((S.pal || {}).own || {})[id]; return o && o.nick ? o.nick : (o && o.mega && !o.megaOff && form === 2 ? MEGA[id].name : p.names[Math.min(form || 0, 2)]); };
 function palState(){
   const P = S.pal || (S.pal = {own:{}, buddy:null, egg:null, eggDay:''});
   if (!P.v2){
@@ -2958,14 +3153,19 @@ function palState(){
 }
 function palSprite(id, form, scale = 4, cls = ''){
   const p = palById(id); if (!p) return '';
-  const rows = p.forms[form || 0];
-  const W = rows[0].length + 2, H = rows.length + 2, pal = p.pal;
+  const own = ((S.pal || {}).own || {})[id], M = MEGA[id];
+  const isMega = M && (form === 3 || (form === 2 && own && own.mega && !own.megaOff && !/\braw\b/.test(cls)));
+  const rows = isMega ? M.rows : p.forms[form || 0];
+  const W = rows[0].length + 2, H = rows.length + 2, pal = isMega ? M.pal : p.pal;
+  if (isMega) cls += ' megapal';
   const g = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => (y > 0 && y < H - 1 && x > 0 && x < W - 1 && pal[rows[y - 1][x - 1]] && rows[y - 1][x - 1] !== 'o') ? rows[y - 1][x - 1] : '.'));
   const out = g.map(r => r.slice());
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === '.'){
     for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const X = x + dx, Y = y + dy; if (X >= 0 && X < W && Y >= 0 && Y < H && g[Y][X] !== '.'){ out[y][x] = 'O'; break; } }
   }
-  return gridSVG(out.map(r => r.join('')), Object.assign({}, pal, {O:pal.o}), scale, 'pal ' + cls, p.names[form || 0]);
+  const fr = out.map(r => r.join('')), P2 = Object.assign({}, pal, {O:pal.o});
+  if (/\bstill\b/.test(cls) || scale < 1.8) return gridSVG(fr, P2, scale, 'pal ' + cls, isMega ? M.name : p.names[form || 0]);
+  return rigSVG(fr, P2, scale, 'pal ' + cls, isMega ? M.name : p.names[form || 0], autoRig(fr, RIGX[p.el] || {}));
 }
 function eggSprite(id, scale = 4, cracked = false){
   const p = palById(id) || PALS[0], W = 12, H = 14;
@@ -3015,20 +3215,24 @@ function palCard(){
     c.append(pickRow); return c;
   }
   let left = '';
-  if (P.buddy){ const b = P.own[P.buddy], p = palById(P.buddy); left = `<div class="palme">${palSprite(P.buddy, b.form, b.form ? 3 : 4)}</div><div><small>MY BUDDY · ${ELNAME[p.el].toUpperCase()}</small><h3>${palName(P.buddy, b.form)}</h3>${b.form < 2 ? `<div class="meter"><i style="width:${Math.min(100, (b.xp - (b.form ? EVO_AT[0] : 0)) / (EVO_AT[b.form] - (b.form ? EVO_AT[0] : 0)) * 100)}%"></i></div><p>${toNext(b)} XP to evolve</p>` : '<p>Fully grown!</p>'}</div>`; }
+  if (P.buddy){ const b = P.own[P.buddy], p = palById(P.buddy), md = palMood(); left = `<div class="palme mood-${md}" title="Tap to pet">${palSprite(P.buddy, b.form, b.form ? 3 : 4)}${moodFx(md)}</div><div><small>MY BUDDY · ${ELNAME[p.el].toUpperCase()} · ${'♥'.repeat(palFrLvl(P.buddy))}</small><h3>${palName(P.buddy, b.form)}${md === 'sleepy' ? ' <span class="hsub">is sleepy</span>' : md === 'happy' ? ' <span class="hsub">is happy!</span>' : ''}</h3>${b.form < 2 ? `<div class="meter"><i style="width:${Math.min(100, (b.xp - (b.form ? EVO_AT[0] : 0)) / (EVO_AT[b.form] - (b.form ? EVO_AT[0] : 0)) * 100)}%"></i></div><p>${toNext(b)} XP to evolve</p>` : `<p>${b.mega && !b.megaOff ? '⚡ MEGA power unlocked!' : megaReqs(P.buddy).every(r => r.ok) ? '⚡ Ready for the Mega Trial! Tap my name.' : 'Fully grown! Next goal: MEGA (tap my name)'}</p>`}</div>`; }
   if (P.egg){
     if (P.buddy) left += `<div class="palegg">${eggSprite(P.egg.id, 3)}<div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><small>${EGG_NEED - P.egg.xp} XP to hatch</small></div>`;
     else left = `<div class="palme">${eggSprite(P.egg.id, 4)}</div><div><small>MY EGG · ${ELNAME[palById(P.egg.id).el].toUpperCase()}</small><h3>Hatch your first pal!</h3><div class="meter"><i style="width:${P.egg.xp / EGG_NEED * 100}%"></i></div><p>Play lessons to hatch it: ${EGG_NEED - P.egg.xp} XP to go</p></div>`;
   }
   c.innerHTML = `<div class="palrow">${left}</div>`;
-  const b = el('button', 'btn dark', `PALS ${Object.keys(P.own).length}/${PALS.length}`); b.onclick = palBook;
-  c.append(b);
+  const sp = c.querySelector('.palme'); if (sp && P.buddy){ sp.onclick = () => petPal(sp); }
+  const nm = c.querySelector('h3'); if (nm && P.buddy){ nm.style.cursor = 'pointer'; nm.onclick = () => palDetail(P.buddy); }
+  const btns = el('div', 'palbtns');
+  if (P.buddy){ const f = el('button', 'btn' + (P.berries > 0 ? ' go' : ''), `🍓 ${P.berries || 0}`); f.title = 'Feed a berry'; f.onclick = () => feedPal(f); btns.append(f); const pl = el('button', 'btn warm', '⚽ PLAY'); pl.title = 'Costs 1 berry'; pl.onclick = playPal; btns.append(pl); }
+  const b = el('button', 'btn dark', `PALS ${Object.keys(P.own).length}/${PALS.length}`); b.onclick = palBook; btns.append(b);
+  c.append(btns);
   return c;
 }
 function palBook(){
   const P = palState();
   openModal(`<h3>My Pixel Pals</h3><div class="sub">Learn to hatch eggs. Your buddy grows with every lesson and evolves twice. Reach today’s goal or master a unit to get a new egg.</div><div class="palgrid">${PALS.map(p => { const o = P.own[p.id]; return o ? `<button class="palslot${P.buddy === p.id ? ' on' : ''}" data-id="${p.id}">${palSprite(p.id, o.form, 3)}<b>${palName(p.id, o.form)}</b><small>${ELNAME[p.el]}${P.buddy === p.id ? ' · buddy' : ''}</small><span class="stages">${[0, 1, 2].map(f => `<i class="${f <= o.form ? 'on' : ''}"></i>`).join('')}</span></button>` : `<div class="palslot locked">${P.egg && P.egg.id === p.id ? eggSprite(p.id, 3) : '<span class="qm">?</span>'}<b>???</b><small>${P.egg && P.egg.id === p.id ? 'in your egg' : ELNAME[p.el] + ' pal'}</small></div>`; }).join('')}</div><div class="acts"><button class="btn go" data-close>DONE</button></div>`, c => {
-    c.querySelectorAll('button.palslot').forEach(b => b.onclick = () => { P.buddy = b.dataset.id; save(); sfx.tap(); closeModal(); render(); });
+    c.querySelectorAll('button.palslot').forEach(b => b.onclick = () => { sfx.tap(); palDetail(b.dataset.id); });
   });
 }
 function palShow(ev, done){
@@ -3036,8 +3240,8 @@ function palShow(ev, done){
   const ov = el('div', 'palov'); document.body.append(ov);
   const close = () => { ov.remove(); render(); done && done(); };
   const final = (form, title) => {
-    ov.innerHTML = `<div class="palstage"><div class="palbig stamp">${palSprite(ev.id, form, form === 2 ? 8 : 10)}</div><h2>${title}</h2><p>${ELNAME[p.el]} pal</p><button class="btn go wide">YAY!</button></div>`;
-    ov.querySelector('button').onclick = close; burstAt(ov.querySelector('.palbig'), {n:22, star:true, r:150}); sfx.fanfare(); confetti();
+    ov.innerHTML = `<div class="palstage"><div class="palbig stamp">${palSprite(ev.id, form, form === 2 ? 8 : 10)}</div><h2>${title}</h2><p>${ELNAME[p.el]} pal</p><button class="btn go wide">${ev.type === 'hatch' ? 'GIVE IT A NAME' : 'YAY!'}</button></div>`;
+    ov.querySelector('button').onclick = ev.type === 'hatch' ? () => { ov.remove(); nameModal(ev.id, () => { render(); done && done(); }); } : close; burstAt(ov.querySelector('.palbig'), {n:22, star:true, r:150}); sfx.fanfare(); confetti();
   };
   if (ev.type === 'hatch'){
     ov.innerHTML = `<div class="palstage"><div class="palbig wob">${eggSprite(ev.id, 10)}</div><h2>Something is hatching…</h2></div>`;
@@ -3627,6 +3831,299 @@ function gradeTabs(){
   document.addEventListener('dblclick', e => e.preventDefault(), {passive:false});
 })();
 
+/* ================= Pals+: names, petting, berries, moods, buddy in lessons, boss battles, stories, cards ================= */
+const PSTORY = {"leaf":[{"en":"{N} was born in a big green forest. Every morning, {N} swings from tree to tree and says hello to the birds.","zh":[["{N}",""],["住","zhù"],["在","zài"],["一","yí"],["片","piàn"],["大","dà"],["森","sēn"],["林","lín"],["里","lǐ"],["。",""],["每","měi"],["天","tiān"],["早","zǎo"],["上","shang"],["，",""],["{N}",""],["在","zài"],["树","shù"],["上","shàng"],["荡","dàng"],["来","lái"],["荡","dàng"],["去","qù"],["，",""],["和","hé"],["小","xiǎo"],["鸟","niǎo"],["说","shuō"],["早","zǎo"],["安","ān"],["。",""]]},{"en":"{N} loves bananas, but {N} always shares them with friends. Sharing makes {N} feel happy inside.","zh":[["{N}",""],["最","zuì"],["喜","xǐ"],["欢","huān"],["吃","chī"],["香","xiāng"],["蕉","jiāo"],["，",""],["可","kě"],["是","shì"],["它","tā"],["总","zǒng"],["是","shì"],["和","hé"],["朋","péng"],["友","yǒu"],["一","yì"],["起","qǐ"],["分","fēn"],["享","xiǎng"],["。",""],["分","fēn"],["享","xiǎng"],["让","ràng"],["{N}",""],["心","xīn"],["里","lǐ"],["很","hěn"],["快","kuài"],["乐","lè"],["。",""]]},{"en":"One day, a little bird fell from its nest. {N} climbed up carefully and put it back. The mother bird sang a thank-you song.","zh":[["有","yǒu"],["一","yì"],["天","tiān"],["，",""],["一","yì"],["只","zhī"],["小","xiǎo"],["鸟","niǎo"],["从","cóng"],["鸟","niǎo"],["窝","wō"],["里","lǐ"],["掉","diào"],["下","xià"],["来","lái"],["。",""],["{N}",""],["小","xiǎo"],["心","xīn"],["地","de"],["爬","pá"],["上","shàng"],["树","shù"],["，",""],["把","bǎ"],["它","tā"],["送","sòng"],["回","huí"],["家","jiā"],["。",""],["鸟","niǎo"],["妈","mā"],["妈","ma"],["唱","chàng"],["歌","gē"],["谢","xiè"],["谢","xie"],["它","tā"],["。",""]]},{"en":"When {N} grows big, the leaves on its head turn into a crown. {N} wants to keep the forest safe for everyone.","zh":[["{N}",""],["长","zhǎng"],["大","dà"],["以","yǐ"],["后","hòu"],["，",""],["头","tóu"],["上","shang"],["的","de"],["叶","yè"],["子","zi"],["变","biàn"],["成","chéng"],["了","le"],["皇","huáng"],["冠","guān"],["。",""],["它","tā"],["要","yào"],["保","bǎo"],["护","hù"],["森","sēn"],["林","lín"],["，",""],["让","ràng"],["大","dà"],["家","jiā"],["都","dōu"],["住","zhù"],["得","de"],["开","kāi"],["心","xīn"],["。",""]]}],"fire":[{"en":"{N} lives near a warm volcano. The little flame on its head glows brighter when {N} is happy.","zh":[["{N}",""],["住","zhù"],["在","zài"],["一","yí"],["座","zuò"],["暖","nuǎn"],["暖","nuǎn"],["的","de"],["火","huǒ"],["山","shān"],["旁","páng"],["边","biān"],["。",""],["它","tā"],["高","gāo"],["兴","xìng"],["的","de"],["时","shí"],["候","hòu"],["，",""],["头","tóu"],["上","shang"],["的","de"],["小","xiǎo"],["火","huǒ"],["苗","miáo"],["会","huì"],["更","gèng"],["亮","liàng"],["。",""]]},{"en":"{N} likes to run very fast. But {N} learned to stop and look before crossing the river.","zh":[["{N}",""],["很","hěn"],["喜","xǐ"],["欢","huān"],["跑","pǎo"],["得","de"],["飞","fēi"],["快","kuài"],["。",""],["不","bú"],["过","guò"],["它","tā"],["学","xué"],["会","huì"],["了","le"],["过","guò"],["河","hé"],["以","yǐ"],["前","qián"],["，",""],["先","xiān"],["停","tíng"],["下","xià"],["来","lái"],["看","kàn"],["一","yi"],["看","kàn"],["。",""]]},{"en":"On a cold night, the forest animals were shivering. {N} sat close to them and kept everyone warm.","zh":[["一","yí"],["个","gè"],["冷","lěng"],["冷","lěng"],["的","de"],["晚","wǎn"],["上","shang"],["，",""],["森","sēn"],["林","lín"],["里","lǐ"],["的","de"],["动","dòng"],["物","wù"],["都","dōu"],["在","zài"],["发","fā"],["抖","dǒu"],["。",""],["{N}",""],["坐","zuò"],["在","zài"],["大","dà"],["家","jiā"],["身","shēn"],["边","biān"],["，",""],["让","ràng"],["大","dà"],["家","jiā"],["都","dōu"],["暖","nuǎn"],["和","huo"],["起","qǐ"],["来","lái"],["。",""]]},{"en":"Now {N} is strong and brave. Its fiery mane shines like the sun, and it always helps friends in need.","zh":[["现","xiàn"],["在","zài"],["{N}",""],["又","yòu"],["强","qiáng"],["壮","zhuàng"],["又","yòu"],["勇","yǒng"],["敢","gǎn"],["。",""],["它","tā"],["的","de"],["火","huǒ"],["焰","yàn"],["鬃","zōng"],["毛","máo"],["像","xiàng"],["太","tài"],["阳","yáng"],["一","yí"],["样","yàng"],["亮","liàng"],["，",""],["朋","péng"],["友","yǒu"],["有","yǒu"],["困","kùn"],["难","nán"],["，",""],["它","tā"],["总","zǒng"],["是","shì"],["第","dì"],["一","yī"],["个","gè"],["帮","bāng"],["忙","máng"],["。",""]]}],"water":[{"en":"{N} was born in a quiet blue lake. It loves to make bubbles and watch them float up to the sky.","zh":[["{N}",""],["出","chū"],["生","shēng"],["在","zài"],["一","yí"],["个","gè"],["安","ān"],["静","jìng"],["的","de"],["蓝","lán"],["色","sè"],["湖","hú"],["里","lǐ"],["。",""],["它","tā"],["喜","xǐ"],["欢","huān"],["吐","tǔ"],["泡","pào"],["泡","pào"],["，",""],["看","kàn"],["泡","pào"],["泡","pào"],["飞","fēi"],["到","dào"],["天","tiān"],["上","shàng"],["。",""]]},{"en":"When the flowers are thirsty, {N} sprinkles gentle rain on them. The flowers smile and grow taller.","zh":[["花","huā"],["儿","ér"],["口","kǒu"],["渴","kě"],["的","de"],["时","shí"],["候","hòu"],["，",""],["{N}",""],["就","jiù"],["下","xià"],["一","yì"],["场","cháng"],["小","xiǎo"],["雨","yǔ"],["。",""],["花","huā"],["儿","ér"],["笑","xiào"],["了","le"],["，",""],["长","zhǎng"],["得","de"],["更","gèng"],["高","gāo"],["了","le"],["。",""]]},{"en":"A little fish got lost in the big river. {N} swam with it all the way home. Being kind is {N}'s superpower.","zh":[["一","yì"],["条","tiáo"],["小","xiǎo"],["鱼","yú"],["在","zài"],["大","dà"],["河","hé"],["里","lǐ"],["迷","mí"],["路","lù"],["了","le"],["。",""],["{N}",""],["陪","péi"],["着","zhe"],["它","tā"],["游","yóu"],["回","huí"],["家","jiā"],["。",""],["善","shàn"],["良","liáng"],["就","jiù"],["是","shì"],["{N}",""],["的","de"],["超","chāo"],["能","néng"],["力","lì"],["。",""]]},{"en":"Now {N} can fly above the clouds. It watches over the rivers and seas, and brings rain when the land is dry.","zh":[["现","xiàn"],["在","zài"],["{N}",""],["能","néng"],["在","zài"],["云","yún"],["上","shàng"],["飞","fēi"],["。",""],["它","tā"],["守","shǒu"],["护","hù"],["着","zhe"],["河","hé"],["流","liú"],["和","hé"],["大","dà"],["海","hǎi"],["，",""],["土","tǔ"],["地","dì"],["干","gān"],["的","de"],["时","shí"],["候","hòu"],["，",""],["它","tā"],["就","jiù"],["带","dài"],["来","lái"],["雨","yǔ"],["水","shuǐ"],["。",""]]}]};
+const BOSSES = {"leaf":{"rows":["....a.....a..........a.....a....","...aA....aA..........Aa....Aa...","..aAA...aAAa..a..a..aAAa...AAa..","..aAAa.aAAAa.aA..Aa.aAAAa.aAAa..",".aAAAaaAAAAaaAA..AAaaAAAAaaAAAa.","..............BBhh..............","..........hhhPhBBBPhhh..........","........hhhBBPPBBPPBBBBh........","......hKKBBBBBBBBBBBBBBKKh......",".....hhBBKKBBBBBBBBBBKKBBBB.....","....hhBBBEEKBBBBBBBBKEEBBBBB....","...hhBBBEWEEBBBBBBBBEWEEBBBBb...","...hBBBBEWEEBBBBBBBBEWEEBBBBB...","..hhBBBBEEEsBBBBBBBBEEEsBBBBBb..","..hBBBBBBEEBBBBBBBBBBEEBBBBBBb..","..hBBBBBBBBBBBBBBBBBBBBBBBBBBB..",".hhBBBCCBBBBBBBBBBBBBBBBCCBBBBb.",".hBBBBBBBBBBBLLLLLLBBBBBBBBBBbb.","..BBBBBBBBBLLLLLLLLLLBBBBBBBBb..","..hBBBBBBBLLLLTLLTLLLLBBBBBBBb..","..hBBBBBBLLLLLLLLLLLLLLBBBBBbb..","...BBBBBBLLLLLLLLLLLLLLBBBBBb...","...hBBBBBLLLLLLLLLLLLLLBBBBbb...","....bBBBBLLLLLLLLLLLLLLBBBbb....",".....bBBBBLLLLLLLLLLLLBBBbb.....","......BBBBBLLLLLLLLLLBBBBb......","......FFFFFFBLLLLLLBFFFFFF......",".....FFFFFFFFbBBBbbFFFFFFFF.....",".....FFFFFFFF.bbbb.FFFFFFFF.....","........FF............FF........"],"pal":{"E":"#1F1830","W":"#FFFFFF","s":"#FF5A5A","C":"#FF8FA0","T":"#FFFFFF","K":"#1F1830","B":"#5E9E46","h":"#8FCC6C","b":"#3F7330","L":"#9ED07A","A":"#2E5E24","a":"#1F421A","P":"#D94A6A","F":"#3F7330","o":"#1c2f15"}},"fire":{"rows":["....a......................a....","...aAa.....a........a.....aAa...","..aAYAa...aAa......aAa...aAYAa..","..aAYYAa.aAYAa....aAYAa.aAYYAa..",".aAYYYAaaAYYYAa..aAYYYAaaAYYYAa.","................................","..........hhhhhhhhhhhh..........","........hhhBBBBBBBBBBBBh........","......hKKBBBBBBBBBBBBBBKKh......",".....hhBBKKBBBBBBBBBBKKBBBB.....","....hhBBBEEKBBBBBBBBKEEBBBBB....","...hhBBBEWEEBBBBBBBBEWEEBBBBB...","..hLBBBBEWEEBBBBBBBBEWEEBBBBLb..","..LLBBBLEEEsBBBBBBBBEEEsLBBBLL..","..LBBBLLBEEBBBBBBBBBBEEBLLBBBL..",".hhBBBBBBBBBBBBBBBBBBBBBBBBBBBb.",".hBBBBCCBBBBBBBBBBBBBBBBCCBBBBb.",".hBBBBBBBBBBBBBBBBBBBBBBBBBBBBb.",".hBBBBBBBBBBBBBBBBBBBBBBBBBBBbb.","..BBBBBBBBBBBBTBBTBBBBBBBBBBBb..","..hBBBLBBBLBBBBBBBBBBLBBBLBBBb..","..hBBBLLBLLBBBBBBBBBBLLBLLBBbb..","...bBBBLLLBBBBBBBBBBBBLLLBBbb...","....bBBBBBBBBBBBBBBBBBBBBBbb....",".....bBBBBBBBBBBBBBBBBBBBbb.....","......BBBBBBBBBBBBBBBBBBBb......","......FFFFFFBBBBBBBBFFFFFF......",".....FFFFFFFFbbbbbbFFFFFFFF.....",".....FFFFFFFF......FFFFFFFF.....","........FF............FF........"],"pal":{"E":"#1F1830","W":"#FFFFFF","s":"#FF5A5A","C":"#FF8FA0","T":"#FFFFFF","K":"#1F1830","B":"#8A3A2A","h":"#B5553A","b":"#5E2518","L":"#FF8A3D","A":"#FFC93C","a":"#FF5A33","Y":"#FFF1A0","F":"#5E2518","o":"#29110c"}},"water":{"rows":["................................","................................","..........hhhhhhhhhhhh..........","........hhhBBBBBBBBBBBBh........","......hhhBBBBBBBBBBBBBBBBh......",".....hhBBBBBBhhhhhhBBBBBBBB.....","....hhBBBBBhhhhhhhhhhBBBBBBB....","...hhBBBBBhhhhhhhhhhhhBBBBBBb...","...hBBBKKBhhhhhhhhhhhhBKKBBBB...","..hhBBBBBKKhhhhhhhhhhKKBBBBBBb..","..hBBBBBBEEKBhhhhhhBKEEBBBBBBb..","..hBBBBBEWEEBBBBBBBBEWEEBBBBBB..",".hhBBBBBEWEEBBBBBBBBEWEEBBBBBBb.",".hBBBBBBEEEsBBBBBBBBEEEsBBBBBbb.","..BBBBBBBEEBBBBBBBBBBEEBBBBBBb..","..hBBBBBBBBBBBBBBBBBBBBBBBBBBb..","..hBBBCCBBBBBBBBBBBBBBBBCCBBbb..","...BBBBBBBLBLBBBBBBLBLBBBBBBb...","...hBBBBBBLLLBBBBBBLLLBBBBBbb...","....bBBBBBBBBBTBBTBBBBBBBBbb....",".....bBBBBBBBBBBBBBBBBBBBbb.....","......bbBBBBBBBBBBBBBBBbbb......","........bbBBBBBBBBBBBbbb........","A.A.A.A.A.AbAbAbbAbAbA.A.A.A.A.A","AaAaAaAaAaAaAaAaaAaAaAaAaAaAaAaA","A...A...A...A......A...A...A...A","a...a...a...a......a...a...a...a","....A...A..............A...A....","................................","................................"],"pal":{"E":"#1F1830","W":"#FFFFFF","s":"#FF5A5A","C":"#FF8FA0","T":"#FFFFFF","K":"#1F1830","B":"#6A5ACD","h":"#9C8FF0","b":"#46399A","L":"#B9AEFF","A":"#3FD6C8","a":"#1F9FAE","F":"#46399A","o":"#1f1b3d"}}};
+const BOSSNAME = {leaf:'Thornox', fire:'Magmaw', water:'Tidegloom'};
+const FR_AT = [0, 15, 40, 80];
+const ELCOL = {leaf:['#7BD15A', '#2E7F34'], fire:['#FF8A3D', '#B5361A'], water:['#4FCFB8', '#1F6FAE']};
+const BEATS = {fire:'leaf', water:'fire', leaf:'water'};
+const nickOf = id => { const o = palState().own[id]; return o && o.nick ? o.nick : ''; };
+const palFr = id => (palState().own[id] || {}).fr || 0;
+const palFrLvl = id => FR_AT.filter(x => palFr(id) >= x).length;
+function addFr(id, n){ const o = palState().own[id]; if (o) o.fr = (o.fr || 0) + n; }
+function palMood(){
+  const h = new Date().getHours(), P = palState();
+  if (h >= 21 || h < 7) return 'sleepy';
+  if (P.lastLesson && Date.now() - P.lastLesson < 30 * 60000) return 'happy';
+  return 'calm';
+}
+function moodFx(m){ return m === 'sleepy' ? '<span class="zz">z<b>z</b><i>Z</i></span>' : m === 'happy' ? '<span class="sparkle">✦<b>✧</b></span>' : ''; }
+const SUGGEST = {leaf:['Leafy', 'Mango', 'Pip', 'Kiwi', 'Bobo'], fire:['Sparky', 'Toasty', 'Rocky', 'Chilli', 'Bacon'], water:['Bubbles', 'Splash', 'Lulu', 'Ocean', 'Mizu']};
+function nameModal(id, after){
+  const p = palById(id), sug = shuffle(SUGGEST[p.el]).slice(0, 3);
+  openModal(`<div class="palname">${palSprite(id, (palState().own[id] || {}).form || 0, 5)}<h3>Give your pal a name!</h3><input id="pName" maxlength="12" placeholder="${p.names[0]}" value="${esc(nickOf(id))}" autocomplete="off"><div class="seg">${sug.map(n => `<button data-n="${n}">${n}</button>`).join('')}</div><div class="acts"><button class="btn ghost" id="pKeep">Keep “${p.names[0]}”</button><button class="btn go" id="pOK">OK</button></div></div>`, c => {
+    const inp = c.querySelector('#pName');
+    c.querySelectorAll('.seg button').forEach(b => b.onclick = () => { inp.value = b.dataset.n; sfx.tap(); });
+    const done = nick => { const o = palState().own[id]; if (o){ o.nick = (nick || '').trim().slice(0, 12); save(); } closeModal(); render(); after && after(); };
+    c.querySelector('#pOK').onclick = () => done(inp.value);
+    c.querySelector('#pKeep').onclick = () => done('');
+  });
+}
+function petPal(sp){
+  const P = palState(), id = P.buddy; if (!id) return;
+  const o = P.own[id];
+  if (o.petDay !== today()){ o.petDay = today(); o.pets = 0; }
+  if (o.pets < 5){ o.pets++; addFr(id, 1); save(); }
+  rigAct(sp.querySelector('svg.rig'), 'pet', 1200);
+  burstAt(sp, {n:8, cols:['#FF7AA8', '#FFB3CF', '#FFFFFF'], r:50});
+  const p = palById(id); tone(p.el === 'fire' ? [520, 660] : p.el === 'water' ? [700, 880] : [600, 760], .07, 'triangle', .08);
+  const msgs = ['♥', 'Hehe!', '♥ ♥', 'That tickles!', 'Yay!'];
+  const b = el('span', 'petbub', pick(msgs)); sp.parentElement.append(b); setTimeout(() => b.remove(), 900);
+}
+function feedPal(btn){
+  const P = palState(), id = P.buddy; if (!id || !(P.berries > 0)) { fxAnim(btn, 'shake', 400); return; }
+  P.berries--; addFr(id, 3);
+  const sp = document.querySelector('.palcard .palme');
+  if (sp && !REDUCE){ const [x0, y0] = centerOf(btn), [x1, y1] = centerOf(sp); const f = el('div', 'flycoin', '<span style="font-size:26px">🍓</span>'); f.style.left = x0 + 'px'; f.style.top = y0 + 'px'; fxLayer().append(f); f.animate([{transform:'translate(0,0)'}, {transform:`translate(${(x1 - x0) / 2}px,${(y1 - y0) / 2 - 60}px)`, offset:.5}, {transform:`translate(${x1 - x0}px,${y1 - y0}px) scale(.4)`}], {duration:600, easing:'ease-in', fill:'forwards'}).onfinish = () => { f.remove(); rigAct(sp.querySelector('svg.rig'), 'eat', 1300); burstAt(sp, {n:10, cols:['#FF5A6E', '#FFD23F', '#7BD15A'], r:50}); sfx.coin(); }; }
+  const o = P.own[id]; o.xp += 15; let ev = null;
+  if (o.form < 2 && o.xp >= EVO_AT[o.form]){ o.form++; ev = {type:'evolve', id, form:o.form}; }
+  save();
+  setTimeout(() => { if (ev) palShow(ev, () => render()); else render(); }, REDUCE ? 0 : 1900);
+}
+
+/* ---------- buddy inside lessons ---------- */
+function buddyBar(){
+  let b = $('#buddyb');
+  if (!b){ b = el('button', 'buddyb'); b.id = 'buddyb'; b.setAttribute('aria-label', 'Buddy help'); $('.ltop').append(b); b.onclick = buddyHelp; }
+  const P = palState();
+  if (!P.buddy || !LS || LS.mode === 'test'){ b.hidden = true; return; }
+  b.hidden = false; LS.helpLeft = LS.mode === 'boss' ? 0 : 1;
+  b.innerHTML = `${palSprite(P.buddy, P.own[P.buddy].form, P.own[P.buddy].form ? 2 : 2.6)}${LS.helpLeft ? '<i class="hb">?</i>' : ''}`;
+  setTimeout(() => buddySay(LS && LS.mode === 'boss' ? 'Let’s battle!' : pick(['Let’s go!', 'I’m with you!', 'Ready? Me too!'])), 1500);
+}
+function buddyCheer(ok, combo){
+  const b = $('#buddyb'); if (!b || b.hidden) return;
+  const sp = b.querySelector('svg'); if (!sp) return;
+  if (ok){ rigAct(sp.querySelector ? sp.querySelector('svg.rig') || sp : sp, combo >= 3 ? 'dance' : 'cheer', 1200); if (combo >= 3 || Math.random() < .35) buddySay(pick(combo >= 3 ? ['On fire!', `${combo} in a row!`, 'Unstoppable!'] : ['Yay!', 'Great!', 'Woohoo!', 'We did it!'])); const el_ = palById(palState().buddy).el; burstAt(b, {n:combo >= 3 ? 14 : 7, cols:ELCOL[el_].concat(['#FFFFFF']), r:combo >= 3 ? 70 : 40}); b.classList.toggle('aura', combo >= 3); }
+  else { rigAct(sp.querySelector ? sp.querySelector('svg.rig') || sp : sp, 'sad', 1000); b.classList.remove('aura'); buddySay(pick(['You can do it!', 'Let’s think again!', 'I believe in you!'])); }
+}
+function buddyHelp(){
+  const b = $('#buddyb'), q = LS && LS.queue[LS.i];
+  const say = t => { const s = el('span', 'petbub help', t); b.append(s); setTimeout(() => s.remove(), 1600); };
+  const nm = palName(palState().buddy, palState().own[palState().buddy].form);
+  if (!q || LS.demo || !$('#sheet').hidden) return;
+  if (!LS.helpLeft){ fxAnim(b, 'shake', 400); say(LS.mode === 'boss' ? `${nm} is busy battling!` : `${nm} already helped this lesson.`); return; }
+  if (q.kind !== 'choice'){ fxAnim(b, 'shake', 400); say(`${nm} can help with choice questions.`); return; }
+  const wrong = [...document.querySelectorAll('.choice')].filter(x => x.dataset.v !== String(q.answer) && !x.classList.contains('no'));
+  if (wrong.length < 2){ say('Only two left. You can do it!'); return; }
+  const w = pick(wrong); w.classList.add('no'); w.disabled = true; if (LS.sel === w.dataset.v){ LS.sel = null; updateCheck(); }
+  burstAt(w, {n:10, cols:ELCOL[palById(palState().buddy).el], r:40}); fxAnim(b.querySelector('svg'), 'kjump', 800);
+  LS.helpLeft = 0; LS.usedHint = true; q.usedHint = true; sfx.whoosh();
+  b.querySelector('.hb') && b.querySelector('.hb').remove();
+  say(`${nm}: not this one!`);
+}
+
+/* ---------- weekly boss battle ---------- */
+function isoWeek(d = new Date()){ const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return `${t.getUTCFullYear()}-W${Math.ceil(((t - y0) / 864e5 + 1) / 7)}`; }
+const bossEl = () => ['leaf', 'fire', 'water'][(+isoWeek().split('W')[1]) % 3];
+function bossSprite(el_, scale = 3, cls = ''){ const B = BOSSES[el_]; return gridSVG(outlineRows(B.rows), Object.assign({}, B.pal, {O:B.pal.o}), scale, 'boss ' + cls, BOSSNAME[el_]); }
+function outlineRows(rows){
+  const W = rows[0].length + 2, H = rows.length + 2;
+  const g = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => (y > 0 && y < H - 1 && x > 0 && x < W - 1 && rows[y - 1][x - 1] !== '.') ? rows[y - 1][x - 1] : '.'));
+  const out = g.map(r => r.slice());
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[y][x] === '.'){ for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const X = x + dx, Y = y + dy; if (X >= 0 && X < W && Y >= 0 && Y < H && g[Y][X] !== '.'){ out[y][x] = 'O'; break; } } }
+  return out.map(r => r.join(''));
+}
+function bossPool(){
+  const grade = curGrade();
+  let ids = orderOf(curSub()).filter(id => sk(id).lvl >= 1);
+  if (ids.length < 3) ids = SUBJECTS.filter(x => x.grade === grade).flatMap(x => orderOf(x.id)).filter(id => sk(id).lvl >= 1);
+  if (ids.length < 3) ids = ALLSK().filter(id => sk(id).lvl >= 1);
+  return ids.filter(id => !/^zh_xz_/.test(id));
+}
+function bossCard(){
+  const P = palState(); if (!P.buddy) return null;
+  const B = S.boss || (S.boss = {wk:'', won:false, wins:0});
+  if (B.wk !== isoWeek()){ B.wk = isoWeek(); B.won = false; }
+  const pool = bossPool(), e = bossEl(), mine = palById(P.buddy).el;
+  const c = el('div', 'reviewcard bosscard' + (B.won ? ' won' : ''));
+  const adv = BEATS[mine] === e ? `<b class="adv">${ELNAME[mine]} beats ${ELNAME[e]}: double damage!</b>` : BEATS[e] === mine ? `<span>${ELNAME[e]} is strong against ${ELNAME[mine]}. Be careful!</span>` : '';
+  c.innerHTML = `<div class="bossme">${bossSprite(e, 2)}</div><div><small>WEEKLY BOSS · ${ELNAME[e].toUpperCase()}</small><h3>${BOSSNAME[e]}</h3><p>${B.won ? `Defeated this week! 🏆 ×${B.wins}. A new boss comes on Monday.` : pool.length < 3 ? 'Finish 3 lessons to unlock the boss battle.' : `Answer questions so ${palName(P.buddy, P.own[P.buddy].form)} can attack! ${adv}`}</p></div>`;
+  if (!B.won && pool.length >= 3){ const b = el('button', 'btn warm', 'BATTLE!'); b.onclick = startBoss; c.append(b); }
+  return c;
+}
+function startBoss(){
+  const pool = bossPool(); if (pool.length < 3) return;
+  const e = bossEl(), mine = palById(palState().buddy).el;
+  LS = {id:null, mode:'boss', keys:new Set(), queue:[], i:0, firstRight:0, answered:0, combo:0, skips:0, wrongNow:0, hintLvl:0, usedHint:false, perSkill:{}, t0:Date.now(), fwRun:0, slow:false,
+    boss:{el:e, hp:10, max:10, eff:BEATS[mine] === e ? 2 : 1}};
+  for (let k = 0; k < 12; k++){ const s = pick(pool); LS.queue.push(makeQ(s, Math.max(0, sk(s).lvl - 1))); }
+  openLessonUI(); showQ();
+}
+function bossArena(){
+  const B = LS.boss, P = palState();
+  return el('div', 'arena', `<div class="ar-me">${palSprite(P.buddy, P.own[P.buddy].form, P.own[P.buddy].form ? 2 : 2.5)}</div><div class="ar-mid"><b>${B.mega ? 'Mega Trial' : BOSSNAME[B.el]}</b><div class="hp"><i style="width:${B.hp / B.max * 100}%"></i></div><small>${B.eff > 1 ? 'Super effective!' : 'HP ' + B.hp + '/' + B.max}</small></div><div class="ar-boss${B.mega ? ' shadow' : ''}">${B.mega ? palSprite(B.mega, 2, 2.4, 'raw still') : bossSprite(B.el, 2.4)}</div>`);
+}
+function bossHit(first){
+  const B = LS.boss, ar = document.querySelector('.arena'); if (!ar) return;
+  const dmg = (first ? 2 : 1) * B.eff; B.hp = Math.max(0, B.hp - dmg);
+  const me = ar.querySelector('.ar-me'), bo = ar.querySelector('.ar-boss');
+  const mine = palById(palState().buddy).el;
+  if (!REDUCE){
+    const [x0, y0] = centerOf(me), [x1, y1] = centerOf(bo);
+    const ball = el('div', 'flycoin', `<span class="orb" style="background:${ELCOL[mine][0]};box-shadow:0 0 0 3px ${ELCOL[mine][1]}"></span>`); ball.style.left = x0 + 'px'; ball.style.top = y0 + 'px'; fxLayer().append(ball);
+    rigAct(me.querySelector('svg'), 'cheer', 900); tone([300, 500, 800], .05, 'square', .05);
+    ball.animate([{transform:'translate(0,0) scale(.6)'}, {transform:`translate(${x1 - x0}px,${y1 - y0}px) scale(1.4)`}], {duration:420, easing:'ease-in', fill:'forwards'}).onfinish = () => {
+      ball.remove(); fxAnim(bo, 'shake', 450); burstAt(bo, {n:14, cols:ELCOL[mine].concat(['#fff']), r:60}); tone([160, 120], .08, 'sawtooth', .06);
+      const t = el('span', 'dmg', `-${dmg}`); bo.append(t); setTimeout(() => t.remove(), 900);
+      ar.querySelector('.hp i').style.width = (B.hp / B.max * 100) + '%';
+      ar.querySelector('small').textContent = B.hp ? (B.eff > 1 ? 'Super effective!' : 'HP ' + B.hp + '/' + B.max) : 'Defeated!';
+      if (!B.hp){ bo.classList.add('ko'); }
+    };
+  } else ar.querySelector('.hp i').style.width = (B.hp / B.max * 100) + '%';
+  progress();
+}
+function bossMiss(){ const ar = document.querySelector('.arena'); if (!ar) return; fxAnim(ar.querySelector('.ar-boss'), 'kjump', 800); fxAnim(ar.querySelector('.ar-me'), 'shake', 450); }
+
+/* ---------- stories ---------- */
+function storyModal(id, k){
+  const st = PSTORY[palById(id).el][k], nm = palName(id, palState().own[id].form);
+  const en = st.en.replace(/\{N\}/g, nm), zhT = st.zh.map(t => t[0] === '{N}' ? [nm, ''] : t), zhPlain = zhT.map(t => t[0]).join('');
+  openModal(`<h3>${palName(id, palState().own[id].form)} · Story ${k + 1}</h3><div class="storypal">${palSprite(id, Math.min(k >= 3 ? 2 : k >= 2 ? 1 : 0, palState().own[id].form), 4)}</div><div class="seg" id="stTab"><button data-v="en" class="on">English</button><button data-v="zh">华文</button></div><div class="storybox" id="stBox"><p class="story">${esc(en)}</p></div><div class="acts"><button class="btn" id="stSay">${icon('speaker', 3)} Read to me</button><button class="btn go" data-close>DONE</button></div>`, c => {
+    let lang = 'en';
+    const paint = () => { c.querySelectorAll('#stTab button').forEach(b => b.classList.toggle('on', b.dataset.v === lang)); c.querySelector('#stBox').innerHTML = lang === 'en' ? `<p class="story">${esc(en)}</p>` : `<p class="story zh">${RB(zhT)}</p>`; };
+    c.querySelectorAll('#stTab button').forEach(b => b.onclick = () => { lang = b.dataset.v; paint(); });
+    c.querySelector('#stSay').onclick = () => speak(lang === 'en' ? en : zhPlain, lang);
+  });
+}
+
+/* ---------- sticker cards ---------- */
+function cardCanvas(id, form){
+  const p = palById(id), isM = form === 3, src = isM ? MEGA[id] : p, rows = outlineRows(isM ? src.rows : p.forms[form]), pal = Object.assign({}, src.pal, {O:src.pal.o || p.pal.o}), fname = isM ? MEGA[id].name : p.names[form];
+  const W = 600, H = 840, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
+  const [c1, c2] = ELCOL[p.el];
+  g.fillStyle = '#1E1A2B'; g.fillRect(0, 0, W, H);
+  g.fillStyle = c2; g.fillRect(12, 12, W - 24, H - 24);
+  g.fillStyle = c1; g.fillRect(28, 28, W - 56, H - 56);
+  g.fillStyle = '#FFFFFF'; g.fillRect(52, 130, W - 104, 440);
+  g.fillStyle = 'rgba(0,0,0,.08)'; for (let i = 0; i < 12; i++) g.fillRect(52, 130 + i * 40, W - 104, 2);
+  const s = Math.floor(Math.min((W - 160) / rows[0].length, 380 / rows.length)), ox = (W - rows[0].length * s) / 2, oy = 150 + (400 - rows.length * s) / 2;
+  rows.forEach((r, y) => [...r].forEach((ch, x) => { if (pal[ch]){ g.fillStyle = pal[ch]; g.fillRect(ox + x * s, oy + y * s, s, s); } }));
+  g.fillStyle = '#1E1A2B'; g.textAlign = 'center';
+  g.font = 'bold 56px "Pixelify Sans", monospace'; g.fillText(nickOf(id) || fname, W / 2, 96);
+  g.font = 'bold 30px "Pixelify Sans", monospace'; g.fillText(`${fname} · ${ELNAME[p.el]} · ${isM ? 'MEGA' : 'Stage ' + (form + 1)}`, W / 2, 630); if (isM){ g.strokeStyle = '#FFD23F'; g.lineWidth = 10; g.strokeRect(20, 20, W - 40, H - 40); }
+  g.font = '24px "Silkscreen", monospace'; g.fillText(`Friendship ${palFr(id)} · ${today()}`, W / 2, 690);
+  g.font = 'bold 34px "Pixelify Sans", monospace'; g.fillText('MeQuest', W / 2, 780);
+  return cv;
+}
+async function saveCard(id, form){
+  const cv = cardCanvas(id, form), name = `${(nickOf(id) || (form === 3 ? MEGA[id].name : palById(id).names[form])).replace(/[^A-Za-z0-9]+/g, '') || 'pal'}-card.png`;
+  const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+  if (window.claude && typeof window.claude.use === 'function'){
+    const dl = await Promise.race([Promise.resolve(window.claude.use('downloads')).catch(() => null), new Promise(r => setTimeout(() => r(null), 4000))]);
+    if (dl){ try{ await dl.save({filename:name, data:blob}); }catch(e){} return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+function cardModal(id, form){
+  const cv = cardCanvas(id, form);
+  openModal(`<h3>${form === 3 ? MEGA[id].name : palById(id).names[form]} card</h3><div class="cardimg"></div><div class="acts"><button class="btn" id="cdSave">Save picture</button><button class="btn go" data-close>DONE</button></div>`, c => {
+    cv.style.width = '100%'; cv.style.maxWidth = '320px'; c.querySelector('.cardimg').append(cv);
+    c.querySelector('#cdSave').onclick = () => saveCard(id, form);
+  });
+}
+
+/* ---------- pal detail page ---------- */
+function palDetail(id){
+  const P = palState(), o = P.own[id], p = palById(id), lvl = palFrLvl(id), fr = palFr(id), nextAt = FR_AT[lvl] || null;
+  openModal(`<div class="paldet"><div class="pdtop" style="background:${ELCOL[p.el][0]}">${palSprite(id, o.form, o.form ? 4 : 5)}</div><h3>${palName(id, o.form)} <small class="hsub">${nickOf(id) ? p.names[o.form] + ' · ' : ''}${ELNAME[p.el]}</small></h3>
+    <div class="frrow">${[0, 1, 2, 3].map(i => `<i class="${i < lvl ? 'on' : ''}">♥</i>`).join('')}<span>Friendship ${fr}${nextAt != null ? ` · next story at ${nextAt}` : ' · all stories unlocked!'}</span></div>
+    <p class="small">Pet ${palName(id, o.form)} (up to 5 times a day), feed berries 🍓 and finish lessons to grow your friendship.</p>
+    <h4 class="ah">Stories</h4><div class="stlist">${[0, 1, 2, 3].map(k => k < lvl ? `<button class="btn small" data-st="${k}">📖 Story ${k + 1}</button>` : `<button class="btn small" disabled>🔒 ${FR_AT[k]} ♥</button>`).join('')}</div>
+    <h4 class="ah">Cards</h4><div class="cdlist">${[0, 1, 2, 3].map(f => (f < 3 ? f <= o.form : o.mega) ? `<button class="cdmini${f === 3 ? ' mega' : ''}" data-f="${f}" style="background:${ELCOL[p.el][0]}">${palSprite(id, f, 2, f === 2 ? 'raw' : '')}<small>${f === 3 ? 'MEGA' : p.names[f]}</small></button>` : `<div class="cdmini locked"><span class="qm">?</span><small>${f === 3 ? 'MEGA' : 'Stage ' + (f + 1)}</small></div>`).join('')}</div>
+    ${megaBlock(id)}
+    <div class="acts"><button class="btn" id="pdRen">Rename</button>${P.buddy === id ? '' : '<button class="btn" id="pdBud">Make buddy</button>'}<button class="btn go" data-close>DONE</button></div></div>`, c => {
+    c.querySelectorAll('[data-st]').forEach(b => b.onclick = () => storyModal(id, +b.dataset.st));
+    c.querySelectorAll('[data-f]').forEach(b => b.onclick = () => cardModal(id, +b.dataset.f));
+    c.querySelector('#pdRen').onclick = () => nameModal(id, () => palDetail(id));
+    const mg = c.querySelector('#pdMega'); if (mg) mg.onclick = () => startMega(id);
+    const mt = c.querySelector('#pdMegaT'); if (mt) mt.onclick = () => { o.megaOff = !o.megaOff; save(); closeModal(); palDetail(id); render(); };
+    const bb = c.querySelector('#pdBud'); if (bb) bb.onclick = () => { P.buddy = id; save(); sfx.tap(); closeModal(); render(); };
+  });
+}
+
+
+
+/* ---------- MEGA evolution: needs real learning ---------- */
+const MEGA = {"leaf":{"rows":["..............................","............Y..Y..Y...........","...........YgY.YgY.YgY........","...........YYYYYYYYYYY........","..........aaYrYYYYYrY.........",".........aAAaaAAaaAAa.........","........aAvAAAvAAAAvAa........",".......aAAa.aAAAAa.aAAa.......","........aahhhaaaaBBhaa........","........hhhBBBBBBBBBBh........",".......hhBBBBBBBBBBBBBB.......","......hhBBBBBBBBBBBBBBBb......","......hBBBBBBBBBBBBBBBBB......",".hhhhhhBBBBmmBBBBmmBBBBBBhhhh.","hhPPBBBBBmmmmmBBmmmmmBBBBBPPBb","hPPPPBBBmEEEmmmmmEEEmmBBBPPPPb","hPPPPBBBmEWEEmmmmEWEEmBBBPPPPb","hBPPBBBBmEEEsmmmmEEEsmBBBBPPbb",".bbbbbBBmmEEmmmmmmEEmmBbbbbbb.","......bBmmmmmmmmmmmmmmbb......",".......bBmmmmmmmmmmmmbb.......","........CCmmmmmmmmmmCC........",".........BBmmmmmmmmBB....TTT..","......hhhhBBBBBBBBBBBBhhT...T.","......hBBBvvvvvvvvvvBBBBT...T.",".....hhBBBBLLLLLLLLBBBBBBT....",".....hBBBBLLLLLLLLLLBBBBBT....","..aAahBBBBLLLLLLLLLLBBBbbaAa..","..aAAaBBBBLLLLLLLLLLBBBbaAAa..","..AAAahbBBLLLLLLLLLLBbbbaAAA..","..aAA...BBLLLLLLLLLLBb...AAa..","........hbBLLLLLLLLbbb........","..........FFBLLLLBFF..........","........FFFFFFbbFFFFFF........","........FFFFFF..FFFFFF........","..........FF......FF.........."],"pal":{"B":"#6FD653","h":"#C2FF9A","b":"#3E9B33","m":"#FFF1D6","n":"#F2D7AE","L":"#FFF1D6","P":"#FFB8C2","F":"#5FA845","E":"#1F2238","W":"#FFFFFF","s":"#9CC8FF","C":"#FF9DB0","A":"#45B84A","a":"#2C7F34","v":"#B5F28F","T":"#5FA845","k":"#E8D2A8","o":"#334b26","Y":"#FFD23F","g":"#FFF3A0","r":"#FF5A6E","Z":"#B6FF7A"},"name":"Mega Junglor"},"fire":{"rows":["..............................","...........v..Y..v............","..........vV.YRY.Vv...........","..........vVVYYYVVv...........","..........avVVVVVva...........","........a.aAaAAaAAaAa.........","...a...aAaAAYAYAYAYAAa....a...","...aA.aAAYAYYYYYYYYAYAAa.Aa...","...aAaAAYYYYYYYYYYYYYAAaAAa...","...aAAAdhhhBdBBBBdBBBhdAAAa...","...aAAABhBBBBBBBBBBBBBBAAAa...","...aAABBBBBBBBBBBBBBBBBBAAa...",".....BBBBBBBBBBBBBBBBBBBb.....",".....hBBBBBBBBBBBBBBBBBBB.....","....hhBBBBBBBBBBBBBBBBBBBb....","....hBEEEBBBBBBBBBBBEEEBBb....","....hBEWEEBBBBBBBBBBEWEEBb....","....hBEEEsBBBBBBBBBBEEEsbb....",".....BBEEBBNNNNNNNNBBEEBb.....",".....hBBBBNNNNNNNNNNBBBbb.....","......CBtBNnNNNNNNnNBtbC......",".......bttNnNNNNNNnNttb.......","........BtBNNNNNNNNBtB........","......hhhBBBBBNNBBBBBBBh......",".....hhBBBBBLLLLLLBBBBBBb.....",".....hBBBBBLLLLLLLLBBBBBb.....",".....hBBBBLLLLLLLLLLBBBBb.....",".....hBBBBLLLLLLLLLLBBBBb.....",".....hBBBLLLLLLLLLLLLBBbb.....","......bBBBLLLLLLLLLLBBbb......",".......bBBLLLLLLLLLLBbb.......","........BBFFLLLLLLFFBb........","........FFFFFLLLLFFFFF........","........FFFFFbbbbFFFFF........","..........FF......FF.........."],"pal":{"B":"#F2783A","h":"#FFC08F","b":"#B5452A","d":"#9E4B22","L":"#FFE7C7","N":"#FFB9A0","n":"#B5523A","P":"#FFB0A0","F":"#8A3F1F","E":"#1F2238","W":"#FFFFFF","s":"#9CC8FF","C":"#FF6B6B","A":"#FFC93C","a":"#FF5A33","Y":"#FFF3A0","t":"#FFF8E8","o":"#533420","R":"#FFFFFF","V":"#5AB8FF","v":"#2F6FDE","Z":"#FFB347"},"name":"Mega Infernoar"},"water":{"rows":["..............................",".............YgY..............","...........Y.YYY.Y............","..........YgYYpYYgY...........","...H..H....YYYYYYY.....H..H...","...HH.HHA............AHH.HH...","....HHH.AA..........AA.HHH....",".....HHGaAA........AAaGHH.....","......HGaAAAhhhhhhAAAaGH......",".........aAhBBBBBBBAa.........",".......hhhBBBBBBBBBBBBh.......","......hhBBBBBBBBBBBBBBBb......","......hBBBBBBBBBBBBBBBBB......",".....hhBBBBBBBBBBBBBBBBBb.....",".....hBBBBBBBBBBBBBBBBBBb.....",".....hEEEBBBBBBBBBBBEEEBb.....",".....hEWEEBBBBBBBBBBEWEEb.....",".....hEEEsBBBBBBBBBBEEEsb.....",".....hBEEBBBBBBBBBBBBEEBb.....",".....hBBBBBBBBBBBBBBBBBbb.....","K.....CBBBBBBBBBBBBBBBbC.....K",".K..K..bBBBBBBBBBBBBBbb..K..K.","..KK....BBBBBBBBBBBBBb....KK..","........hBBBBBBBBBBBBB........","......hhhBBBBBBBBBBBBBBh......",".....hhBBBBLLLLLLLLBBBBBb.....",".....hBBBBLLlllllllLBBBBB..AA.",".....hBBBBLLLLLLLLLLBBBBBBhhAA","......BBBBLlllllllllBBBBBBbbA.","......hBBBLLLLLLLLLLBBBbbbb...",".......bBBLLlllllllLBbbb......","........bBBLLLLLLLLBbb........",".........BFFLLLLLLFFB.........","........FFFFFFLLFFFFFF........","........FFFFFF..FFFFFF........","..........FF......FF.........."],"pal":{"B":"#3FD9C2","h":"#B3FFF1","b":"#1F9E8C","L":"#FFF4D6","l":"#EFD9A8","H":"#FFE58A","G":"#D9A830","F":"#1F7A6C","E":"#1F2238","W":"#FFFFFF","s":"#9CC8FF","C":"#FF9DB6","A":"#5EA8FF","a":"#2F6FD8","v":"#B9DCFF","K":"#2A9E8C","o":"#1c4a42","Y":"#FFD23F","g":"#FFF3A0","p":"#FFFFFF","Z":"#9FF5FF"},"name":"Mega Tsunaloong"}};
+const MEGA_SUB = {fire:{subs:['math', 'math2'], label:'Maths'}, leaf:{subs:['en', 'en2'], label:'English'}, water:{subs:['zh', 'zh2'], label:'华文'}};
+const MEGA_NEED = {skills:6, bosses:2, fr:80};
+function megaSkills(id){ const M = MEGA_SUB[palById(id).el]; return SUBJECTS.filter(x => M.subs.includes(x.id)).flatMap(x => orderOf(x.id)); }
+function megaReqs(id){
+  const o = palState().own[id], M = MEGA_SUB[palById(id).el];
+  const mastered = megaSkills(id).filter(k => sk(k).lvl >= 3).length, wins = (S.boss && S.boss.wins) || 0, fr = palFr(id);
+  return [
+    {t:'Reach stage 3', ok:o.form >= 2, v:`Stage ${o.form + 1}/3`},
+    {t:'Friendship ♥♥♥♥', ok:fr >= MEGA_NEED.fr, v:`${Math.min(fr, MEGA_NEED.fr)}/${MEGA_NEED.fr}`},
+    {t:`Master ${MEGA_NEED.skills} ${M.label} skills (3 stars)`, ok:mastered >= MEGA_NEED.skills, v:`${Math.min(mastered, MEGA_NEED.skills)}/${MEGA_NEED.skills}`},
+    {t:`Defeat ${MEGA_NEED.bosses} weekly bosses`, ok:wins >= MEGA_NEED.bosses, v:`${Math.min(wins, MEGA_NEED.bosses)}/${MEGA_NEED.bosses}`}
+  ];
+}
+function megaBlock(id){
+  const o = palState().own[id], p = palById(id);
+  if (o.mega) return `<h4 class="ah">Mega</h4><p class="small">✨ ${MEGA[id].name} has unlocked Mega power! <button class="btn small" id="pdMegaT">${o.megaOff ? 'Show Mega form' : 'Show normal form'}</button></p>`;
+  const R = megaReqs(id), all = R.every(r => r.ok);
+  return `<h4 class="ah">Mega evolution</h4><div class="megabox"><div class="megaprev">${all ? palSprite(id, 3, 2) : `<div class="megasil">${palSprite(id, 3, 2)}</div>`}</div><ul class="megareq">${R.map(r => `<li class="${r.ok ? 'ok' : ''}"><i>${r.ok ? '✔' : '○'}</i><span>${r.t}</span><b>${r.v}</b></li>`).join('')}</ul></div>
+    ${all ? `<button class="btn warm wide" id="pdMega">⚡ MEGA TRIAL</button><p class="small">Win a ${MEGA_SUB[p.el].label} battle against your pal’s shadow to Mega evolve!</p>` : `<p class="small">Keep learning ${MEGA_SUB[p.el].label} to unlock the Mega Trial.</p>`}`;
+}
+function startMega(id){
+  const P = palState(); P.buddy = id; save();
+  const lv = megaSkills(id).filter(k => sk(k).lvl >= 1 && !/^zh_xz_/.test(k)), pool = lv.length >= 3 ? lv : megaSkills(id);
+  LS = {id:null, mode:'boss', keys:new Set(), queue:[], i:0, firstRight:0, answered:0, combo:0, skips:0, wrongNow:0, hintLvl:0, usedHint:false, perSkill:{}, t0:Date.now(), fwRun:0, slow:false,
+    boss:{el:palById(id).el, hp:14, max:14, eff:1, mega:id}};
+  for (let k = 0; k < 12; k++){ const sId = pick(pool); LS.queue.push(makeQ(sId, Math.min(3, Math.max(1, sk(sId).lvl)))); }
+  closeModal(); openLessonUI(); showQ();
+}
+function megaShow(id, done){
+  const p = palById(id), ov = el('div', 'palov megaov'); document.body.append(ov);
+  ov.innerHTML = `<div class="palstage"><div class="palbig megaflash">${palSprite(id, 2, 8, 'raw')}</div><h2>…</h2></div>`;
+  const close = () => { ov.remove(); render(); done && done(); };
+  sfx.level && sfx.level();
+  setTimeout(() => { if (!ov.isConnected) return; ov.querySelector('.palbig').innerHTML = palSprite(id, 3, 8); ov.querySelector('.palbig').classList.add('stamp');
+    ov.querySelector('h2').textContent = `MEGA ${p.names[2].toUpperCase()}!`;
+    const t = el('p', '', 'Your hard work unlocked Mega power!'); const b = el('button', 'btn go wide', 'AMAZING!'); b.onclick = close; ov.querySelector('.palstage').append(t, b);
+    burstAt(ov.querySelector('.palbig'), {n:30, cols:ELCOL[p.el].concat(['#FFD23F', '#fff']), r:160}); tone([523, 659, 784, 1047, 1319], .12, 'square', .07); }, REDUCE ? 50 : 1600);
+}
+
+/* ---------- play time with your pal: costs 1 berry (earned by learning), 60 s, max 3 a day ---------- */
+const PLAY_SECS = 60, PLAY_MAX = 3;
+function playPal(){
+  const P = palState(), id = P.buddy; if (!id) return;
+  const o = P.own[id], nm = palName(id, o.form), p = palById(id);
+  if (o.playDay !== today()){ o.playDay = today(); o.plays = 0; }
+  if (o.plays >= PLAY_MAX){ openModal(`<div class="palname">${palSprite(id, o.form, 4)}<h3>${esc(nm)} is tired today 😴</h3><p>You played ${PLAY_MAX} times today. Come back tomorrow! Learning together is fun too.</p><div class="acts"><button class="btn go" data-close>OK</button></div></div>`); return; }
+  if (!(P.berries > 0)){ openModal(`<div class="palname">${palSprite(id, o.form, 4)}<h3>Play costs 1 🍓</h3><p>Finish a lesson to earn a berry, then come back to play with ${esc(nm)}!</p><div class="acts"><button class="btn go" data-close>OK</button></div></div>`); return; }
+  P.berries--; o.plays++; save();
+  const ov = el('div', 'playov'); document.body.append(ov);
+  let caught = 0, gave = false, left = PLAY_SECS;
+  const reward = () => { if (gave) return; gave = true; addFr(id, 2); save(); };
+  ov.innerHTML = `<div class="playstage"><div class="playtop"><b>Play with ${esc(nm)}</b><button class="iconbtn" id="plX" aria-label="Close">${icon('cross', 3)}</button></div>
+    <div class="playfield"><div class="playpal">${palSprite(id, o.form, o.form ? 6 : 7)}</div><div class="playmsg">Pick a game!</div></div>
+    <div class="playbtns"><button class="btn" data-g="ball">⚽ Ball</button><button class="btn" data-g="piano">🎹 Piano</button><button class="btn" data-g="bubbles">🫧 Bubbles</button></div><div class="playarea"></div></div>`;
+  const field = ov.querySelector('.playfield'), pal = ov.querySelector('.playpal'), msg = ov.querySelector('.playmsg'), area = ov.querySelector('.playarea');
+  const happy = t => { msg.textContent = t; rigAct(pal.querySelector('svg'), pick(['cheer', 'hop', 'wave']), 1300); burstAt(pal, {n:8, cols:ELCOL[p.el].concat(['#FF7AA8']), r:60}); reward(); };
+  ov.querySelector('#plX').onclick = () => { clearInterval(tk); ov.remove(); render(); };
+  const tm = el('span', 'playtime', `⏱ ${left}s`); ov.querySelector('.playtop b').after(tm);
+  const tk = setInterval(() => { if (!ov.isConnected){ clearInterval(tk); return; } left--; tm.textContent = `⏱ ${left}s`;
+    if (left <= 0){ clearInterval(tk); field.querySelectorAll('.pbub').forEach(x => x.remove()); area.innerHTML = ''; ov.querySelectorAll('[data-g]').forEach(x => x.disabled = true);
+      msg.textContent = `${nm} had so much fun! Time for a little rest. 😊`; const sv = pal.querySelector('svg'); if (sv) rigAct(sv, 'wave', 1600);
+      const d = el('button', 'btn go wide', 'BYE-BYE!'); d.onclick = () => { ov.remove(); render(); }; area.append(d); } }, 1000);
+  const games = {
+    ball(){ area.innerHTML = '<p class="small">Tap the ball to throw it!</p>'; const b = el('button', 'toyball', '⚽'); area.append(b);
+      b.onclick = () => { if (b.dataset.busy) return; b.dataset.busy = 1; const [x0, y0] = centerOf(b), [x1, y1] = centerOf(pal); b.style.visibility = 'hidden';
+        const f = el('div', 'flycoin', '<span style="font-size:40px">⚽</span>'); f.style.left = x0 + 'px'; f.style.top = y0 + 'px'; fxLayer().append(f);
+        const a = f.animate([{transform:'translate(0,0)'}, {transform:`translate(${(x1 - x0) / 2}px,${(y1 - y0) / 2 - 140}px) rotate(360deg)`, offset:.5}, {transform:`translate(${x1 - x0}px,${y1 - y0 - 40}px) rotate(720deg)`}], {duration:REDUCE ? 1 : 700, easing:'ease-out', fill:'forwards'});
+        a.onfinish = () => { f.remove(); caught++; tone([523, 784], .07, 'triangle', .08); happy(caught === 1 ? `${nm} caught it!` : `${caught} catches in a row!`); setTimeout(() => { b.style.visibility = ''; delete b.dataset.busy; }, 400); }; }; },
+    piano(){ area.innerHTML = '<p class="small">Play a tune! Watch ' + esc(nm) + ' dance.</p>'; const kb = el('div', 'toykeys'); const N = [['C', 523], ['D', 587], ['E', 659], ['F', 698], ['G', 784], ['A', 880], ['B', 988], ['C', 1047]];
+      N.forEach(([n, f], i) => { const k = el('button', 'tkey', n); k.onclick = () => { tone([f], .25, 'triangle', .12); rigAct(pal.querySelector('svg'), i % 3 === 2 ? 'wiggle' : 'dance', 1300); burstAt(k, {n:4, cols:['#FFD23F', '#FF7AA8'], r:30}); caught++; if (caught % 6 === 0) happy(`${nm} loves your music!`); else msg.textContent = '♪ ♫ ♪'; }; kb.append(k); }); area.append(kb); },
+    bubbles(){ area.innerHTML = '<p class="small">Pop the bubbles!</p>'; const spawn = () => { if (!ov.isConnected) return; for (let i = 0; i < 6; i++){ const bb = el('button', 'pbub', ''); bb.style.left = rand(5, 85) + '%'; bb.style.animationDelay = (i * .35) + 's'; bb.onclick = () => { bb.remove(); tone([880 + rand(0, 400)], .05, 'sine', .08); burstAt(bb, {n:6, cols:['#BDF3FF', '#FFFFFF'], r:30}); caught++; if (!field.querySelector('.pbub')){ happy(`${nm} popped them all with you!`); setTimeout(spawn, 1200); } }; field.append(bb); } }; field.querySelectorAll('.pbub').forEach(x => x.remove()); spawn(); }
+  };
+  ov.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { sfx.tap(); caught = 0; ov.querySelectorAll('[data-g]').forEach(x => x.classList.toggle('go', x === b)); field.querySelectorAll('.pbub').forEach(x => x.remove()); games[b.dataset.g](); });
+}
+/* buddy chats during lessons */
+function buddySay(t){ const b = $('#buddyb'); if (!b || b.hidden) return; b.querySelectorAll('.petbub').forEach(x => x.remove()); const s = el('span', 'petbub help', t); b.append(s); setTimeout(() => s.remove(), 1500); }
+
 /* ================= state & saving ================= */
 const KEY = 'p1-maths-quest-v1';
 const blank = () => ({v:1, skills:{}, xp:0, day:{date:'', xp:0}, streak:{n:0, last:''}, settings:{sound:true, unlockAll:false}, coins:0, goalDay:'', shop:{}, redeemed:[], coinLog:[], pin:'', updatedAt:0});
@@ -3694,6 +4191,7 @@ function renderHome(){
   const hello = el('div', 'hello', kibi(dayXP() >= GOAL ? 'wow' : 'happy', {scale:4}) + `<div class="bub">${dayXP() >= GOAL ? 'You reached today’s goal! Amazing!' : next ? `Let’s play: ${SK[next].name}!` : 'You mastered everything! Try a review.'}</div>`);
   home.append(hello);
   home.append(palCard());
+  { const bc = bossCard(); if (bc) home.append(bc); }
   if (!SUB.id.startsWith('math')) dictCards(SUB.id).forEach(c => home.append(c));
   const rec1 = ORDER.some(id => sk(id).lvl >= 1) ? recommend(SUB.id) : null;
   if (rec1){
@@ -4219,7 +4717,7 @@ function burstAt(e, o){ if (e) { const [x, y] = centerOf(e); burst(x, y, o); } }
 function setKibiHead(mood, cls){
   const k = document.querySelector('#lbody .qhead .kibi'); if (!k) return;
   const t = document.createElement('div'); t.innerHTML = kibi(mood, {head:true, scale:4});
-  const nk = t.firstElementChild; k.replaceWith(nk); if (cls) fxAnim(nk, cls, 900);
+  const nk = t.firstElementChild; k.replaceWith(nk); if (cls) fxAnim(nk, cls, 900); if (mood === 'happy') rigAct(nk, 'cheer', 1000);
 }
 function banner(html, cls = '', ms = 1500){
   if (REDUCE) return;
@@ -4227,7 +4725,7 @@ function banner(html, cls = '', ms = 1500){
 }
 function splash(mode){
   if (REDUCE) return;
-  const txt = {learn:'LET’S LEARN!', test:'LEVEL CHECK!', challenge:'CHALLENGE!', review:'REVIEW TIME!', dict:'LISTEN & WRITE!'}[mode] || 'LET’S GO!';
+  const txt = {learn:'LET’S LEARN!', test:'LEVEL CHECK!', challenge:'CHALLENGE!', review:'REVIEW TIME!', dict:'LISTEN & WRITE!', boss:'BOSS BATTLE!', mega:'MEGA TRIAL!'}[mode] || 'LET’S GO!';
   const s = el('div', 'splash ' + (mode || ''), `<div class="sk">${kibi(mode === 'test' ? 'think' : 'happy', {scale:6})}</div><div class="stxt">${txt}</div>`);
   const kill = () => { if (!s.isConnected) return; s.classList.add('out'); setTimeout(() => s.remove(), 260); };
   s.onclick = kill; $('#lesson').append(s); sfx.whoosh(); setTimeout(kill, 1150);
@@ -4253,11 +4751,11 @@ function fxAnswer(q, ok, first){
   if (ok){
     const t = (q.kind === 'write' || q.kind === 'dict') ? $('.hzwrap') : q.kind === 'dictself' ? $('.dans') : q.kind === 'choice' ? document.querySelector('.choice.yes') : q.kind === 'number' ? $('#numbox') : $('#slots');
     fxAnim(t, 'popok', 500); burstAt(t, {n:first ? 16 : 9, star:first});
-    setKibiHead('happy', 'kjump');
+    setKibiHead('happy', 'kjump'); buddyCheer(true, LS.combo);
     if (first && [3, 5, 8, 10, 15, 20].includes(LS.combo)){ setTimeout(() => { banner(`${icon('flame', 6)}<b>${LS.combo} IN A ROW!</b>`, 'fire'); sfx.combo(); }, 250); }
   } else {
     const t = q.kind === 'choice' ? document.querySelector(`.choice[data-v="${CSS.escape(String(LS.sel))}"]`) : q.kind === 'number' ? $('#numbox') : $('#slots');
-    fxAnim(t, 'shake', 500); setKibiHead('think', 'ktilt');
+    fxAnim(t, 'shake', 500); setKibiHead('think', 'ktilt'); buddyCheer(false, 0); if (LS.mode === 'boss') bossMiss();
   }
 }
 function resultFX(r, o){
@@ -4275,6 +4773,7 @@ function resultFX(r, o){
 }
 function playPending(){
   const P = FX.pending; FX.pending = {};
+  if (P.mega){ const m = P.mega; P.mega = null; FX.pending = P; megaShow(m, () => setTimeout(playPending, 150)); return; }
   if (P.pal){ const ev = P.pal; P.pal = null; FX.pending = P; palShow(ev, () => setTimeout(playPending, 150)); return; }
   if (P.egg) setTimeout(() => { banner(`${eggSprite(P.egg, 5)}<b>NEW EGG!</b>`, 'gold', 1800); sfx.star(); }, P.coins ? 1500 : 300);
   if (P.coins){
@@ -4324,7 +4823,7 @@ function startLesson(id, o = {}){
   showQ();
 }
 function progress(){
-  const w = (LS.answered / LS.queue.length * 100) + '%', f = $('#pfill'), grew = f.style.width && f.style.width !== w && LS.answered > 0;
+  const w = (LS.boss ? (1 - LS.boss.hp / LS.boss.max) * 100 : LS.answered / LS.queue.length * 100) + '%', f = $('#pfill'), grew = f.style.width && f.style.width !== w && LS.answered > 0;
   f.style.width = w; $('#combo').innerHTML = LS.combo >= 2 ? `${icon('flame', 3)}${LS.combo}` : '';
   $('.pbar').classList.toggle('fire', LS.combo >= 3);
   if (grew){ fxAnim($('.pbar'), 'shine', 800); if (LS.combo >= 2) fxAnim($('#combo'), 'bump', 300); }
@@ -4351,6 +4850,7 @@ function showQ(demo){
   body.append(wrap);
   buildAnswer(q, ans);
   $('#hintBtn').disabled = false;
+  if (LS.mode === 'boss') wrap.prepend(bossArena());
   if (LS.mode === 'test') wrap.prepend(el('div', 'modetag test', `${icon('star', 2)} LEVEL CHECK · no hints, just try your best`));
   else if (LS.mode === 'challenge') wrap.prepend(el('div', 'modetag adv', `${icon('bolt', 2)} ${lvName(LS.id, LS.adv).toUpperCase()} CHALLENGE`));
   else if (LS.mode === 'learn' && !demo){ wrap.prepend(el('div', 'modetag', `${icon('bulb', 3)} LET’S DO IT TOGETHER (${LS.i} of 2)`)); showHint(true); }
@@ -4477,7 +4977,7 @@ function check(){
     (LS.perSkill[q.skill] = LS.perSkill[q.skill] || {r:0, n:0}).n++; if (first) LS.perSkill[q.skill].r++;
     if (q.kind === 'choice') document.querySelectorAll('.choice').forEach(b => { if (b.dataset.v === String(q.answer)) b.classList.add('yes'); });
     if (q.kind === 'number') $('#numbox').classList.add('yes');
-    sfx.good2(first ? LS.combo - 1 : 0); progress(); fxAnswer(q, true, first);
+    sfx.good2(first ? LS.combo - 1 : 0); if (LS.mode === 'boss') bossHit(first); progress(); fxAnswer(q, true, first);
     const praise = q.lang === 'zh' ? (first ? pick(['太棒了！', '答对了！', '真厉害！', '好极了！']) : pick(['你想出来了！', '不放弃，真棒！', '对了！'])) : first ? pick(['Great job!', 'Awesome!', 'You got it!', 'Super!', 'Brilliant!', 'Nice thinking!']) : pick(['You worked it out!', 'Well done for not giving up!', 'Yes! Good thinking!']);
     sheet('good', praise + (LS.combo >= 3 ? ` ${LS.combo} in a row!` : ''), q.explain, [['CONTINUE', 'go primarykey', next]]);
   } else {
@@ -4521,6 +5021,7 @@ function sheet(kind, title, text, buttons){
 function next(){
   $('#sheet').hidden = true; $('#lfoot').hidden = false;
   LS.i++;
+  if (LS.mode === 'boss' && LS.boss.hp <= 0) LS.i = LS.queue.length;
   if (LS.i >= LS.queue.length) (LS.mode === 'learn' ? finishLearn : finish)(); else showQ();
 }
 function finish(){
@@ -4548,6 +5049,14 @@ function finish(){
     }
     else if (s.lvl < 3) msg = `Get ${total - 1} or more right on the first try to earn the next star. You can do it!`;
     else msg = 'Great practice! Keep it strong.';
+  } else if (LS.mode === 'boss' && LS.boss.mega){
+    const won = LS.boss.hp <= 0, mid = LS.boss.mega;
+    if (won){ const o = palState().own[mid]; o.mega = true; o.megaOff = false; lines.push(['Mega Trial cleared!', 50]); msg = `⚡ ${palById(mid).names[2]} passed the Mega Trial!`; LS.megaWin = mid; }
+    else msg = 'The shadow was too strong this time. Practise more and try the Mega Trial again!';
+  } else if (LS.mode === 'boss'){
+    const won = LS.boss.hp <= 0, nm = BOSSNAME[LS.boss.el];
+    if (won){ const B = S.boss; B.won = true; B.wins = (B.wins || 0) + 1; lines.push([`Defeated ${nm}!`, 30]); msg = `🏆 ${nm} is defeated! Your buddy got 40 XP, 3 berries and lots of friendship.`; }
+    else msg = `${nm} ran away! Try again to defeat it.`;
   } else if (LS.mode === 'dict'){ const L = dictLists().find(x => x.id === LS.dict), wk = L ? dictWeak(L).length : 0; msg = wk ? `${wk} word${wk > 1 ? 's' : ''} still need practice. Try FIX next time!` : 'Every word is right. You are ready for the test!'; }
   else msg = 'Mixed review done. Your brain is getting stronger!';
   S.xp += xp;
@@ -4566,17 +5075,18 @@ function finish(){
   logSession();
   save();
   const lvlA = LS.id ? sk(LS.id).lvl : 0, advA = LS.id ? (sk(LS.id).adv || 0) : 0, unitL = lines.find(l => /^Unit mastered/.test(l[0]));
-  const palEv = palGain(xp)[0], newEgg = (unitL && palNewEgg('unit')) || (goalNow && palNewEgg('goal')) || null; save();
-  FX.pending = {coins:earned, streak:streakB !== today(), goal:goalNow, star:lvlA > lvlB ? LS.id : null, unlock:ALLSK().find(id => unlocked(id) && !wasOpen.has(id)) || null, pal:palEv && (palEv.type === 'hatch' || palEv.type === 'evolve') ? palEv : null, egg:newEgg};
+  { const PP = palState(); PP.berries = (PP.berries || 0) + 1; PP.lastLesson = Date.now(); if (PP.buddy) addFr(PP.buddy, 2); if (LS.mode === 'boss' && LS.boss.hp <= 0){ PP.berries += 3; if (PP.buddy) addFr(PP.buddy, 10); } }
+  const palEv = palGain(xp + (LS.mode === 'boss' && LS.boss.hp <= 0 ? 40 : 0))[0], newEgg = (unitL && palNewEgg('unit')) || (goalNow && palNewEgg('goal')) || null; save();
+  FX.pending = {coins:earned, streak:streakB !== today(), goal:goalNow, star:lvlA > lvlB ? LS.id : null, unlock:ALLSK().find(id => unlocked(id) && !wasOpen.has(id)) || null, pal:palEv && (palEv.type === 'hatch' || palEv.type === 'evolve') ? palEv : null, egg:newEgg, mega:LS.megaWin || null};
   sfx.win(); confetti();
   $('#lfoot').hidden = true; $('#sheet').hidden = true;
   $('#pfill').style.width = '100%'; $('#combo').textContent = '';
   const body = $('#lbody'); body.innerHTML = '';
   const perfect = fr === total;
-  const r = el('div', 'result', `${kibi('wow', {scale:5})}<h2>${perfect ? 'Perfect lesson!' : LS.mode === 'challenge' ? 'Challenge done!' : 'Lesson complete!'}</h2>
+  const r = el('div', 'result', `${kibi('wow', {scale:5})}<h2>${LS.mode === 'boss' ? (LS.boss.hp <= 0 ? 'Victory!' : 'Good try!') : perfect ? 'Perfect lesson!' : LS.mode === 'challenge' ? 'Challenge done!' : 'Lesson complete!'}</h2>
     <div class="tiles3"><div class="rt a"><b>XP</b><span>${icon('bolt', 3)}<em class="cu" data-to="${xp}" data-pre="+">+${xp}</em></span></div><div class="rt b"><b>First try</b><span><em class="cu" data-to="${fr}" data-post="/${total}">${fr}/${total}</em></span></div><div class="rt c"><b>Streak</b><span>${icon('flame', 3)}${S.streak.n}</span></div></div>
     <div class="coinlines">${lines.map(l => `<div><span>${l[0]}</span><span>+${l[1]}</span></div>`).join('')}<div class="tot"><span>${icon('kcoin', 3)} K Coins earned</span><span class="cu">+${earned}</span></div></div>
-    <div class="lvlup">${msg}${goalNow ? '<br>Today’s goal reached!' : ''}</div>${palLine(palEv)}${palEv && palEv.type === 'hatch' ? `<div class="palline">${eggSprite(palEv.id, 2, true)}<span>Your egg is hatching!</span></div>` : ''}${palEv && palEv.type === 'evolve' ? `<div class="palline">${palSprite(palEv.id, 0, 2)}<span>Something is happening to your buddy…</span></div>` : ''}${breakNote()}`);
+    <div class="lvlup">${msg}${goalNow ? '<br>Today’s goal reached!' : ''}</div>${palLine(palEv)}<div class="palline"><span style="font-size:22px">🍓</span><span>+${LS.mode === 'boss' && LS.boss.hp <= 0 ? 4 : 1} berry for your pal${palState().buddy ? ` · ${palName(palState().buddy, palState().own[palState().buddy].form)} ♥ +${LS.mode === 'boss' && LS.boss.hp <= 0 ? 12 : 2}` : ''}</span></div>${palEv && palEv.type === 'hatch' ? `<div class="palline">${eggSprite(palEv.id, 2, true)}<span>Your egg is hatching!</span></div>` : ''}${palEv && palEv.type === 'evolve' ? `<div class="palline">${palSprite(palEv.id, 0, 2)}<span>Something is happening to your buddy…</span></div>` : ''}${breakNote()}`);
   const b = el('button', 'btn go wide', 'CONTINUE'); b.onclick = endLesson;
   r.append(b); body.append(r);
   resultFX(r, {earned, perfect, newStar:lvlA > lvlB && LS.mode !== 'challenge' ? lvlA : 0, badge:advA > advB, unit:unitL ? unitL[0].replace('Unit mastered: ', '') : ''});
@@ -4602,7 +5112,7 @@ function confetti(){
 }
 
 /* expose for testing */
-window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
+window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
 
 render();
 setTimeout(connectRemote, 0);
