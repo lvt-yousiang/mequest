@@ -1029,6 +1029,16 @@ svg.rig.act-sad .rg-armL,svg.rig.act-sad .rg-armR{animation:none}
 }
 @media (max-height:760px){ .cbbar{padding-top:6px;padding-bottom:6px} .cbtab{min-height:42px;padding:8px 10px;font-size:14px} .cbbig{font-size:48px} .cbword{font-size:24px !important} .cbhero{padding:10px 12px} }
 @media (max-width:560px){ .cbsteps span small{display:none} .cbsteps span{padding:5px 8px;font-size:15px} .cbbig{font-size:46px} .cbword{font-size:24px !important} .cbsess{gap:6px} .cbtile{width:64px;height:84px} .cbtile .zh{font-size:40px} .cbtab{font-size:14px;padding:10px 8px} .cbslot,.cbpart{width:64px;height:64px;font-size:42px} .cbopt{font-size:32px !important;min-width:64px} }
+
+/* teaching after guessing */
+.teachbox{display:flex;flex-direction:column;gap:8px;margin-top:8px;max-height:46dvh;overflow:auto}
+.tstep{display:flex;gap:10px;align-items:flex-start;background:#fff;padding:8px 10px;box-shadow:var(--pf);margin:2px}
+.tstep > b{flex:0 0 auto;width:26px;height:26px;display:grid;place-items:center;background:var(--sun);font:700 15px/1 var(--display)}
+.tstep.ans{background:#E8F6E2}.tstep.ans > b{background:#6BC84A;color:#fff}
+.tstep .helper,.tstep svg{max-width:100%}
+.choice.readfirst{opacity:.45;filter:grayscale(.6)}
+.noticebox{background:#FFF3C4;box-shadow:var(--pf);padding:12px 14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;width:100%;max-width:560px;margin:4px}
+.noticebox p{margin:0;font:700 15px/1.4 var(--body)}
 /* ================= FX ================= */
 .fxl{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
 .burst{position:absolute;width:0;height:0}
@@ -3055,6 +3065,7 @@ function rec(q, first, skipped){
   b.n++; if (first) b.f++; if (q.firstMs != null && q.firstMs < 120000) b.ms += q.firstMs; if (q.usedHint) b.hu++;
   const L = q.lvl != null ? q.lvl : (q.d || 0); b.lv[L] = b.lv[L] || [0, 0]; add(b.lv[L], first);
   b.r.push(first ? 1 : 0); if (b.r.length > 12) b.r.shift(); b.t = today();
+  b.gr = b.gr || []; b.gr.push(q.guess ? 1 : 0); if (b.gr.length > 12) b.gr.shift(); if (q.guess) b.g = (b.g || 0) + 1;
   const sub = subOf(q.skill); if (sub) st.last[sub.id] = today();
 }
 const recentRate = id => { const b = ST().by[id]; if (!b || b.r.length < 4) return null; const r = b.r.slice(-6); return r.reduce((a, x) => a + x, 0) / r.length; };
@@ -3107,11 +3118,13 @@ function breakNote(){
 /* ---------- recommendations ---------- */
 function recommend(subId){
   const order = orderOf(subId);
+  const fx = order.find(id => { const f = (S.focus || {})[id]; return f && !f.done && daysSince(f.d) <= 14; });
+  if (fx) return {id:fx, why:'was tricky last time. Let’s learn it again, step by step', btn:'LEARN', learn:true};
   const struggling = order.filter(id => { const r = recentRate(id); return r != null && r < .5; });
   if (struggling.length) return {id:struggling[0], why:'needs a little more practice', btn:'PRACTISE'};
   const due = order.filter(id => sk(id).lvl >= 1 && daysSince((ST().by[id] || {}).t) >= 5);
   if (due.length) return {id:due[0], why:'is due for a quick review', btn:'REVIEW'};
-  const ready = order.filter(id => sk(id).lvl >= 3 && (sk(id).adv || 0) < 2);
+  const ready = order.filter(id => sk(id).lvl >= 3 && (sk(id).adv || 0) < 2 && !(sk(id).advWait && sk(id).advWait > today()));
   if (ready.length){ const id = ready[0]; return {id, why:`is ready for the ${lvName(id, (sk(id).adv || 0) ? 5 : 4)} challenge`, btn:'CHALLENGE', lvl:(sk(id).adv || 0) ? 5 : 4}; }
   const nx = order.find(id => unlocked(id) && sk(id).lvl < 3);
   return nx ? {id:nx, why:'is your next adventure', btn:'START'} : null;
@@ -3125,13 +3138,14 @@ function startLearn(id){
   openLessonUI(); showDemo();
 }
 function showDemo(){
-  const q = LS.queue[0];
+  const q = LS.queue[LS.i];
   LS.demo = {step:0};
   showQ(true);
   const wrap = $('#lbody .q');
   const tag = el('div', 'modetag demotag', `${icon('bulb', 3)} WATCH KIBI FIRST · tap NEXT STEP`);
-  const sk1 = el('button', 'skipdemo', 'I know this! Skip ▶'); sk1.onclick = () => { const id = LS.id; sk(id).learned = true; save(); startLesson(id, {skipLearn:true}); };
-  tag.append(sk1); wrap.prepend(tag);
+  if (LS.mode === 'learn'){ const sk1 = el('button', 'skipdemo', 'I know this! Skip ▶'); sk1.onclick = () => { const id = LS.id; sk(id).learned = true; save(); startLesson(id, {skipLearn:true}); }; tag.append(sk1); }
+  else tag.innerHTML = `${icon('bulb', 3)} LET’S LEARN IT TOGETHER · tap NEXT STEP`;
+  wrap.prepend(tag);
   const qa = wrap.querySelector('.qans'); qa.classList.add('demo');
   const nudge = e => { if (!LS || !LS.demo) return; e.preventDefault(); e.stopPropagation(); fxAnim($('#checkBtn'), 'bump', 400); fxAnim(tag, 'shake', 450); };
   qa.addEventListener('click', nudge, true); qa.addEventListener('touchend', nudge, {capture:true, passive:false});
@@ -3139,10 +3153,10 @@ function showDemo(){
   const b = $('#checkBtn'); b.disabled = false; b.textContent = 'NEXT STEP ▶'; b.classList.add('pulse');
 }
 function demoStep(){
-  const q = LS.queue[0], D = LS.demo, hb = $('#hintbox');
+  const q = LS.queue[LS.i], D = LS.demo, hb = $('#hintbox');
   if (q.kind === 'write'){
     if (D.step === 0 && LS.writer){ hb.hidden = false; hb.innerHTML = `<div class="ht"><span>${icon('bulb', 3)}</span><div>${RB(XPH.demo)} ${RB(XPH.h_rule)}</div></div>`; LS.writer.animateCharacter(); speak(q.say, 'zh'); D.step = 1; $('#checkBtn').textContent = 'TRY ONE TOGETHER'; return; }
-    LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; showQ(); return;
+    LS.demo = null; LS.i++; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; if (LS.i >= LS.queue.length) (LS.mode === 'learn' ? finishLearn : finish)(); else showQ(); return;
   }
   const ht = x => typeof x === 'string' ? x : x.h;
   if (D.step < q.hints.length){
@@ -3165,10 +3179,10 @@ function demoStep(){
     $('#checkBtn').textContent = 'TRY ONE TOGETHER';
     return;
   }
-  LS.demo = null; LS.i = 1; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; showQ();
+  LS.demo = null; LS.i++; $('#checkBtn').textContent = 'CHECK'; $('#checkBtn').classList.remove('pulse'); $('#hintBtn').hidden = false; if (LS.i >= LS.queue.length) (LS.mode === 'learn' ? finishLearn : finish)(); else showQ();
 }
 function finishLearn(){
-  const s = sk(LS.id); s.learned = true; logSession(); save();
+  const s = sk(LS.id); s.learned = true; if (S.focus && S.focus[LS.id]) S.focus[LS.id].done = true; logSession(); save();
   const id = LS.id;
   $('#lfoot').hidden = true; $('#sheet').hidden = true;
   const body = $('#lbody'); body.innerHTML = '';
@@ -3205,6 +3219,12 @@ function finishTest(){
   const body = $('#lbody'); body.innerHTML = '';
   const rows = Object.entries(T.res).map(([id, b]) => `<div class="mrow"><span></span><div><b>${SK[id].name}${SK[id].sub ? ` <span class="hsub">${SK[id].sub}</span>` : ''}</b></div><div class="right">${bandChip(b, gradeOf(id))}</div></div>`).join('');
   const r = el('div', 'result', `${kibi('wow', {scale:5})}<h2>Level check done!</h2><div class="lvlup">${T.title} · +10 K Coins for trying your best!</div><div class="mapunit" style="width:100%;text-align:left">${rows}</div><p class="small">Grown-ups can see the full report in Admin → Report.</p>`);
+  if ((LS.notice && LS.notice.length) || (LS.guessN || 0) >= 2){
+    const ids = [...new Set((LS.notice || []).concat(LS.queue.filter(x => x.guess && !x.demoQ).map(x => x.skill)))].filter(id => SK[id]).slice(0, 2);
+    const nb = el('div', 'noticebox', `<b>👀 Kibi noticed</b><p>${LS.guessN ? `Some answers looked like guesses. ` : ''}${ids.length ? `Let’s make <b>${ids.map(id => SK[id].name).join('</b> and <b>')}</b> easy next time.` : ''} Reading carefully and thinking first wins more stars!</p>`);
+    ids.forEach(id => { const lb = el('button', 'btn warm', `LEARN ${SK[id].name.toUpperCase()}`); lb.onclick = () => startLearn(id); nb.append(lb); });
+    r.append(nb);
+  }
   const b = el('button', 'btn go wide', 'CONTINUE'); b.onclick = endLesson;
   r.append(b); body.append(r);
 }
@@ -3267,6 +3287,8 @@ function alerts(){
   SUBJECTS.forEach(x => { const d = daysSince(st.last[x.id]); if (st.last[x.id] && d >= 3 && d < 999) out.push({k:'warn', t:`No ${subLabel(x)} for ${d} days`, d:'A short lesson keeps it fresh.'}); });
   ALLSK().forEach(id => { const r = recentRate(id); if (r != null && r < .5) out.push({k:'warn', t:`Finding “${SK[id].name}” hard`, d:`Only ${pct(r, 1)}% right first time recently. Try the Learn step together, or use real objects.`}); });
   if (P.n >= 20 && P.fw >= .15) out.push({k:'warn', t:'Rushing', d:'Many quick wrong answers. Kibi has added a short pause.'});
+  ALLSK().forEach(id => { const b = ST().by[id]; const g = b && b.gr ? b.gr.reduce((a, x) => a + x, 0) : 0; if (g >= 3) out.push({k:'warn', t:`Guessing in “${SK[id].name}”`, d:`${g} of the last ${b.gr.length} answers looked like guesses (very quick, or trying option after option). Kibi now stops a guess after 2 wrong tries, shows the steps, and gives a new question like it. Sitting with him for one lesson helps a lot.`}); });
+  Object.entries(S.focus || {}).filter(([id, f]) => SK[id] && daysSince(f.d) <= 14).slice(0, 3).forEach(([id, f]) => out.push({k:'info', t:`Kibi re-taught “${SK[id].name}”`, d:`${f.n} time${f.n > 1 ? 's' : ''} recently (${fmtDate(f.d)}): ${f.why}. ${f.done ? 'He has done the Learn step again since then.' : 'It is now first on his “Kibi recommends” card.'}`}));
   const ready = ALLSK().filter(id => sk(id).lvl >= 3 && !(sk(id).adv)).length;
   if (ready) out.push({k:'good', t:`${ready} topic${ready > 1 ? 's' : ''} ready for a challenge`, d:'Open a 3-star topic and press P1 ADVANCED.'});
   SUBJECTS.filter(x => x.grade === curGrade()).forEach(x => { if (!orderOf(x.id).some(id => S.place && S.place[id])) out.push({k:'info', t:`No ${subLabel(x)} level check yet`, d:'A level check takes about 10 minutes and gives a quick picture.'}); });
@@ -4973,7 +4995,7 @@ function renderHome(){
   const rec1 = ORDER.some(id => sk(id).lvl >= 1) ? recommend(SUB.id) : null;
   if (rec1){
     const rc = el('div', 'reviewcard reco', `<div><small>${icon('bulb', 2)} KIBI RECOMMENDS</small><h3>${SK[rec1.id].name}</h3><p>${SK[rec1.id].name} ${rec1.why}.</p></div>`);
-    const b = el('button', 'btn go', rec1.btn); b.onclick = () => startLesson(rec1.id, rec1.lvl ? {lvl:rec1.lvl} : {});
+    const b = el('button', 'btn go', rec1.btn); b.onclick = () => rec1.learn ? startLearn(rec1.id) : startLesson(rec1.id, rec1.lvl ? {lvl:rec1.lvl} : {});
     rc.append(b); hub.append(rc);
   }
   const lc = el('div', 'reviewcard check', `<div><h3>${SUB.label} level check</h3><p>About 10 minutes, no hints. Shows Mum and Dad how far you have got${S.place && ORDER.some(id => S.place[id]) ? ' (you can do it again any time)' : ''}.</p></div>`);
@@ -5649,11 +5671,13 @@ function showQ(demo){
   $('#hintBtn').disabled = false;
   if (LS.mode === 'boss') wrap.prepend(bossArena());
   if (LS.mode === 'test') wrap.prepend(el('div', 'modetag test', `${icon('star', 2)} LEVEL CHECK · no hints, just try your best`));
+  else if (LS.mode === 'challenge' && q.lvl != null && q.lvl < 4) wrap.prepend(el('div', 'modetag', `${icon('bulb', 2)} STEP BACK · PRACTISE THE BASICS FIRST`));
   else if (LS.mode === 'challenge') wrap.prepend(el('div', 'modetag adv', `${icon('bolt', 2)} ${lvName(LS.id, LS.adv).toUpperCase()} CHALLENGE`));
   else if (LS.mode === 'learn' && !demo){ wrap.prepend(el('div', 'modetag', `${icon('bulb', 3)} LET’S DO IT TOGETHER (${LS.i} of 2)`)); showHint(true); }
   if (!demo && LS.mode !== 'test' && LS.mode !== 'learn' && q.helper && adaptFlags().earlyHelper){ vis.append(el('div', 'helper early', q.helper)); }
   updateCheck();
   if (q.autoSay) setTimeout(() => { if (LS && LS.queue[LS.i] === q) speak(q.say, q.lang); }, LS.i === 0 && !REDUCE ? 1400 : 350);
+  if (!demo && LS.slow && q.kind === 'choice' && LS.mode !== 'learn'){ const cs = [...document.querySelectorAll('#lbody .choice')]; cs.forEach(b => { b.disabled = true; b.classList.add('readfirst'); }); setTimeout(() => cs.forEach(b => { if (!b.classList.contains('no')){ b.disabled = false; } b.classList.remove('readfirst'); }), 1800); }
   if (!demo && LS.slow && LS.mode !== 'learn'){ LS.hold = true; updateCheck(); setTimeout(() => { if (LS && LS.queue[LS.i] === q){ LS.hold = false; updateCheck(); } }, 2500); }
 }
 
@@ -5745,6 +5769,52 @@ function showHint(fromWrong){
 }
 $('#hintBtn').onclick = () => { sfx.tap(); { const q0 = LS.queue[LS.i]; if (!q0.tries && !q0.usedHint) q0.hintBefore = true; q0.usedHint = true; } const h = showHint(false); const q = LS.queue[LS.i]; speak(h.say, q.lang); };
 
+
+/* ================= guessing & struggle: notice it, teach it, practise it ================= */
+function teachIt(q){
+  q.guess = true; q.usedHint = true; q.taught = true;
+  rec(q, false, false); LS.answered++; LS.combo = 0; LS.guessN = (LS.guessN || 0) + 1;
+  (LS.perSkill[q.skill] = LS.perSkill[q.skill] || {r:0, n:0}).n++;
+  if (q.kind === 'choice') document.querySelectorAll('.choice').forEach(b => { b.disabled = true; if (b.dataset.v === String(q.answer)) b.classList.add('yes'); });
+  else if (q.kind === 'number'){ LS.num = String(q.answer); drawNum(); $('#numbox').classList.add('yes'); }
+  else if (q.kind === 'order'){ LS.order = q.answer.map(a => q.tiles.indexOf(a)); drawOrder(); }
+  const steps = (q.hints || []).map(h => typeof h === 'string' ? h : h.h);
+  const html = `<div class="teachbox">${steps.map((h, i) => `<div class="tstep"><b>${i + 1}</b><div>${h}</div></div>`).join('')}<div class="tstep ans"><b>✓</b><div>${q.explain || ''}</div></div></div>`;
+  const zh = q.lang === 'zh';
+  // a fresh question of the same kind right after, so the new idea is used at once
+  const d = q.lvl != null ? q.lvl : (LS.mode === 'challenge' ? LS.adv : sk(q.skill).lvl);
+  if (LS.queue.filter(x => x.retry).length < 4){ const nq = makeQ(q.skill, LS.mode === 'challenge' ? Math.max(3, d - 1) : Math.max(0, d)); nq.retry = true; LS.queue.splice(LS.i + 1, 0, nq); }
+  watchStruggle(q, false);
+  sheet('think', zh ? '我们一起来看看！' : 'Let’s work it out together', `<p>${zh ? '猜答案学不到东西哦。看看怎么做：' : 'Guessing doesn’t help you learn. Here is how to work it out:'}</p>${html}`, [[zh ? '我明白了，再来一题' : 'GOT IT! TRY A NEW ONE', 'go primarykey', next]]);
+  speak(zh ? '我们一起来看看怎么做。' : 'Let’s work it out together. ' + (q.explain ? String(q.explain).replace(/<[^>]+>/g, ' ') : ''), q.lang);
+  progress();
+}
+function watchStruggle(q, first){
+  if (!LS || ['learn', 'test', 'boss', 'dict'].includes(LS.mode) || q.retry && first) return;
+  const H = LS.hist = LS.hist || {}; const h = H[q.skill] = H[q.skill] || []; h.push(first ? 1 : 0);
+  LS.rescued = LS.rescued || {};
+  const last = h.slice(-5), misses = last.filter(x => !x).length;
+  const guesses = LS.queue.slice(0, LS.i + 1).filter(x => x.skill === q.skill && x.guess).length;
+  if (!LS.rescued[q.skill] && ((h.length >= 3 && misses >= 3) || guesses >= 3)){
+    LS.rescued[q.skill] = true; LS.needRescue = q.skill;
+    S.focus = S.focus || {}; const f = S.focus[q.skill] = S.focus[q.skill] || {n:0};
+    f.n++; f.d = today(); f.done = false; f.why = guesses >= 3 ? 'several answers looked like guesses' : `${misses} of the last ${last.length} were wrong on the first try`; f.mode = LS.mode;
+    save();
+  }
+}
+function rescue(sid){
+  LS.rescueN = (LS.rescueN || 0) + 1; LS.notice = LS.notice || []; LS.notice.push(sid);
+  const lower = LS.mode === 'challenge' ? Math.max(3, LS.adv - 1) : Math.max(0, sk(sid).lvl - 1);
+  // easier, steadier questions for the rest of this lesson
+  for (let k = LS.i; k < LS.queue.length; k++) if (LS.queue[k].skill === sid && !LS.queue[k].retry){ LS.queue[k] = makeQ(sid, lower); }
+  const dq = makeQ(sid, lower); dq.demoQ = true; $('#lbody').innerHTML = '';
+  LS.i = Math.min(LS.i, LS.queue.length); LS.queue.splice(LS.i, 0, dq);
+  const zh = (dq.lang === 'zh');
+  sheet('think', zh ? 'Kibi 发现这里有点难' : 'Kibi noticed this is tricky', zh ? '没关系！我们先一起一步一步学，再接着练习。' : `No problem! Let’s learn “${SK[sid].name}” step by step together, then keep practising with easier questions.`,
+    [[zh ? '一起学 ▶' : 'LEARN WITH KIBI ▶', 'go primarykey', () => { $('#sheet').hidden = true; $('#lfoot').hidden = false; showDemo(); }]]);
+  speak(zh ? '没关系！我们一起一步一步来学。' : 'No problem! Let’s learn it step by step together.', zh ? 'zh' : 'en');
+}
+
 function check(){
   const q = LS.queue[LS.i];
   let ok;
@@ -5755,7 +5825,9 @@ function check(){
   else ok = LS.order.map(i => q.tiles[i]).join('|') === q.answer.join('|');
   q.tries = (q.tries || 0) + 1;
   if (q.firstMs == null){ q.firstMs = Date.now() - q.t0; if (!ok && q.firstMs < 4000){ q.fastWrong = true; LS.fwRun++; } else if (ok) LS.fwRun = 0; }
-  if (!ok) q.wrongs = (q.wrongs || 0) + 1;
+  const tNow = Date.now(), gap = tNow - (q.lastTry || q.t0); q.lastTry = tNow;
+  if (!ok){ q.wrongs = (q.wrongs || 0) + 1; if (gap < 3500 && (q.wrongs || 0) >= 2) q.rapid = true; }
+  if (q.fastWrong || (q.kind === 'choice' && (q.wrongs || 0) >= 2) || q.rapid) q.guess = true;
   if (LS.mode === 'test'){
     if (q.kind === 'choice') document.querySelectorAll('.choice').forEach(b => { if (b.dataset.v === String(LS.sel)) b.classList.add(ok ? 'yes' : 'no'); });
     if (q.kind === 'number' && ok) $('#numbox').classList.add('yes');
@@ -5768,7 +5840,8 @@ function check(){
     if (q.kind === 'dictself' && !LS.selfOK) LS.wrongNow = Math.max(LS.wrongNow, 1);
     const first = LS.wrongNow === 0 && !LS.usedHint;
     if (q.dict){ dictRecord(q, first); if (!first && !q.requeued){ const L = dictLists().find(x => x.id === q.dict); if (L) LS.queue.push(Object.assign(dictQ(L, q.word), {requeued:true})); } }
-    if (first){ LS.firstRight++; LS.combo++; } else { LS.combo = 0; LS.grit = (LS.grit || 0) + 1; }
+    if (first){ LS.firstRight++; LS.combo++; } else { LS.combo = 0; if (!q.guess) LS.grit = (LS.grit || 0) + 1; }
+    watchStruggle(q, first);
     q.usedHint = q.usedHint || LS.usedHint; rec(q, first, false);
     LS.answered++;
     (LS.perSkill[q.skill] = LS.perSkill[q.skill] || {r:0, n:0}).n++; if (first) LS.perSkill[q.skill].r++;
@@ -5779,6 +5852,7 @@ function check(){
     sheet('good', praise + (LS.combo >= 3 ? ` ${LS.combo} in a row!` : ''), q.explain, [['CONTINUE', 'go primarykey', next]]);
   } else {
     LS.wrongNow++; LS.combo = 0; sfx.think();
+    if (LS.mode !== 'learn' && LS.mode !== 'boss' && !q.dict && q.kind !== 'write' && (q.kind === 'choice' ? LS.wrongNow >= 2 : LS.wrongNow >= 3)){ teachIt(q); return; }
     if (q.kind === 'choice') document.querySelectorAll('.choice').forEach(b => { if (b.dataset.v === String(LS.sel)) { b.classList.add('no'); b.setAttribute('aria-pressed', 'false'); b.disabled = true; } });
     fxAnswer(q, false);
     LS.sel = null; LS.num = ''; LS.order = [];
@@ -5818,11 +5892,12 @@ function sheet(kind, title, text, buttons){
 function next(){
   $('#sheet').hidden = true; $('#lfoot').hidden = false;
   LS.i++;
+  if (LS.needRescue && LS.i < LS.queue.length + 1){ const sid = LS.needRescue; LS.needRescue = null; rescue(sid); return; }
   if (LS.mode === 'boss' && LS.boss.hp <= 0) LS.i = LS.queue.length;
   if (LS.i >= LS.queue.length) (LS.mode === 'learn' ? finishLearn : finish)(); else showQ();
 }
 function finish(){
-  const total = LS.queue.length, fr = LS.firstRight;
+  const total = LS.queue.filter(x => !x.demoQ).length, fr = LS.firstRight;
   const wasOpen = new Set(ALLSK().filter(unlocked)), lvlB = LS.id ? sk(LS.id).lvl : 0, advB = LS.id ? (sk(LS.id).adv || 0) : 0, streakB = S.streak.last;
   let xp = 10 + fr * 2 + (fr === total ? 5 : 0);
   let msg = '';
@@ -5832,6 +5907,7 @@ function finish(){
     const s = sk(LS.id), need = lvName(LS.id, LS.adv), pass = fr >= total - 1, lv = LS.adv - 3;
     if (pass && (s.adv || 0) < lv){ s.adv = lv; lines.push([`${need} badge`, LS.adv === 5 ? 50 : 30]); msg = `${badgeHTML(lv, LS.id)}<br>You passed the ${need} challenge for ${SK[LS.id].name}!${lv === 1 ? '<br>The P2 Preview challenge is now open.' : ''}`; }
     else if (pass) msg = `Great work! You passed ${need} again.`;
+    else if (LS.rescueN){ s.advWait = cbDate(3); msg = `This challenge was tricky, so Kibi taught you the steps. Practise ${SK[LS.id].name} a few more times, then try the ${need} challenge again in a few days!`; }
     else msg = `Challenges are meant to be hard! Get ${total - 1} or more right on the first try to win the ${need} badge.`;
   } else if (LS.id){
     const s = sk(LS.id); s.lessons++; s.first += fr; s.tries += total;
@@ -5909,7 +5985,7 @@ function confetti(){
 }
 
 /* expose for testing */
-window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {cbOpen, cbS, cbPlan, cbTab, ALLSK, SUBJECTS, playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
+window.__P1 = {GEN, ORDER, SK, advQ, ADV}; window.__T = {teachIt, rescue, recommend, alerts, cbOpen, cbS, cbPlan, cbTab, ALLSK, SUBJECTS, playPal, startBoss, palDetail, storyModal, cardModal, feedPal, petPal, nameModal, palGain, palShow, palState, palBook, hzData, startDict, paperDict, dictLists, startLesson, startLearn, startTest, nodeSheet, endLesson, show, rec, makeQ, save, key, updateCheck, UNITS, get LS(){ return LS; }, set LS(v){ LS = v; }, get S(){ return S; }};
 
 render();
 setTimeout(connectRemote, 0);
