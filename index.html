@@ -5951,12 +5951,13 @@ function finish(){
   { const PP = palState(); PP.berries = (PP.berries || 0) + 1; PP.lastLesson = Date.now(); if (PP.buddy) addFr(PP.buddy, 2); if (LS.mode === 'boss' && LS.boss.hp <= 0){ PP.berries += 3; if (PP.buddy) addFr(PP.buddy, 10); } }
   const palEv = palGain(xp + (LS.mode === 'boss' && LS.boss.hp <= 0 ? 20 : 0))[0], newEgg = (unitL && palNewEgg('unit')) || (goalNow && palNewEgg('goal')) || null; save();
   FX.pending = {coins:earned, streak:streakB !== today(), goal:goalNow, star:lvlA > lvlB ? LS.id : null, unlock:ALLSK().find(id => unlocked(id) && !wasOpen.has(id)) || null, pal:palEv && (palEv.type === 'hatch' || palEv.type === 'evolve') ? palEv : null, egg:newEgg, mega:LS.megaWin || null};
-  sfx.win(); confetti();
+  const good = LS.mode === 'boss' ? LS.boss.hp <= 0 : fr >= Math.ceil(total * .6) || lvlA > lvlB || advA > advB;
+  if (good){ sfx.win(); confetti(); } else sfx.good();
   $('#lfoot').hidden = true; $('#sheet').hidden = true;
   $('#pfill').style.width = '100%'; $('#combo').textContent = '';
   const body = $('#lbody'); body.innerHTML = '';
   const perfect = fr === total;
-  const r = el('div', 'result', `${kibi('wow', {scale:5})}<h2>${LS.mode === 'boss' ? (LS.boss.hp <= 0 ? 'Victory!' : 'Good try!') : perfect ? 'Perfect lesson!' : LS.mode === 'challenge' ? 'Challenge done!' : 'Lesson complete!'}</h2>
+  const r = el('div', 'result', `${kibi(good ? 'wow' : 'happy', {scale:5})}<h2>${LS.mode === 'boss' ? (LS.boss.hp <= 0 ? 'Victory!' : 'Good try!') : perfect ? 'Perfect lesson!' : !good ? 'Good effort! Keep practising' : LS.mode === 'challenge' ? 'Challenge done!' : 'Lesson complete!'}</h2>
     <div class="tiles3"><div class="rt a"><b>XP</b><span>${icon('bolt', 3)}<em class="cu" data-to="${xp}" data-pre="+">+${xp}</em></span></div><div class="rt b"><b>First try</b><span><em class="cu" data-to="${fr}" data-post="/${total}">${fr}/${total}</em></span></div><div class="rt c"><b>Streak</b><span>${icon('flame', 3)}${S.streak.n}</span></div></div>
     <div class="coinlines">${lines.map(l => `<div><span>${l[0]}</span><span>+${l[1]}</span></div>`).join('')}<div class="tot"><span>${icon('kcoin', 3)} K Coins earned</span><span class="cu">+${earned}</span></div></div>
     <div class="lvlup">${msg}${goalNow ? '<br>Today’s goal reached!' : ''}</div>${palLine(palEv)}<div class="palline"><span style="font-size:22px">🍓</span><span>+${LS.mode === 'boss' && LS.boss.hp <= 0 ? 4 : 1} berry for your pal${palState().buddy ? ` · ${palName(palState().buddy, palState().own[palState().buddy].form)} ♥ +${LS.mode === 'boss' && LS.boss.hp <= 0 ? 12 : 2}` : ''}</span></div>${palEv && palEv.type === 'hatch' ? `<div class="palline">${eggSprite(palEv.id, 2, true)}<span>Your egg is hatching!</span></div>` : ''}${palEv && palEv.type === 'evolve' ? `<div class="palline">${palSprite(palEv.id, 0, 2)}<span>Something is happening to your buddy…</span></div>` : ''}${breakNote()}`);
